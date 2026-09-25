@@ -147,7 +147,7 @@ bug-to-proof/
 ├── README.md
 │
 ├── apps/
-│   ├── dashboard/                     # React + Vite dashboard  [Member 1]
+│   ├── dashboard/                     # React + Vite dashboard  [Sikander]
 │   │   ├── package.json
 │   │   ├── vite.config.ts
 │   │   ├── tsconfig.json
@@ -170,7 +170,7 @@ bug-to-proof/
 │   │       └── types/
 │   │           └── index.ts           # Re-exports shared types
 │   │
-│   └── minishop/                      # React + Vite demo app  [Member 3]
+│   └── minishop/                      # React + Vite demo app  [Rida Zainab]
 │       ├── package.json
 │       ├── vite.config.ts
 │       ├── tsconfig.json
@@ -192,7 +192,7 @@ bug-to-proof/
 │               └── index.ts
 │
 ├── services/
-│   └── api/                           # Node.js + Express  [Member 2]
+│   └── api/                           # Node.js + Express  [Abdullah Ijaz]
 │       ├── package.json
 │       ├── tsconfig.json
 │       └── src/
@@ -215,7 +215,7 @@ bug-to-proof/
 │           └── index.ts               # BugCase, Reproduction, Patch, Evidence, etc.
 │
 ├── tests/
-│   └── playwright/                    # Playwright tests  [Member 3]
+│   └── playwright/                    # Playwright tests  [Rida Zainab]
 │       ├── package.json
 │       ├── playwright.config.ts
 │       └── cases/
@@ -724,7 +724,7 @@ MiniShop MUST include `data-testid` attributes for Playwright:
 | Cart item quantity | `cart-item-quantity-{productId}` |
 | Checkout button | `checkout-button` |
 
-These must be agreed upon before Member 3 writes the Playwright spec.
+These must be agreed upon before Rida Zainab writes the Playwright spec.
 
 ---
 
@@ -778,7 +778,7 @@ Only include if the primary demo is complete and stable with ≥1 hour buffer.
 
 ## 14. Three-Person Work Division
 
-### Member 1 — Dashboard
+### Sikander — Dashboard
 
 **Owns:** `apps/dashboard/`
 
@@ -802,7 +802,7 @@ Only include if the primary demo is complete and stable with ≥1 hour buffer.
 
 ---
 
-### Member 2 — Backend API
+### Abdullah Ijaz — Backend API
 
 **Owns:** `services/api/`
 
@@ -818,7 +818,7 @@ Only include if the primary demo is complete and stable with ≥1 hour buffer.
 
 **Dependencies on others:**
 - Needs shared types (co-authors during Milestone 0)
-- Needs MiniShop running for integration testing (after Member 3 sets it up)
+- Needs MiniShop running for integration testing (after Rida Zainab sets it up)
 
 **Does NOT touch:**
 - `apps/dashboard/`
@@ -827,7 +827,7 @@ Only include if the primary demo is complete and stable with ≥1 hour buffer.
 
 ---
 
-### Member 3 — MiniShop + Playwright
+### Rida Zainab — MiniShop + Playwright
 
 **Owns:** `apps/minishop/` and `tests/playwright/`
 
@@ -842,7 +842,7 @@ Only include if the primary demo is complete and stable with ≥1 hour buffer.
 - Artifact directory setup
 
 **Dependencies on others:**
-- Needs API to have artifact directory path convention defined (from Member 2)
+- Needs API to have artifact directory path convention defined (from Abdullah Ijaz)
 - Playwright config needs agreed port for MiniShop (5174)
 
 **Does NOT touch:**
@@ -855,18 +855,18 @@ Only include if the primary demo is complete and stable with ≥1 hour buffer.
 
 | File / Directory | Primary Owner | Shared Access | Conflict Risk |
 |-----------------|---------------|---------------|---------------|
-| `apps/dashboard/` | Member 1 | Read types | Very Low |
-| `apps/minishop/` | Member 3 | None | Very Low |
-| `services/api/src/routes/` | Member 2 | None | Very Low |
-| `services/api/src/runner/playwrightRunner.ts` | Member 2 | Member 3 reviews | Low |
-| `tests/playwright/` | Member 3 | None | Very Low |
-| `packages/shared-types/src/index.ts` | **All agree, Member 2 commits** | All consume | **HIGH — freeze early** |
-| `data/cases/case-001.json` | Member 3 seeds, Member 2 format | Dashboard reads | Medium |
+| `apps/dashboard/` | Sikander | Read types | Very Low |
+| `apps/minishop/` | Rida Zainab | None | Very Low |
+| `services/api/src/routes/` | Abdullah Ijaz | None | Very Low |
+| `services/api/src/runner/playwrightRunner.ts` | Abdullah Ijaz | Rida Zainab reviews | Low |
+| `tests/playwright/` | Rida Zainab | None | Very Low |
+| `packages/shared-types/src/index.ts` | **All agree, Abdullah Ijaz commits** | All consume | **HIGH — freeze early** |
+| `data/cases/case-001.json` | Rida Zainab seeds, Abdullah Ijaz format | Dashboard reads | Medium |
 | `artifacts/` | Runtime-generated, no source ownership | All read | Low |
 | `package.json` (root) | **One person sets up workspaces** | All add workspace | Medium |
-| `tsconfig.base.json` | Member 2 sets up | All extend | Low |
-| `README.md` | Agreed sections, final by Member 2 | All add sections | Low |
-| `.gitignore` | Member 2 sets up | None | Very Low |
+| `tsconfig.base.json` | Abdullah Ijaz sets up | All extend | Low |
+| `README.md` | Agreed sections, final by Abdullah Ijaz | All add sections | Low |
+| `.gitignore` | Abdullah Ijaz sets up | None | Very Low |
 | `plans/bug-to-proof-plan.md` | Plan only | Read only | Very Low |
 
 ---
@@ -991,8 +991,11 @@ LLM_MODEL=gpt-4o-mini
 LLM_ENABLED=true
 ```
 
-`LLM_ENABLED=false` disables all LLM calls and the system falls back to storing raw
-input/output without AI enhancement. This ensures the demo works even without an API key.
+`LLM_ENABLED=false` disables all LLM calls and the system falls back gracefully.
+The system is **fully functional without an API key** — all three LLM calls are optional
+enhancements. If `LLM_API_KEY` is absent or empty, the LLM client automatically treats
+it as disabled and logs a warning rather than throwing. No feature breaks; LLM-populated
+fields simply remain at their fallback values.
 
 ### 16.5 npm Scripts (Root `package.json`)
 
@@ -1011,7 +1014,7 @@ input/output without AI enhancement. This ensures the demo works even without an
 
 ### 16.6 MiniShop data-testid Contract
 
-Agreed before Member 3 writes tests and Member 1 builds any linking UI:
+Agreed before Rida Zainab writes tests and Sikander builds any linking UI:
 
 ```
 add-to-cart-{productId}     e.g. add-to-cart-1
@@ -1030,9 +1033,9 @@ checkout-button
 ```
 main
 ├── feature/contracts      ← All three work here during Milestone 0 (very short-lived)
-├── feature/dashboard      ← Member 1
-├── feature/api            ← Member 2
-└── feature/playwright-minishop  ← Member 3
+├── feature/dashboard      ← Sikander
+├── feature/api            ← Abdullah Ijaz
+└── feature/playwright-minishop  ← Rida Zainab
 ```
 
 ### 17.2 Merge Order
@@ -1049,9 +1052,9 @@ Step 7: Integration testing on main
 
 ### 17.3 Rules
 
-- **Only one person touches `packages/shared-types/src/index.ts`** — Member 2 commits, others pull
-- **Only one person sets up root `package.json`** — Member 2 owns, others create PRs for workspace additions
-- **`data/cases/case-001.json`** — Member 3 creates after schema is frozen, commits once
+- **Only one person touches `packages/shared-types/src/index.ts`** — Abdullah Ijaz commits, others pull
+- **Only one person sets up root `package.json`** — Abdullah Ijaz owns, others create PRs for workspace additions
+- **`data/cases/case-001.json`** — Rida Zainab creates after schema is frozen, commits once
 - **No one auto-merges** — brief review before each merge
 - **Resolve conflicts on API types immediately** — do not let drift accumulate
 - **README.md** — each member writes their section in a separate file (`docs/section-api.md` etc.), final assembly at end
@@ -1096,15 +1099,15 @@ Milestone 0: Shared Contracts
 **Objective:** Establish the shared foundation so parallel work can begin.
 
 **Tasks:**
-1. Member 2: Initialize root `package.json` with npm workspaces
-2. Member 2: Create `packages/shared-types/src/index.ts` with all types
-3. Member 2: Create `tsconfig.base.json`
-4. Member 2: Create `.gitignore` (node_modules, artifacts/**, .env, dist)
-5. Member 2: Create `data/` and `artifacts/` directories with `.gitkeep`
+1. Abdullah Ijaz: Initialize root `package.json` with npm workspaces
+2. Abdullah Ijaz: Create `packages/shared-types/src/index.ts` with all types
+3. Abdullah Ijaz: Create `tsconfig.base.json`
+4. Abdullah Ijaz: Create `.gitignore` (node_modules, artifacts/**, .env, dist)
+5. Abdullah Ijaz: Create `data/` and `artifacts/` directories with `.gitkeep`
 6. All: Review and sign off on shared types
 7. All: Review and sign off on API contract
 8. All: Review and sign off on `data-testid` naming
-9. Member 2: Commit and push `feature/contracts`
+9. Abdullah Ijaz: Commit and push `feature/contracts`
 10. All: Merge to `main`, create individual feature branches
 
 **Acceptance Criteria:**
@@ -1116,7 +1119,7 @@ Milestone 0: Shared Contracts
 
 ### Milestone 1 — Foundation (All members, rest of Day 1)
 
-#### Member 1 — Dashboard Shell
+#### Sikander — Dashboard Shell
 
 **Tasks:**
 1. Scaffold `apps/dashboard/` with `npm create vite@latest`
@@ -1145,7 +1148,7 @@ Milestone 0: Shared Contracts
 
 ---
 
-#### Member 2 — API Foundation
+#### Abdullah Ijaz — API Foundation
 
 **Tasks:**
 1. Scaffold `services/api/` with Express + TypeScript
@@ -1173,7 +1176,7 @@ Milestone 0: Shared Contracts
 
 ---
 
-#### Member 3 — MiniShop Foundation
+#### Rida Zainab — MiniShop Foundation
 
 **Tasks:**
 1. Scaffold `apps/minishop/` with `npm create vite@latest`
@@ -1208,7 +1211,7 @@ Milestone 0: Shared Contracts
 
 ### Milestone 2 — Core Workflow
 
-#### Member 1 — Dashboard: Connect to API
+#### Sikander — Dashboard: Connect to API
 
 **Tasks:**
 1. Replace mock data in `api/client.ts` with real `fetch` calls to `localhost:3001`
@@ -1235,7 +1238,7 @@ Milestone 0: Shared Contracts
 
 ---
 
-#### Member 2 — API: Reproduction & Runner
+#### Abdullah Ijaz — API: Reproduction & Runner
 
 **Tasks:**
 1. Create `runner/playwrightRunner.ts` with spawn logic, result parsing, artifact saving
@@ -1261,7 +1264,7 @@ Milestone 0: Shared Contracts
 
 ---
 
-#### Member 3 — Playwright Spec & Evidence
+#### Rida Zainab — Playwright Spec & Evidence
 
 **Tasks:**
 1. Scaffold `tests/playwright/` with `npm init playwright`
@@ -1295,7 +1298,7 @@ Milestone 0: Shared Contracts
 
 ### Milestone 3 — Patch Workflow (Day 2 afternoon)
 
-#### Member 1 — Dashboard: Patch Visualization
+#### Sikander — Dashboard: Patch Visualization
 
 **Tasks:**
 1. Build `PatchViewer` component: renders unified diff with syntax highlighting
@@ -1319,7 +1322,7 @@ Milestone 0: Shared Contracts
 
 ---
 
-#### Member 2 — API: Patch State Handling
+#### Abdullah Ijaz — API: Patch State Handling
 
 **Tasks:**
 1. Validate PATCH /api/cases/:id accepts `patch` object and `status` change
@@ -1338,7 +1341,7 @@ Milestone 0: Shared Contracts
 
 ---
 
-#### Member 3 — Fix the Bug + After Run
+#### Rida Zainab — Fix the Bug + After Run
 
 **Tasks:**
 1. Create a separate git branch `demo/patched-minishop` with the fix applied
@@ -1346,7 +1349,7 @@ Milestone 0: Shared Contracts
 3. Confirm test PASSES
 4. Capture after-fix screenshot and trace
 5. Copy to `artifacts/case-001/after/` (committed for demo seeding)
-6. Update `data/cases/case-001.json` to include verification afterRun (co-ordinate with Member 2)
+6. Update `data/cases/case-001.json` to include verification afterRun (co-ordinate with Abdullah Ijaz)
 
 **Files Modified/Created:**
 - `artifacts/case-001/after/screenshot.png` (committed)
@@ -1364,7 +1367,7 @@ Milestone 0: Shared Contracts
 
 **Objective:** Make the demo reliable and visually impressive for judges.
 
-#### Member 1 — UX Polish
+#### Sikander — UX Polish
 
 **Tasks:**
 1. Status badge animations (pulse on REPRODUCING/VERIFYING)
@@ -1377,7 +1380,7 @@ Milestone 0: Shared Contracts
 
 ---
 
-#### Member 2 — Integration & Demo Setup
+#### Abdullah Ijaz — Integration & Demo Setup
 
 **Tasks:**
 1. Final integration test with all three services running
@@ -1389,7 +1392,7 @@ Milestone 0: Shared Contracts
 
 ---
 
-#### Member 3 — Playwright & Evidence Final
+#### Rida Zainab — Playwright & Evidence Final
 
 **Tasks:**
 1. Ensure `case-001-cart-total.spec.ts` is stable and deterministic
@@ -1547,7 +1550,7 @@ The MVP is complete when a developer can:
 | Demo machine missing Node/Playwright | Low | High | Document exact setup in README; check versions in `engines` field |
 | Port conflicts | Low | Medium | Document ports; use `.env` for overrides |
 | API not ready when dashboard demos | Medium | Medium | Seed case-001 with pre-captured artifacts so dashboard works even without live runner |
-| npm workspace setup confusion | Low | Medium | Member 2 owns setup; README documents one-step install |
+| npm workspace setup confusion | Low | Medium | Abdullah Ijaz owns setup; README documents one-step install |
 
 ---
 
@@ -1587,19 +1590,19 @@ Hour 0–2  (All together)
      └─ port assignments
 
 Hour 2–8  (Parallel, Day 1)
-  ├─ Member 1: Dashboard shell + mock API client
-  ├─ Member 2: Express API + case CRUD + JSON storage + seeded case
-  └─ Member 3: MiniShop + seeded bug + manual verification
+  ├─ Sikander: Dashboard shell + mock API client
+  ├─ Abdullah Ijaz: Express API + case CRUD + JSON storage + seeded case
+  └─ Rida Zainab: MiniShop + seeded bug + manual verification
 
 Hour 8–16  (Parallel, Day 2)
-  ├─ Member 1: Connect dashboard to real API, polling, evidence panel
-  ├─ Member 2: Playwright runner + reproduce/verify routes
-  └─ Member 3: Playwright spec, failure artifacts, patch, after artifacts
+  ├─ Sikander: Connect dashboard to real API, polling, evidence panel
+  ├─ Abdullah Ijaz: Playwright runner + reproduce/verify routes
+  └─ Rida Zainab: Playwright spec, failure artifacts, patch, after artifacts
 
 Hour 16–20  (Parallel, Day 2 afternoon)
-  ├─ Member 1: Patch viewer + before/after comparison + verification UI
-  ├─ Member 2: Final state machine + patch state handling + demo reset API
-  └─ Member 3: Verify full Playwright flow, seed final artifacts
+  ├─ Sikander: Patch viewer + before/after comparison + verification UI
+  ├─ Abdullah Ijaz: Final state machine + patch state handling + demo reset API
+  └─ Rida Zainab: Verify full Playwright flow, seed final artifacts
 
 Hour 20–24  (All together, Day 3)
   └─ Integration: merge branches, run end-to-end, fix integration issues
@@ -1608,9 +1611,9 @@ Hour 20–24  (All together, Day 3)
      └─ Full happy path passes
 
 Hour 24–30  (Polish, Day 3)
-  ├─ Member 1: UI polish, error states, responsive check
-  ├─ Member 2: README, demo script, npm run demo
-  └─ Member 3: Playwright reliability, final artifact commit
+  ├─ Sikander: UI polish, error states, responsive check
+  ├─ Abdullah Ijaz: README, demo script, npm run demo
+  └─ Rida Zainab: Playwright reliability, final artifact commit
 
 Hour 30–36  (Buffer + rehearsal)
   └─ Full demo run x3, fix any remaining issues
@@ -1667,7 +1670,7 @@ which are set separately).
 description as a single step; `expected` and `actual` are left as empty strings for the
 developer to fill in via `PATCH /api/cases/:id`.
 
-**Owner:** Member 2 (in `services/api/src/routes/cases.ts` and new `services/api/src/llm/client.ts`)
+**Owner:** Abdullah Ijaz (in `services/api/src/routes/cases.ts` and new `services/api/src/llm/client.ts`)
 
 ---
 
@@ -1698,7 +1701,7 @@ Diff:
 
 **Fallback:** `summary` defaults to `"Patch applied"`, `reasoning` defaults to `""`.
 
-**Owner:** Member 2 (in `services/api/src/routes/cases.ts`)
+**Owner:** Abdullah Ijaz (in `services/api/src/routes/cases.ts`)
 
 ---
 
@@ -1725,7 +1728,7 @@ Reproduction actual: "{reproduction.actual}"
 
 **Fallback:** Field is `null`; dashboard shows the raw description instead.
 
-**Owner:** Member 2 (in `services/api/src/runner/playwrightRunner.ts` callback or reproduce route)
+**Owner:** Abdullah Ijaz (in `services/api/src/runner/playwrightRunner.ts` callback or reproduce route)
 
 ---
 
@@ -1736,10 +1739,13 @@ Reproduction actual: "{reproduction.actual}"
 Responsibilities:
 - Read `LLM_API_URL`, `LLM_API_KEY`, `LLM_MODEL`, `LLM_ENABLED` from env
 - Export a single function: `callLLM(prompt: string, timeoutMs?: number): Promise<string>`
-- Return empty string and log a warning on any error (network, timeout, invalid JSON)
-- Never throw — always return a safe fallback
+- **If `LLM_API_KEY` is absent/empty or `LLM_ENABLED !== "true"`, return `""` immediately** — no network call, no error
+- Return empty string and log a warning on any error (network failure, timeout, invalid JSON, non-2xx response)
+- Never throw — always return a safe fallback value
+- 10 second timeout by default; callers can override
 
 This file is the single integration point. Swapping providers requires only changing this file.
+The rest of the codebase never imports from a provider SDK directly.
 
 ---
 
@@ -1771,17 +1777,17 @@ parallel work begins.
 
 | File | Owner |
 |------|-------|
-| `services/api/src/llm/client.ts` | Member 2 |
-| LLM calls in `routes/cases.ts` | Member 2 |
-| LLM call in reproduce route | Member 2 |
-| `rootCauseExplanation` display in dashboard | Member 1 |
-| `.env.example` LLM vars | Member 2 |
+| `services/api/src/llm/client.ts` | Abdullah Ijaz |
+| LLM calls in `routes/cases.ts` | Abdullah Ijaz |
+| LLM call in reproduce route | Abdullah Ijaz |
+| `rootCauseExplanation` display in dashboard | Sikander |
+| `.env.example` LLM vars | Abdullah Ijaz |
 
 ---
 
 ### 29.9 Dashboard Display of LLM Output
 
-Member 1 adds the following to the **Bug Report** section of the case detail page:
+Sikander adds the following to the **Bug Report** section of the case detail page:
 
 ```
 ┌──────────────────────────────────────────────────┐
