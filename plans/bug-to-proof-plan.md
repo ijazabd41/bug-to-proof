@@ -19,10 +19,15 @@ The differentiator is not "AI writes a fix." The differentiator is **reproducibl
 the same Playwright test fails before the patch and passes after it, with screenshots and
 traces preserved for each run.
 
+**LLM integration:** Three targeted AI API calls (OpenAI-compatible endpoint) enhance
+three specific moments — structuring the initial bug report, generating the patch summary,
+and explaining the root cause. All calls are optional fallbacks; the system works without them.
+
 **Current workspace state:** Greenfield. Only `AGENTS.md` exists. Everything must be created.
 
 **Technology choices:** React + TypeScript + Vite (dashboard), Node.js + Express (API),
-Playwright (reproduction + verification), local JSON files (storage), MiniShop (demo app).
+Playwright (reproduction + verification), local JSON files (storage), MiniShop (demo app),
+OpenAI-compatible API (LLM enhancement).
 
 ---
 
@@ -978,7 +983,16 @@ MINISHOP_PORT=5174
 DATA_DIR=./data
 ARTIFACTS_DIR=./artifacts
 PLAYWRIGHT_TIMEOUT=30000
+
+# LLM Integration (OpenAI-compatible)
+LLM_API_URL=https://api.openai.com/v1
+LLM_API_KEY=your-key-here
+LLM_MODEL=gpt-4o-mini
+LLM_ENABLED=true
 ```
+
+`LLM_ENABLED=false` disables all LLM calls and the system falls back to storing raw
+input/output without AI enhancement. This ensures the demo works even without an API key.
 
 ### 16.5 npm Scripts (Root `package.json`)
 
@@ -1612,6 +1626,178 @@ Shared Types → API Case Storage → Playwright Runner → Evidence Artifacts �
 
 ---
 
+## 29. LLM Integration
+
+### 29.1 Overview
+
+Three discrete LLM calls are made from the Node.js API. All calls are:
+- Fire-and-forget from the user's perspective (async, non-blocking)
+- Wrapped with a timeout (10s) and a fallback (raw input used if call fails)
+- Gated by `LLM_ENABLED` environment variable
+- Using the OpenAI Chat Completions API (`/v1/chat/completions`) with any compatible endpoint
+
+No LLM call is on the critical path. The system is fully functional without them.
+
+---
+
+### 29.2 LLM Call 1 — Bug Report Structuring
+
+**Trigger:** `POST /api/cases` — immediately after the case is created from a plain-language report.
+
+**Purpose:** Convert the free-text `description` into a structured `reproduction` object
+with inferred preconditions, steps, expected result, and actual result.
+
+**Input to LLM:**
+```
+You are a software QA engineer. Given the following bug description, extract:
+- preconditions (array of strings)
+- steps (array of numbered steps to reproduce)
+- expected (single sentence: what should happen)
+- actual (single sentence: what actually happens)
+
+Return JSON only, no prose.
+
+Bug description: "{description}"
+```
+
+**Output:** JSON object merged into `case.reproduction` (except `testFile` and `lastRun`,
+which are set separately).
+
+**Fallback if LLM disabled or fails:** `reproduction` is pre-populated with the raw
+description as a single step; `expected` and `actual` are left as empty strings for the
+developer to fill in via `PATCH /api/cases/:id`.
+
+**Owner:** Member 2 (in `services/api/src/routes/cases.ts` and new `services/api/src/llm/client.ts`)
+
+---
+
+### 29.3 LLM Call 2 — Patch Summary Generation
+
+**Trigger:** `PATCH /api/cases/:id` when `patch.diff` is provided for the first time
+(i.e., when Bob stores the diff after investigation).
+
+**Purpose:** Generate a human-readable `patch.summary` and `patch.reasoning` paragraph
+from the raw unified diff and the bug description.
+
+**Input to LLM:**
+```
+You are a software engineer explaining a bug fix to a technical audience.
+Given the bug description and the unified diff below, write:
+- summary: one sentence describing what was changed (max 120 characters)
+- reasoning: 2-3 sentences explaining why this diff fixes the bug
+
+Return JSON only: { "summary": "...", "reasoning": "..." }
+
+Bug description: "{description}"
+
+Diff:
+{diff}
+```
+
+**Output:** Overwrites `patch.summary` and `patch.reasoning` in the case JSON.
+
+**Fallback:** `summary` defaults to `"Patch applied"`, `reasoning` defaults to `""`.
+
+**Owner:** Member 2 (in `services/api/src/routes/cases.ts`)
+
+---
+
+### 29.4 LLM Call 3 — Root Cause Explanation
+
+**Trigger:** When the case transitions to `REPRODUCED` (after Playwright confirms the failure).
+
+**Purpose:** Generate a concise `rootCauseExplanation` field on the case that the dashboard
+displays in the "Bug Report" section. Helps judges quickly understand the bug.
+
+**Input to LLM:**
+```
+You are a software engineer. A Playwright test has confirmed the following bug.
+Write a single paragraph (3-4 sentences) explaining the probable root cause
+and its impact on the user experience. Be specific and technical.
+
+Bug title: "{title}"
+Bug description: "{description}"
+Reproduction expected: "{reproduction.expected}"
+Reproduction actual: "{reproduction.actual}"
+```
+
+**Output:** String stored as `case.rootCauseExplanation`.
+
+**Fallback:** Field is `null`; dashboard shows the raw description instead.
+
+**Owner:** Member 2 (in `services/api/src/runner/playwrightRunner.ts` callback or reproduce route)
+
+---
+
+### 29.5 Shared LLM Client
+
+**File:** `services/api/src/llm/client.ts`
+
+Responsibilities:
+- Read `LLM_API_URL`, `LLM_API_KEY`, `LLM_MODEL`, `LLM_ENABLED` from env
+- Export a single function: `callLLM(prompt: string, timeoutMs?: number): Promise<string>`
+- Return empty string and log a warning on any error (network, timeout, invalid JSON)
+- Never throw — always return a safe fallback
+
+This file is the single integration point. Swapping providers requires only changing this file.
+
+---
+
+### 29.6 Updated Data Model
+
+The `BugCase` interface gains one additional optional field:
+
+```typescript
+export interface BugCase {
+  // ... existing fields ...
+  rootCauseExplanation: string | null;  // LLM-generated, or null
+}
+```
+
+The `Patch` interface `summary` and `reasoning` fields already exist and are now populated
+by LLM Call 2 rather than being manually written.
+
+---
+
+### 29.7 Updated Shared Types
+
+Add `rootCauseExplanation: string | null` to `BugCase` in
+`packages/shared-types/src/index.ts`. This must be added during Milestone 0 before
+parallel work begins.
+
+---
+
+### 29.8 File Ownership for LLM
+
+| File | Owner |
+|------|-------|
+| `services/api/src/llm/client.ts` | Member 2 |
+| LLM calls in `routes/cases.ts` | Member 2 |
+| LLM call in reproduce route | Member 2 |
+| `rootCauseExplanation` display in dashboard | Member 1 |
+| `.env.example` LLM vars | Member 2 |
+
+---
+
+### 29.9 Dashboard Display of LLM Output
+
+Member 1 adds the following to the **Bug Report** section of the case detail page:
+
+```
+┌──────────────────────────────────────────────────┐
+│ Root Cause                                        │
+│                                                   │
+│ The cart total calculation in cartStore.ts reads  │
+│ only the first item's price rather than summing   │
+│ all items. This means adding any second product   │
+│ leaves the total unchanged from the initial item. │
+└──────────────────────────────────────────────────┘
+```
+
+If `rootCauseExplanation` is null, this section is hidden.
+
+---
+
 ## Sub-Tasks for Agent Mode Implementation
 
 Each sub-task below is designed for sequential execution in Bob Agent Mode.
@@ -1632,8 +1818,8 @@ Each sub-task below is designed for sequential execution in Bob Agent Mode.
 - **Status:** `[ ] pending`
 
 ### Sub-Task 4 — Node.js API
-- **Intent:** Build Express API with case CRUD, JSON storage, Playwright runner integration, and static artifact serving
-- **Files to create:** All files under `services/api/`, `data/cases/case-001.json`
+- **Intent:** Build Express API with case CRUD, JSON storage, Playwright runner integration, static artifact serving, and LLM client
+- **Files to create:** All files under `services/api/` including `src/llm/client.ts`, `data/cases/case-001.json`
 - **Status:** `[ ] pending`
 
 ### Sub-Task 5 — React Dashboard
