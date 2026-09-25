@@ -1,0 +1,13 @@
+# This directory holds runtime Playwright artifacts (screenshots, traces, result JSON).
+#
+# Layout:
+#   artifacts/<caseId>/before/screenshot.png
+#   artifacts/<caseId>/before/trace.zip
+#   artifacts/<caseId>/before/result.json
+#   artifacts/<caseId>/after/screenshot.png
+#   artifacts/<caseId>/after/trace.zip
+#   artifacts/<caseId>/after/result.json
+#
+# Runtime-generated subdirectories are git-ignored (see .gitignore).
+# Only pre-seeded demo artifacts for case-001 are committed.
+# Served as static files by the API at http://localhost:3001/artifacts/

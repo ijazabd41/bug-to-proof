@@ -1,0 +1,39 @@
+﻿# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+.vite/
+
+# Environment — never commit real keys
+.env
+.env.local
+.env.*.local
+
+# Test artifacts — runtime-generated, not source
+artifacts/case-*/before/
+artifacts/case-*/after/
+test-results/
+playwright-report/
+
+# Keep the gitkeep placeholders
+!artifacts/.gitkeep
+!data/cases/.gitkeep
+
+# TypeScript
+*.tsbuildinfo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*

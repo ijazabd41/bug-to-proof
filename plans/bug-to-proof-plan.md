@@ -1,6 +1,6 @@
-# Bug-to-Proof — Hackathon Implementation Plan
+﻿# Bug-to-Proof â€” Hackathon Implementation Plan
 
-> **Status:** DRAFT — awaiting team review and sign-off before implementation begins.
+> **Status:** DRAFT â€” awaiting team review and sign-off before implementation begins.
 
 ---
 
@@ -12,7 +12,7 @@ verifiable, evidence-backed proof that the bug was reproduced, patched, and re-v
 The system tells a single, compelling story:
 
 ```
-Reported → Reproduced → Failed → Patched → Verified → Proved
+Reported â†’ Reproduced â†’ Failed â†’ Patched â†’ Verified â†’ Proved
 ```
 
 The differentiator is not "AI writes a fix." The differentiator is **reproducible proof**:
@@ -20,7 +20,7 @@ the same Playwright test fails before the patch and passes after it, with screen
 traces preserved for each run.
 
 **LLM integration:** Three targeted AI API calls (OpenAI-compatible endpoint) enhance
-three specific moments — structuring the initial bug report, generating the patch summary,
+three specific moments â€” structuring the initial bug report, generating the patch summary,
 and explaining the root cause. All calls are optional fallbacks; the system works without them.
 
 **Current workspace state:** Greenfield. Only `AGENTS.md` exists. Everything must be created.
@@ -35,12 +35,12 @@ OpenAI-compatible API (LLM enhancement).
 
 | Item | Status |
 |------|--------|
-| `AGENTS.md` | Exists — defines Bob investigation workflow and evidence rules |
-| Application code | Does not exist — greenfield |
-| Package managers | None present — will use `npm` workspaces |
+| `AGENTS.md` | Exists â€” defines Bob investigation workflow and evidence rules |
+| Application code | Does not exist â€” greenfield |
+| Package managers | None present â€” will use `npm` workspaces |
 | Existing tests | None |
 | Existing configuration | None |
-| Database | None — will use local JSON files only |
+| Database | None â€” will use local JSON files only |
 | Infrastructure | None required |
 
 The project rules in `AGENTS.md` already establish critical constraints:
@@ -62,21 +62,21 @@ The project rules in `AGENTS.md` already establish critical constraints:
 4.  Case displays structured reproduction steps (pre-seeded for demo)
 5.  Developer clicks "Run Reproduction"
 6.  Node.js API spawns Playwright against MiniShop
-7.  Playwright test FAILS — expected $30.00, got $10.00
+7.  Playwright test FAILS â€” expected $30.00, got $10.00
 8.  Evidence saved: screenshot, trace, result JSON
-9.  Case status → REPRODUCED
+9.  Case status â†’ REPRODUCED
 10. Dashboard shows failure evidence with screenshot
 11. Developer opens IBM Bob IDE, inspects case and MiniShop source
 12. Bob investigates cart calculation logic
 13. Bob proposes a patch (diff stored in case JSON)
 14. Developer reviews patch in dashboard
 15. Developer approves + Bob applies the patch to MiniShop source
-16. Case status → PATCH_APPLIED
+16. Case status â†’ PATCH_APPLIED
 17. Developer clicks "Run Verification"
 18. Node.js API spawns the same Playwright test against patched MiniShop
-19. Playwright test PASSES — expected $30.00, got $30.00
+19. Playwright test PASSES â€” expected $30.00, got $30.00
 20. Evidence saved: screenshot, trace, result JSON
-21. Case status → VERIFIED
+21. Case status â†’ VERIFIED
 22. Dashboard shows before/after comparison
 ```
 
@@ -87,35 +87,35 @@ The project rules in `AGENTS.md` already establish critical constraints:
 ### 4.1 System Boundaries
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                     Bug-to-Proof Runtime                            │
-│                                                                     │
-│   React Dashboard (port 5173)                                       │
-│          ↓  HTTP                                                    │
-│   Node.js API (port 3001)                                           │
-│          ↓  JSON files                                              │
-│   data/cases/*.json                                                 │
-│          ↓  child_process.spawn                                     │
-│   Playwright Runner                                                 │
-│          ↓  HTTP                                                    │
-│   MiniShop (port 5174)                                              │
-│          ↓  artifacts                                               │
-│   artifacts/case-XXX/before|after/                                  │
-└─────────────────────────────────────────────────────────────────────┘
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚                     Bug-to-Proof Runtime                            â”‚
+â”‚                                                                     â”‚
+â”‚   React Dashboard (port 5173)                                       â”‚
+â”‚          â†“  HTTP                                                    â”‚
+â”‚   Node.js API (port 3001)                                           â”‚
+â”‚          â†“  JSON files                                              â”‚
+â”‚   data/cases/*.json                                                 â”‚
+â”‚          â†“  child_process.spawn                                     â”‚
+â”‚   Playwright Runner                                                 â”‚
+â”‚          â†“  HTTP                                                    â”‚
+â”‚   MiniShop (port 5174)                                              â”‚
+â”‚          â†“  artifacts                                               â”‚
+â”‚   artifacts/case-XXX/before|after/                                  â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 
-┌─────────────────────────────────────────────────────────────────────┐
-│                     Bob Development Workflow                        │
-│                                                                     │
-│   IBM Bob IDE                                                       │
-│          ↓  reads/edits files                                       │
-│   Repository / Source Code                                          │
-│          ↓  investigation                                           │
-│   apps/minishop/src/  (cart logic)                                  │
-│          ↓  proposes patch                                          │
-│   Patch stored as diff in case JSON (human applies via Bob)         │
-│          ↓  triggers API call                                       │
-│   PATCH /api/cases/:id  { status: "PATCH_APPLIED", patch: {...} }   │
-└─────────────────────────────────────────────────────────────────────┘
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚                     Bob Development Workflow                        â”‚
+â”‚                                                                     â”‚
+â”‚   IBM Bob IDE                                                       â”‚
+â”‚          â†“  reads/edits files                                       â”‚
+â”‚   Repository / Source Code                                          â”‚
+â”‚          â†“  investigation                                           â”‚
+â”‚   apps/minishop/src/  (cart logic)                                  â”‚
+â”‚          â†“  proposes patch                                          â”‚
+â”‚   Patch stored as diff in case JSON (human applies via Bob)         â”‚
+â”‚          â†“  triggers API call                                       â”‚
+â”‚   PATCH /api/cases/:id  { status: "PATCH_APPLIED", patch: {...} }   â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
 ### 4.2 Port Allocation
@@ -140,101 +140,101 @@ Use **npm workspaces** with a single root `package.json`. This allows:
 
 ```
 bug-to-proof/
-├── AGENTS.md                          # Existing Bob rules
-├── package.json                       # Root — npm workspaces
-├── tsconfig.base.json                 # Shared TS config
-├── .gitignore
-├── README.md
-│
-├── apps/
-│   ├── dashboard/                     # React + Vite dashboard  [Sikander]
-│   │   ├── package.json
-│   │   ├── vite.config.ts
-│   │   ├── tsconfig.json
-│   │   ├── index.html
-│   │   └── src/
-│   │       ├── main.tsx
-│   │       ├── App.tsx
-│   │       ├── api/
-│   │       │   └── client.ts          # All API calls
-│   │       ├── components/
-│   │       │   ├── CaseList.tsx
-│   │       │   ├── CaseDetail.tsx
-│   │       │   ├── BugReportForm.tsx
-│   │       │   ├── EvidencePanel.tsx
-│   │       │   ├── PatchViewer.tsx
-│   │       │   └── BeforeAfterComparison.tsx
-│   │       ├── pages/
-│   │       │   ├── CasesPage.tsx
-│   │       │   └── CaseDetailPage.tsx
-│   │       └── types/
-│   │           └── index.ts           # Re-exports shared types
-│   │
-│   └── minishop/                      # React + Vite demo app  [Rida Zainab]
-│       ├── package.json
-│       ├── vite.config.ts
-│       ├── tsconfig.json
-│       ├── index.html
-│       └── src/
-│           ├── main.tsx
-│           ├── App.tsx
-│           ├── components/
-│           │   ├── ProductList.tsx
-│           │   ├── ProductCard.tsx
-│           │   ├── Cart.tsx
-│           │   └── CartItem.tsx
-│           ├── pages/
-│           │   ├── ShopPage.tsx
-│           │   └── CartPage.tsx
-│           ├── store/
-│           │   └── cartStore.ts       # Contains the seeded bug
-│           └── types/
-│               └── index.ts
-│
-├── services/
-│   └── api/                           # Node.js + Express  [Abdullah Ijaz]
-│       ├── package.json
-│       ├── tsconfig.json
-│       └── src/
-│           ├── index.ts               # Entry point, Express app
-│           ├── routes/
-│           │   ├── cases.ts           # Case CRUD endpoints
-│           │   ├── reproduce.ts       # Reproduction trigger
-│           │   └── verify.ts          # Verification trigger
-│           ├── storage/
-│           │   └── caseStore.ts       # JSON file read/write
-│           ├── runner/
-│           │   └── playwrightRunner.ts # spawn + parse results
-│           └── types/
-│               └── index.ts           # Types re-exported from shared
-│
-├── packages/
-│   └── shared-types/                  # Shared TS contracts  [frozen before Day 1 parallel work]
-│       ├── package.json
-│       └── src/
-│           └── index.ts               # BugCase, Reproduction, Patch, Evidence, etc.
-│
-├── tests/
-│   └── playwright/                    # Playwright tests  [Rida Zainab]
-│       ├── package.json
-│       ├── playwright.config.ts
-│       └── cases/
-│           ├── case-001-cart-total.spec.ts   # Primary demo test
-│           └── helpers/
-│               └── minishop.ts        # Page-object helpers
-│
-├── data/
-│   └── cases/
-│       └── case-001.json              # Seeded demo case (committed)
-│
-├── artifacts/                         # Git-ignored test artifacts
-│   └── .gitkeep
-│
-├── docs/
-│   └── demo-script.md
-│
-└── plans/
-    └── bug-to-proof-plan.md           # This file
+â”œâ”€â”€ AGENTS.md                          # Existing Bob rules
+â”œâ”€â”€ package.json                       # Root â€” npm workspaces
+â”œâ”€â”€ tsconfig.base.json                 # Shared TS config
+â”œâ”€â”€ .gitignore
+â”œâ”€â”€ README.md
+â”‚
+â”œâ”€â”€ apps/
+â”‚   â”œâ”€â”€ dashboard/                     # React + Vite dashboard  [Rida Zainab]
+â”‚   â”‚   â”œâ”€â”€ package.json
+â”‚   â”‚   â”œâ”€â”€ vite.config.ts
+â”‚   â”‚   â”œâ”€â”€ tsconfig.json
+â”‚   â”‚   â”œâ”€â”€ index.html
+â”‚   â”‚   â””â”€â”€ src/
+â”‚   â”‚       â”œâ”€â”€ main.tsx
+â”‚   â”‚       â”œâ”€â”€ App.tsx
+â”‚   â”‚       â”œâ”€â”€ api/
+â”‚   â”‚       â”‚   â””â”€â”€ client.ts          # All API calls
+â”‚   â”‚       â”œâ”€â”€ components/
+â”‚   â”‚       â”‚   â”œâ”€â”€ CaseList.tsx
+â”‚   â”‚       â”‚   â”œâ”€â”€ CaseDetail.tsx
+â”‚   â”‚       â”‚   â”œâ”€â”€ BugReportForm.tsx
+â”‚   â”‚       â”‚   â”œâ”€â”€ EvidencePanel.tsx
+â”‚   â”‚       â”‚   â”œâ”€â”€ PatchViewer.tsx
+â”‚   â”‚       â”‚   â””â”€â”€ BeforeAfterComparison.tsx
+â”‚   â”‚       â”œâ”€â”€ pages/
+â”‚   â”‚       â”‚   â”œâ”€â”€ CasesPage.tsx
+â”‚   â”‚       â”‚   â””â”€â”€ CaseDetailPage.tsx
+â”‚   â”‚       â””â”€â”€ types/
+â”‚   â”‚           â””â”€â”€ index.ts           # Re-exports shared types
+â”‚   â”‚
+â”‚   â””â”€â”€ minishop/                      # React + Vite demo app  [Sikander]
+â”‚       â”œâ”€â”€ package.json
+â”‚       â”œâ”€â”€ vite.config.ts
+â”‚       â”œâ”€â”€ tsconfig.json
+â”‚       â”œâ”€â”€ index.html
+â”‚       â””â”€â”€ src/
+â”‚           â”œâ”€â”€ main.tsx
+â”‚           â”œâ”€â”€ App.tsx
+â”‚           â”œâ”€â”€ components/
+â”‚           â”‚   â”œâ”€â”€ ProductList.tsx
+â”‚           â”‚   â”œâ”€â”€ ProductCard.tsx
+â”‚           â”‚   â”œâ”€â”€ Cart.tsx
+â”‚           â”‚   â””â”€â”€ CartItem.tsx
+â”‚           â”œâ”€â”€ pages/
+â”‚           â”‚   â”œâ”€â”€ ShopPage.tsx
+â”‚           â”‚   â””â”€â”€ CartPage.tsx
+â”‚           â”œâ”€â”€ store/
+â”‚           â”‚   â””â”€â”€ cartStore.ts       # Contains the seeded bug
+â”‚           â””â”€â”€ types/
+â”‚               â””â”€â”€ index.ts
+â”‚
+â”œâ”€â”€ services/
+â”‚   â””â”€â”€ api/                           # Node.js + Express  [Abdullah Ijaz]
+â”‚       â”œâ”€â”€ package.json
+â”‚       â”œâ”€â”€ tsconfig.json
+â”‚       â””â”€â”€ src/
+â”‚           â”œâ”€â”€ index.ts               # Entry point, Express app
+â”‚           â”œâ”€â”€ routes/
+â”‚           â”‚   â”œâ”€â”€ cases.ts           # Case CRUD endpoints
+â”‚           â”‚   â”œâ”€â”€ reproduce.ts       # Reproduction trigger
+â”‚           â”‚   â””â”€â”€ verify.ts          # Verification trigger
+â”‚           â”œâ”€â”€ storage/
+â”‚           â”‚   â””â”€â”€ caseStore.ts       # JSON file read/write
+â”‚           â”œâ”€â”€ runner/
+â”‚           â”‚   â””â”€â”€ playwrightRunner.ts # spawn + parse results
+â”‚           â””â”€â”€ types/
+â”‚               â””â”€â”€ index.ts           # Types re-exported from shared
+â”‚
+â”œâ”€â”€ packages/
+â”‚   â””â”€â”€ shared-types/                  # Shared TS contracts  [frozen before Day 1 parallel work]
+â”‚       â”œâ”€â”€ package.json
+â”‚       â””â”€â”€ src/
+â”‚           â””â”€â”€ index.ts               # BugCase, Reproduction, Patch, Evidence, etc.
+â”‚
+â”œâ”€â”€ tests/
+â”‚   â””â”€â”€ playwright/                    # Playwright tests  [Sikander]
+â”‚       â”œâ”€â”€ package.json
+â”‚       â”œâ”€â”€ playwright.config.ts
+â”‚       â””â”€â”€ cases/
+â”‚           â”œâ”€â”€ case-001-cart-total.spec.ts   # Primary demo test
+â”‚           â””â”€â”€ helpers/
+â”‚               â””â”€â”€ minishop.ts        # Page-object helpers
+â”‚
+â”œâ”€â”€ data/
+â”‚   â””â”€â”€ cases/
+â”‚       â””â”€â”€ case-001.json              # Seeded demo case (committed)
+â”‚
+â”œâ”€â”€ artifacts/                         # Git-ignored test artifacts
+â”‚   â””â”€â”€ .gitkeep
+â”‚
+â”œâ”€â”€ docs/
+â”‚   â””â”€â”€ demo-script.md
+â”‚
+â””â”€â”€ plans/
+    â””â”€â”€ bug-to-proof-plan.md           # This file
 ```
 
 ---
@@ -338,13 +338,13 @@ bug-to-proof/
 REPORTED
 READY_TO_REPRODUCE    (reproduction steps are set; waiting for run trigger)
 REPRODUCING           (Playwright spawned; test running)
-REPRODUCED            (test ran and failed as expected — bug confirmed)
-REPRODUCTION_FAILED   (test ran but passed — bug not reproduced, or test error)
+REPRODUCED            (test ran and failed as expected â€” bug confirmed)
+REPRODUCTION_FAILED   (test ran but passed â€” bug not reproduced, or test error)
 PATCH_PROPOSED        (Bob has proposed a patch; awaiting approval)
 PATCH_APPLIED         (patch has been applied to source; awaiting verification)
 VERIFYING             (Playwright spawned for verification run)
-VERIFIED              (test now passes — bug fixed and proved)
-VERIFICATION_FAILED   (test still fails after patch — fix incomplete)
+VERIFIED              (test now passes â€” bug fixed and proved)
+VERIFICATION_FAILED   (test still fails after patch â€” fix incomplete)
 ```
 
 ### 6.6 Shared TypeScript Types Location
@@ -384,7 +384,7 @@ Static files for artifacts served at: `http://localhost:3001/artifacts/<path>`
 
 #### `PATCH /api/cases/:id`
 - Updates specific fields of a case (used by Bob workflow to record patch, change status)
-- Request body: partial `BugCase` — allowed fields: `status`, `patch`, `reproduction`
+- Request body: partial `BugCase` â€” allowed fields: `status`, `patch`, `reproduction`
 - Response `200`: updated `BugCase`
 - Validation: `id` must match known case; `status` must be a valid enum value
 - Side effect: overwrites `data/cases/<id>.json`
@@ -403,9 +403,9 @@ Static files for artifacts served at: `http://localhost:3001/artifacts/<path>`
 - Request body: none
 - Pre-condition: case must have `reproduction.testFile` defined
 - Side effects:
-  - Sets case status → `REPRODUCING`
+  - Sets case status â†’ `REPRODUCING`
   - Spawns `npx playwright test <testFile>` with env `PHASE=before`
-  - On completion: parses result, saves evidence, sets status → `REPRODUCED` or `REPRODUCTION_FAILED`
+  - On completion: parses result, saves evidence, sets status â†’ `REPRODUCED` or `REPRODUCTION_FAILED`
   - Writes artifacts to `artifacts/<id>/before/`
   - Appends evidence items to `case.evidence`
   - Sets `reproduction.lastRun`
@@ -424,9 +424,9 @@ Static files for artifacts served at: `http://localhost:3001/artifacts/<path>`
 - Triggers Playwright verification run (same test, after patch)
 - Pre-condition: case status must be `PATCH_APPLIED`
 - Side effects:
-  - Sets case status → `VERIFYING`
+  - Sets case status â†’ `VERIFYING`
   - Spawns `npx playwright test <testFile>` with env `PHASE=after`
-  - On completion: parses result, saves evidence, sets status → `VERIFIED` or `VERIFICATION_FAILED`
+  - On completion: parses result, saves evidence, sets status â†’ `VERIFIED` or `VERIFICATION_FAILED`
   - Writes artifacts to `artifacts/<id>/after/`
   - Appends evidence items to `case.evidence`
   - Sets `verification.afterRun` and `verification.comparison`
@@ -480,8 +480,8 @@ The same spec file is used for both before and after runs. The `PHASE` environme
 controls where artifacts are saved:
 
 ```
-PHASE=before  → artifacts/case-001/before/
-PHASE=after   → artifacts/case-001/after/
+PHASE=before  â†’ artifacts/case-001/before/
+PHASE=after   â†’ artifacts/case-001/after/
 ```
 
 The spec file reads `process.env.PHASE` (via Playwright's env pass-through) to set
@@ -523,9 +523,9 @@ Trace path: `artifacts/${caseId}/${phase}/trace.zip`
 artifacts/
   case-001/
     before/
-      screenshot.png      ← Playwright saveScreenshot
-      trace.zip           ← Playwright trace
-      result.json         ← Raw Playwright JSON output
+      screenshot.png      â† Playwright saveScreenshot
+      trace.zip           â† Playwright trace
+      result.json         â† Raw Playwright JSON output
     after/
       screenshot.png
       trace.zip
@@ -573,8 +573,8 @@ http://localhost:3001/artifacts/case-001/before/screenshot.png
 The dashboard computes the comparison from `verification.beforeRun` and `verification.afterRun`:
 
 ```
-beforeRun.passed === false && afterRun.passed === true → "FIXED"
-beforeRun.passed === false && afterRun.passed === false → "NOT_FIXED"
+beforeRun.passed === false && afterRun.passed === true â†’ "FIXED"
+beforeRun.passed === false && afterRun.passed === false â†’ "NOT_FIXED"
 ```
 
 The comparison panel shows both screenshots side-by-side.
@@ -599,7 +599,7 @@ System state: case status = REPRODUCED
 4. Bob identifies the defective line
 5. Bob proposes a patch (unified diff)
 6. Developer reviews the patch in Bob
-7. Developer approves — Bob applies the patch to cartStore.ts
+7. Developer approves â€” Bob applies the patch to cartStore.ts
 8. Developer calls the API to record the patch and advance the status:
 
    PATCH /api/cases/case-001
@@ -615,7 +615,7 @@ System state: case status = REPRODUCED
      }
    }
 
-9. Dashboard refreshes — case shows PATCH_APPLIED
+9. Dashboard refreshes â€” case shows PATCH_APPLIED
 10. Developer clicks "Run Verification"
 ```
 
@@ -623,7 +623,7 @@ System state: case status = REPRODUCED
 
 - Bob reads the repository (standard IDE behavior)
 - Bob edits source files (standard IDE behavior)
-- The API is just a REST call — can be triggered from the dashboard or from Bob's terminal
+- The API is just a REST call â€” can be triggered from the dashboard or from Bob's terminal
 - No undocumented or fictional Bob APIs are involved
 
 ---
@@ -641,31 +641,31 @@ System state: case status = REPRODUCED
 | Actions | View button |
 
 Status badge colors:
-- `REPORTED` → gray
-- `REPRODUCING` / `VERIFYING` → blue (pulsing)
-- `REPRODUCED` → red
-- `VERIFIED` → green
-- `*_FAILED` → orange
+- `REPORTED` â†’ gray
+- `REPRODUCING` / `VERIFYING` â†’ blue (pulsing)
+- `REPRODUCED` â†’ red
+- `VERIFIED` â†’ green
+- `*_FAILED` â†’ orange
 
 ### 11.2 Case Detail Page (`/cases/:id`)
 
 Sections rendered in order:
 
-1. **Bug Report** — title, description, created date
-2. **Reproduction Steps** — ordered list of steps, expected vs actual
-3. **Reproduction Result** — `Run Reproduction` button or last result
-4. **Failure Evidence** — screenshot thumbnail, trace download link (before phase)
-5. **Proposed Patch** — diff viewer, summary, reasoning (if patch exists)
-6. **Patch Status** — PROPOSED / APPLIED badge; `Mark as Applied` button
-7. **Verification Result** — `Run Verification` button (enabled only if PATCH_APPLIED)
-8. **Before/After Comparison** — side-by-side screenshots + pass/fail badges
+1. **Bug Report** â€” title, description, created date
+2. **Reproduction Steps** â€” ordered list of steps, expected vs actual
+3. **Reproduction Result** â€” `Run Reproduction` button or last result
+4. **Failure Evidence** â€” screenshot thumbnail, trace download link (before phase)
+5. **Proposed Patch** â€” diff viewer, summary, reasoning (if patch exists)
+6. **Patch Status** â€” PROPOSED / APPLIED badge; `Mark as Applied` button
+7. **Verification Result** â€” `Run Verification` button (enabled only if PATCH_APPLIED)
+8. **Before/After Comparison** â€” side-by-side screenshots + pass/fail badges
 
 ### 11.3 Bug Report Form
 
 Simple modal or page with:
 - Title (required)
 - Description (required, multiline)
-- Submit → `POST /api/cases`
+- Submit â†’ `POST /api/cases`
 - After creation, redirect to case detail page
 
 ### 11.4 Polling Behavior
@@ -682,13 +682,13 @@ While `status === "REPRODUCING" || status === "VERIFYING"`:
 ### 12.1 Scope
 
 MiniShop is a minimal React shopping app. It exists solely to be the target of Bug-to-Proof.
-It does not need a backend — it is entirely client-side with hard-coded product data.
+It does not need a backend â€” it is entirely client-side with hard-coded product data.
 
 ### 12.2 Pages
 
 | Page | Route | Description |
 |------|-------|-------------|
-| Shop | `/` | Grid of 4–6 products with "Add to Cart" buttons |
+| Shop | `/` | Grid of 4â€“6 products with "Add to Cart" buttons |
 | Cart | `/cart` | List of cart items, quantities, per-item price, total |
 
 ### 12.3 Product Catalog (Hard-coded)
@@ -724,7 +724,7 @@ MiniShop MUST include `data-testid` attributes for Playwright:
 | Cart item quantity | `cart-item-quantity-{productId}` |
 | Checkout button | `checkout-button` |
 
-These must be agreed upon before Rida Zainab writes the Playwright spec.
+These must be agreed upon before Sikander writes the Playwright spec.
 
 ---
 
@@ -762,23 +762,23 @@ const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
 | Scenario | Buggy Total | Correct Total |
 |----------|------------|---------------|
-| Keyboard only ($10) | $10.00 ✓ | $10.00 |
-| Keyboard + Mouse Pad | $10.00 ✗ | $30.00 |
-| Keyboard + USB Hub | $10.00 ✗ | $25.00 |
+| Keyboard only ($10) | $10.00 âœ“ | $10.00 |
+| Keyboard + Mouse Pad | $10.00 âœ— | $30.00 |
+| Keyboard + USB Hub | $10.00 âœ— | $25.00 |
 
-The test uses Keyboard ($10) + Mouse Pad ($20) → expects $30.00.
+The test uses Keyboard ($10) + Mouse Pad ($20) â†’ expects $30.00.
 
-### 13.3 Secondary Bug (Optional — only if time permits)
+### 13.3 Secondary Bug (Optional â€” only if time permits)
 
 **Quantity update bug:** Incrementing quantity of an item does not update the total.
 
-Only include if the primary demo is complete and stable with ≥1 hour buffer.
+Only include if the primary demo is complete and stable with â‰¥1 hour buffer.
 
 ---
 
 ## 14. Three-Person Work Division
 
-### Sikander — Dashboard
+### Rida Zainab â€” Dashboard
 
 **Owns:** `apps/dashboard/`
 
@@ -802,7 +802,7 @@ Only include if the primary demo is complete and stable with ≥1 hour buffer.
 
 ---
 
-### Abdullah Ijaz — Backend API
+### Abdullah Ijaz â€” Backend API
 
 **Owns:** `services/api/`
 
@@ -818,7 +818,7 @@ Only include if the primary demo is complete and stable with ≥1 hour buffer.
 
 **Dependencies on others:**
 - Needs shared types (co-authors during Milestone 0)
-- Needs MiniShop running for integration testing (after Rida Zainab sets it up)
+- Needs MiniShop running for integration testing (after Sikander sets it up)
 
 **Does NOT touch:**
 - `apps/dashboard/`
@@ -827,7 +827,7 @@ Only include if the primary demo is complete and stable with ≥1 hour buffer.
 
 ---
 
-### Rida Zainab — MiniShop + Playwright
+### Sikander â€” MiniShop + Playwright
 
 **Owns:** `apps/minishop/` and `tests/playwright/`
 
@@ -855,13 +855,13 @@ Only include if the primary demo is complete and stable with ≥1 hour buffer.
 
 | File / Directory | Primary Owner | Shared Access | Conflict Risk |
 |-----------------|---------------|---------------|---------------|
-| `apps/dashboard/` | Sikander | Read types | Very Low |
-| `apps/minishop/` | Rida Zainab | None | Very Low |
+| `apps/dashboard/` | Rida Zainab | Read types | Very Low |
+| `apps/minishop/` | Sikander | None | Very Low |
 | `services/api/src/routes/` | Abdullah Ijaz | None | Very Low |
-| `services/api/src/runner/playwrightRunner.ts` | Abdullah Ijaz | Rida Zainab reviews | Low |
-| `tests/playwright/` | Rida Zainab | None | Very Low |
-| `packages/shared-types/src/index.ts` | **All agree, Abdullah Ijaz commits** | All consume | **HIGH — freeze early** |
-| `data/cases/case-001.json` | Rida Zainab seeds, Abdullah Ijaz format | Dashboard reads | Medium |
+| `services/api/src/runner/playwrightRunner.ts` | Abdullah Ijaz | Sikander reviews | Low |
+| `tests/playwright/` | Sikander | None | Very Low |
+| `packages/shared-types/src/index.ts` | **All agree, Abdullah Ijaz commits** | All consume | **HIGH â€” freeze early** |
+| `data/cases/case-001.json` | Sikander seeds, Abdullah Ijaz format | Dashboard reads | Medium |
 | `artifacts/` | Runtime-generated, no source ownership | All read | Low |
 | `package.json` (root) | **One person sets up workspaces** | All add workspace | Medium |
 | `tsconfig.base.json` | Abdullah Ijaz sets up | All extend | Low |
@@ -875,7 +875,7 @@ Only include if the primary demo is complete and stable with ≥1 hour buffer.
 
 **These must be agreed upon and committed before parallel development begins (Milestone 0).**
 
-### 16.1 Shared TypeScript Types — `packages/shared-types/src/index.ts`
+### 16.1 Shared TypeScript Types â€” `packages/shared-types/src/index.ts`
 
 ```typescript
 export type CaseStatus =
@@ -992,7 +992,7 @@ LLM_ENABLED=true
 ```
 
 `LLM_ENABLED=false` disables all LLM calls and the system falls back gracefully.
-The system is **fully functional without an API key** — all three LLM calls are optional
+The system is **fully functional without an API key** â€” all three LLM calls are optional
 enhancements. If `LLM_API_KEY` is absent or empty, the LLM client automatically treats
 it as disabled and logs a warning rather than throwing. No feature breaks; LLM-populated
 fields simply remain at their fallback values.
@@ -1014,7 +1014,7 @@ fields simply remain at their fallback values.
 
 ### 16.6 MiniShop data-testid Contract
 
-Agreed before Rida Zainab writes tests and Sikander builds any linking UI:
+Agreed before Sikander writes tests and Rida Zainab builds any linking UI:
 
 ```
 add-to-cart-{productId}     e.g. add-to-cart-1
@@ -1032,37 +1032,37 @@ checkout-button
 
 ```
 main
-├── feature/contracts      ← All three work here during Milestone 0 (very short-lived)
-├── feature/dashboard      ← Sikander
-├── feature/api            ← Abdullah Ijaz
-└── feature/playwright-minishop  ← Rida Zainab
+â”œâ”€â”€ feature/contracts      â† All three work here during Milestone 0 (very short-lived)
+â”œâ”€â”€ feature/dashboard      â† Rida Zainab
+â”œâ”€â”€ feature/api            â† Abdullah Ijaz
+â””â”€â”€ feature/playwright-minishop  â† Sikander
 ```
 
 ### 17.2 Merge Order
 
 ```
-Step 1: Merge feature/contracts → main  (before anyone diverges)
+Step 1: Merge feature/contracts â†’ main  (before anyone diverges)
 Step 2: All three branches fork from updated main
 Step 3: Parallel development
-Step 4: Merge feature/api → main first  (lowest dashboard dependency)
-Step 5: Merge feature/playwright-minishop → main
-Step 6: Merge feature/dashboard → main
+Step 4: Merge feature/api â†’ main first  (lowest dashboard dependency)
+Step 5: Merge feature/playwright-minishop â†’ main
+Step 6: Merge feature/dashboard â†’ main
 Step 7: Integration testing on main
 ```
 
 ### 17.3 Rules
 
-- **Only one person touches `packages/shared-types/src/index.ts`** — Abdullah Ijaz commits, others pull
-- **Only one person sets up root `package.json`** — Abdullah Ijaz owns, others create PRs for workspace additions
-- **`data/cases/case-001.json`** — Rida Zainab creates after schema is frozen, commits once
-- **No one auto-merges** — brief review before each merge
-- **Resolve conflicts on API types immediately** — do not let drift accumulate
-- **README.md** — each member writes their section in a separate file (`docs/section-api.md` etc.), final assembly at end
+- **Only one person touches `packages/shared-types/src/index.ts`** â€” Abdullah Ijaz commits, others pull
+- **Only one person sets up root `package.json`** â€” Abdullah Ijaz owns, others create PRs for workspace additions
+- **`data/cases/case-001.json`** â€” Sikander creates after schema is frozen, commits once
+- **No one auto-merges** â€” brief review before each merge
+- **Resolve conflicts on API types immediately** â€” do not let drift accumulate
+- **README.md** â€” each member writes their section in a separate file (`docs/section-api.md` etc.), final assembly at end
 
 ### 17.4 How to Avoid `package.json` Conflicts
 
 Each workspace `package.json` is owned by that member. Root `package.json` only needs
-workspace paths added — use separate commits/PRs with clear messaging.
+workspace paths added â€” use separate commits/PRs with clear messaging.
 
 ---
 
@@ -1070,20 +1070,20 @@ workspace paths added — use separate commits/PRs with clear messaging.
 
 ```
 Milestone 0: Shared Contracts
-        ↓              ↓              ↓
+        â†“              â†“              â†“
   Dashboard         API          MiniShop+PW
   (M1 branch)    (M2 branch)    (M3 branch)
-        ↓              ↓              ↓
+        â†“              â†“              â†“
   React shell    Express setup   MiniShop app
   Components     Case CRUD       Seeded bug
   API client     JSON storage    PW spec
   Evidence UI    Runner          Artifacts
-        ↓              ↓              ↓
-        └──────────────┼──────────────┘
-                       ↓
+        â†“              â†“              â†“
+        â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                       â†“
                 Integration test
                 (end-to-end demo)
-                       ↓
+                       â†“
                    Demo polish
 ```
 
@@ -1094,7 +1094,7 @@ Milestone 0: Shared Contracts
 
 ## 19. Day 1 Plan
 
-### Milestone 0 — Architecture & Contracts (All three members, ~2 hours)
+### Milestone 0 â€” Architecture & Contracts (All three members, ~2 hours)
 
 **Objective:** Establish the shared foundation so parallel work can begin.
 
@@ -1117,9 +1117,9 @@ Milestone 0: Shared Contracts
 
 ---
 
-### Milestone 1 — Foundation (All members, rest of Day 1)
+### Milestone 1 â€” Foundation (All members, rest of Day 1)
 
-#### Sikander — Dashboard Shell
+#### Rida Zainab â€” Dashboard Shell
 
 **Tasks:**
 1. Scaffold `apps/dashboard/` with `npm create vite@latest`
@@ -1148,7 +1148,7 @@ Milestone 0: Shared Contracts
 
 ---
 
-#### Abdullah Ijaz — API Foundation
+#### Abdullah Ijaz â€” API Foundation
 
 **Tasks:**
 1. Scaffold `services/api/` with Express + TypeScript
@@ -1176,7 +1176,7 @@ Milestone 0: Shared Contracts
 
 ---
 
-#### Rida Zainab — MiniShop Foundation
+#### Sikander â€” MiniShop Foundation
 
 **Tasks:**
 1. Scaffold `apps/minishop/` with `npm create vite@latest`
@@ -1209,9 +1209,9 @@ Milestone 0: Shared Contracts
 
 ## 20. Day 2 Plan
 
-### Milestone 2 — Core Workflow
+### Milestone 2 â€” Core Workflow
 
-#### Sikander — Dashboard: Connect to API
+#### Rida Zainab â€” Dashboard: Connect to API
 
 **Tasks:**
 1. Replace mock data in `api/client.ts` with real `fetch` calls to `localhost:3001`
@@ -1238,7 +1238,7 @@ Milestone 0: Shared Contracts
 
 ---
 
-#### Abdullah Ijaz — API: Reproduction & Runner
+#### Abdullah Ijaz â€” API: Reproduction & Runner
 
 **Tasks:**
 1. Create `runner/playwrightRunner.ts` with spawn logic, result parsing, artifact saving
@@ -1259,12 +1259,12 @@ Milestone 0: Shared Contracts
 
 **Acceptance Criteria:**
 - POST /api/cases/case-001/reproduce spawns Playwright and returns 202
-- Case status transitions correctly through REPRODUCING → REPRODUCED
+- Case status transitions correctly through REPRODUCING â†’ REPRODUCED
 - Evidence items are saved and accessible via GET /api/cases/:id/evidence
 
 ---
 
-#### Rida Zainab — Playwright Spec & Evidence
+#### Sikander â€” Playwright Spec & Evidence
 
 **Tasks:**
 1. Scaffold `tests/playwright/` with `npm init playwright`
@@ -1296,9 +1296,9 @@ Milestone 0: Shared Contracts
 
 ---
 
-### Milestone 3 — Patch Workflow (Day 2 afternoon)
+### Milestone 3 â€” Patch Workflow (Day 2 afternoon)
 
-#### Sikander — Dashboard: Patch Visualization
+#### Rida Zainab â€” Dashboard: Patch Visualization
 
 **Tasks:**
 1. Build `PatchViewer` component: renders unified diff with syntax highlighting
@@ -1322,7 +1322,7 @@ Milestone 0: Shared Contracts
 
 ---
 
-#### Abdullah Ijaz — API: Patch State Handling
+#### Abdullah Ijaz â€” API: Patch State Handling
 
 **Tasks:**
 1. Validate PATCH /api/cases/:id accepts `patch` object and `status` change
@@ -1341,7 +1341,7 @@ Milestone 0: Shared Contracts
 
 ---
 
-#### Rida Zainab — Fix the Bug + After Run
+#### Sikander â€” Fix the Bug + After Run
 
 **Tasks:**
 1. Create a separate git branch `demo/patched-minishop` with the fix applied
@@ -1363,11 +1363,11 @@ Milestone 0: Shared Contracts
 
 ## 21. Day 3 / Final Polish Plan
 
-### Milestone 4 — Demo Polish (All members)
+### Milestone 4 â€” Demo Polish (All members)
 
 **Objective:** Make the demo reliable and visually impressive for judges.
 
-#### Sikander — UX Polish
+#### Rida Zainab â€” UX Polish
 
 **Tasks:**
 1. Status badge animations (pulse on REPRODUCING/VERIFYING)
@@ -1376,11 +1376,11 @@ Milestone 0: Shared Contracts
 4. Responsive layout check
 5. Test the full end-to-end flow in the browser
 6. Add a "Demo Reset" button that resets case-001 to REPRODUCED status
-   (calls PATCH /api/cases/case-001 with status reset — for judge demo repeatability)
+   (calls PATCH /api/cases/case-001 with status reset â€” for judge demo repeatability)
 
 ---
 
-#### Abdullah Ijaz — Integration & Demo Setup
+#### Abdullah Ijaz â€” Integration & Demo Setup
 
 **Tasks:**
 1. Final integration test with all three services running
@@ -1392,12 +1392,12 @@ Milestone 0: Shared Contracts
 
 ---
 
-#### Rida Zainab — Playwright & Evidence Final
+#### Sikander â€” Playwright & Evidence Final
 
 **Tasks:**
 1. Ensure `case-001-cart-total.spec.ts` is stable and deterministic
 2. Verify artifacts are committed and serve correctly from API
-3. Run the full live workflow end-to-end (trigger via dashboard → run → verify)
+3. Run the full live workflow end-to-end (trigger via dashboard â†’ run â†’ verify)
 4. Write `docs/demo-script.md`
 
 ---
@@ -1427,18 +1427,18 @@ Kept minimal. Only where logic is non-trivial:
 
 Two scenarios are required:
 
-**Scenario A — Bug Reproduction:**
+**Scenario A â€” Bug Reproduction:**
 - Against unpatched MiniShop
 - `case-001-cart-total.spec.ts` must FAIL
 - Must produce screenshot showing $10.00
 
-**Scenario B — Bug Verification:**
+**Scenario B â€” Bug Verification:**
 - Against patched MiniShop
 - Same `case-001-cart-total.spec.ts` must PASS
 - Must produce screenshot showing $30.00
 
 **Why the same spec file is reused:** If a different test were written for verification,
-the "proof" would be questionable — it might be testing something else. Using the
+the "proof" would be questionable â€” it might be testing something else. Using the
 identical test file guarantees the fix actually addresses the reproduction scenario.
 
 ---
@@ -1449,8 +1449,8 @@ identical test file guarantees the fix actually addresses the reproduction scena
 |----------|-------------|-------------------|
 | MiniShop not running | 409 `{ error: "MiniShop unreachable at port 5174" }` | "Start MiniShop first" banner |
 | Test file not found | 500 `{ error: "Test file not found" }` | Error card in Reproduction section |
-| Playwright process crashes | Status → REPRODUCTION_FAILED | "Reproduction Failed" badge |
-| Test passes when bug expected | Status → REPRODUCTION_FAILED | "Bug not reproduced — test passed unexpectedly" |
+| Playwright process crashes | Status â†’ REPRODUCTION_FAILED | "Reproduction Failed" badge |
+| Test passes when bug expected | Status â†’ REPRODUCTION_FAILED | "Bug not reproduced â€” test passed unexpectedly" |
 | Evidence file missing | 404 on artifact endpoint | "Evidence unavailable" placeholder |
 | Case JSON corrupted | 500 on read | Error state with case ID shown |
 | Invalid case ID in URL | 404 `{ error: "Case not found" }` | "Case not found" page |
@@ -1480,19 +1480,19 @@ The MVP is complete when a developer can:
 2. Open `http://localhost:5173`
 3. See the seeded bug case (case-001) in the list
 4. Click into the case and read the bug description
-5. Click "Run Reproduction" → case transitions to REPRODUCING → then REPRODUCED
+5. Click "Run Reproduction" â†’ case transitions to REPRODUCING â†’ then REPRODUCED
 6. See a failure screenshot showing `$10.00` instead of `$30.00`
 7. See the proposed patch with the unified diff
-8. Click "Mark as Applied" → case transitions to PATCH_APPLIED
-9. Click "Run Verification" → case transitions to VERIFYING → then VERIFIED
+8. Click "Mark as Applied" â†’ case transitions to PATCH_APPLIED
+9. Click "Run Verification" â†’ case transitions to VERIFYING â†’ then VERIFIED
 10. See a success screenshot showing `$30.00`
 11. See the before/after comparison side-by-side
-12. Refresh the browser — case is still there (persisted in JSON)
+12. Refresh the browser â€” case is still there (persisted in JSON)
 13. The demo can be repeated reliably without breaking
 
 ---
 
-## 26. 2–3 Minute Demo Script
+## 26. 2â€“3 Minute Demo Script
 
 **Setup (before judging):**
 - All three services running: `npm run dev`
@@ -1505,31 +1505,31 @@ The MVP is complete when a developer can:
 
 > "We're going to show you how Bug-to-Proof turns a plain bug report into verified evidence."
 
-**[30 seconds — The Problem]**
+**[30 seconds â€” The Problem]**
 1. Show MiniShop tab: "This is MiniShop, a simple shopping app."
 2. Add Mechanical Keyboard to cart
 3. Add Mouse Pad to cart
-4. Show cart total: "$10.00" — "The total should be $30.00, but something is wrong."
+4. Show cart total: "$10.00" â€” "The total should be $30.00, but something is wrong."
 
-**[30 seconds — The Report]**
+**[30 seconds â€” The Report]**
 5. Switch to Bug-to-Proof dashboard
 6. Point to existing case-001: "We've filed a bug report. The system created a case."
 7. Show the reproduction steps: "Here are the exact steps to reproduce it."
 
-**[30 seconds — Reproduction]**
+**[30 seconds â€” Reproduction]**
 8. Click "Run Reproduction"
 9. Watch the status badge pulse to REPRODUCING
-10. Show the REPRODUCED state: "Playwright ran our test — it failed."
+10. Show the REPRODUCED state: "Playwright ran our test â€” it failed."
 11. Show the failure screenshot: "Expected $30.00, got $10.00. That's the bug. Proved."
 
-**[30 seconds — The Fix]**
+**[30 seconds â€” The Fix]**
 12. "We opened IBM Bob, investigated the cart store, and found the bug."
 13. Show the patch diff in the dashboard: "One line. Total was only reading the first item."
 14. Click "Mark as Applied": "The fix is in."
 
-**[30 seconds — Verification]**
+**[30 seconds â€” Verification]**
 15. Click "Run Verification"
-16. Watch status → VERIFIED
+16. Watch status â†’ VERIFIED
 17. Show the passing screenshot: "$30.00. Test passed."
 18. Show the before/after comparison: "Same test. Before: failed. After: passed."
 
@@ -1572,7 +1572,7 @@ The following are explicitly NOT part of this hackathon MVP:
 - Fully autonomous software engineering agent
 - Issue tracker integrations (Jira, GitHub Issues)
 - Automatic LLM-driven test generation at runtime
-- Secondary demo bug (unless primary is complete with ≥1h buffer)
+- Secondary demo bug (unless primary is complete with â‰¥1h buffer)
 
 ---
 
@@ -1581,48 +1581,48 @@ The following are explicitly NOT part of this hackathon MVP:
 Follow this exact sequence to minimize integration risk:
 
 ```
-Hour 0–2  (All together)
-  └─ Milestone 0: Define and commit shared contracts to main
-     ├─ shared-types package
-     ├─ API response shapes
-     ├─ data-testid naming
-     ├─ artifact path convention
-     └─ port assignments
+Hour 0â€“2  (All together)
+  â””â”€ Milestone 0: Define and commit shared contracts to main
+     â”œâ”€ shared-types package
+     â”œâ”€ API response shapes
+     â”œâ”€ data-testid naming
+     â”œâ”€ artifact path convention
+     â””â”€ port assignments
 
-Hour 2–8  (Parallel, Day 1)
-  ├─ Sikander: Dashboard shell + mock API client
-  ├─ Abdullah Ijaz: Express API + case CRUD + JSON storage + seeded case
-  └─ Rida Zainab: MiniShop + seeded bug + manual verification
+Hour 2â€“8  (Parallel, Day 1)
+  â”œâ”€ Rida Zainab: Dashboard shell + mock API client
+  â”œâ”€ Abdullah Ijaz: Express API + case CRUD + JSON storage + seeded case
+  â””â”€ Sikander: MiniShop + seeded bug + manual verification
 
-Hour 8–16  (Parallel, Day 2)
-  ├─ Sikander: Connect dashboard to real API, polling, evidence panel
-  ├─ Abdullah Ijaz: Playwright runner + reproduce/verify routes
-  └─ Rida Zainab: Playwright spec, failure artifacts, patch, after artifacts
+Hour 8â€“16  (Parallel, Day 2)
+  â”œâ”€ Rida Zainab: Connect dashboard to real API, polling, evidence panel
+  â”œâ”€ Abdullah Ijaz: Playwright runner + reproduce/verify routes
+  â””â”€ Sikander: Playwright spec, failure artifacts, patch, after artifacts
 
-Hour 16–20  (Parallel, Day 2 afternoon)
-  ├─ Sikander: Patch viewer + before/after comparison + verification UI
-  ├─ Abdullah Ijaz: Final state machine + patch state handling + demo reset API
-  └─ Rida Zainab: Verify full Playwright flow, seed final artifacts
+Hour 16â€“20  (Parallel, Day 2 afternoon)
+  â”œâ”€ Rida Zainab: Patch viewer + before/after comparison + verification UI
+  â”œâ”€ Abdullah Ijaz: Final state machine + patch state handling + demo reset API
+  â””â”€ Sikander: Verify full Playwright flow, seed final artifacts
 
-Hour 20–24  (All together, Day 3)
-  └─ Integration: merge branches, run end-to-end, fix integration issues
-     ├─ Demo reset button works
-     ├─ All artifacts serve correctly
-     └─ Full happy path passes
+Hour 20â€“24  (All together, Day 3)
+  â””â”€ Integration: merge branches, run end-to-end, fix integration issues
+     â”œâ”€ Demo reset button works
+     â”œâ”€ All artifacts serve correctly
+     â””â”€ Full happy path passes
 
-Hour 24–30  (Polish, Day 3)
-  ├─ Sikander: UI polish, error states, responsive check
-  ├─ Abdullah Ijaz: README, demo script, npm run demo
-  └─ Rida Zainab: Playwright reliability, final artifact commit
+Hour 24â€“30  (Polish, Day 3)
+  â”œâ”€ Rida Zainab: UI polish, error states, responsive check
+  â”œâ”€ Abdullah Ijaz: README, demo script, npm run demo
+  â””â”€ Sikander: Playwright reliability, final artifact commit
 
-Hour 30–36  (Buffer + rehearsal)
-  └─ Full demo run x3, fix any remaining issues
+Hour 30â€“36  (Buffer + rehearsal)
+  â””â”€ Full demo run x3, fix any remaining issues
 ```
 
 **Critical path** (cannot be parallelized):
 
 ```
-Shared Types → API Case Storage → Playwright Runner → Evidence Artifacts → Dashboard Evidence Panel → Before/After Proof
+Shared Types â†’ API Case Storage â†’ Playwright Runner â†’ Evidence Artifacts â†’ Dashboard Evidence Panel â†’ Before/After Proof
 ```
 
 **All other work is parallel after the contracts are frozen.**
@@ -1643,9 +1643,9 @@ No LLM call is on the critical path. The system is fully functional without them
 
 ---
 
-### 29.2 LLM Call 1 — Bug Report Structuring
+### 29.2 LLM Call 1 â€” Bug Report Structuring
 
-**Trigger:** `POST /api/cases` — immediately after the case is created from a plain-language report.
+**Trigger:** `POST /api/cases` â€” immediately after the case is created from a plain-language report.
 
 **Purpose:** Convert the free-text `description` into a structured `reproduction` object
 with inferred preconditions, steps, expected result, and actual result.
@@ -1674,7 +1674,7 @@ developer to fill in via `PATCH /api/cases/:id`.
 
 ---
 
-### 29.3 LLM Call 2 — Patch Summary Generation
+### 29.3 LLM Call 2 â€” Patch Summary Generation
 
 **Trigger:** `PATCH /api/cases/:id` when `patch.diff` is provided for the first time
 (i.e., when Bob stores the diff after investigation).
@@ -1705,7 +1705,7 @@ Diff:
 
 ---
 
-### 29.4 LLM Call 3 — Root Cause Explanation
+### 29.4 LLM Call 3 â€” Root Cause Explanation
 
 **Trigger:** When the case transitions to `REPRODUCED` (after Playwright confirms the failure).
 
@@ -1739,9 +1739,9 @@ Reproduction actual: "{reproduction.actual}"
 Responsibilities:
 - Read `LLM_API_URL`, `LLM_API_KEY`, `LLM_MODEL`, `LLM_ENABLED` from env
 - Export a single function: `callLLM(prompt: string, timeoutMs?: number): Promise<string>`
-- **If `LLM_API_KEY` is absent/empty or `LLM_ENABLED !== "true"`, return `""` immediately** — no network call, no error
+- **If `LLM_API_KEY` is absent/empty or `LLM_ENABLED !== "true"`, return `""` immediately** â€” no network call, no error
 - Return empty string and log a warning on any error (network failure, timeout, invalid JSON, non-2xx response)
-- Never throw — always return a safe fallback value
+- Never throw â€” always return a safe fallback value
 - 10 second timeout by default; callers can override
 
 This file is the single integration point. Swapping providers requires only changing this file.
@@ -1780,24 +1780,24 @@ parallel work begins.
 | `services/api/src/llm/client.ts` | Abdullah Ijaz |
 | LLM calls in `routes/cases.ts` | Abdullah Ijaz |
 | LLM call in reproduce route | Abdullah Ijaz |
-| `rootCauseExplanation` display in dashboard | Sikander |
+| `rootCauseExplanation` display in dashboard | Rida Zainab |
 | `.env.example` LLM vars | Abdullah Ijaz |
 
 ---
 
 ### 29.9 Dashboard Display of LLM Output
 
-Sikander adds the following to the **Bug Report** section of the case detail page:
+Rida Zainab adds the following to the **Bug Report** section of the case detail page:
 
 ```
-┌──────────────────────────────────────────────────┐
-│ Root Cause                                        │
-│                                                   │
-│ The cart total calculation in cartStore.ts reads  │
-│ only the first item's price rather than summing   │
-│ all items. This means adding any second product   │
-│ leaves the total unchanged from the initial item. │
-└──────────────────────────────────────────────────┘
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚ Root Cause                                        â”‚
+â”‚                                                   â”‚
+â”‚ The cart total calculation in cartStore.ts reads  â”‚
+â”‚ only the first item's price rather than summing   â”‚
+â”‚ all items. This means adding any second product   â”‚
+â”‚ leaves the total unchanged from the initial item. â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
 If `rootCauseExplanation` is null, this section is hidden.
@@ -1808,32 +1808,32 @@ If `rootCauseExplanation` is null, this section is hidden.
 
 Each sub-task below is designed for sequential execution in Bob Agent Mode.
 
-### Sub-Task 1 — Repository Foundation & Shared Contracts
+### Sub-Task 1 â€” Repository Foundation & Shared Contracts
 - **Intent:** Create the root workspace structure, shared types package, and configuration files that all members depend on
 - **Files to create:** `package.json` (root), `tsconfig.base.json`, `.gitignore`, `.env.example`, `packages/shared-types/src/index.ts`, `data/cases/.gitkeep`, `artifacts/.gitkeep`
 - **Status:** `[ ] pending`
 
-### Sub-Task 2 — MiniShop Application with Seeded Bug
+### Sub-Task 2 â€” MiniShop Application with Seeded Bug
 - **Intent:** Build the minimal React shopping app with the intentional cart total bug
 - **Files to create:** All files under `apps/minishop/`
 - **Status:** `[ ] pending`
 
-### Sub-Task 3 — Playwright Test Suite
+### Sub-Task 3 â€” Playwright Test Suite
 - **Intent:** Create the reproduction spec, Playwright config, and pre-captured before artifacts
 - **Files to create:** All files under `tests/playwright/`, `artifacts/case-001/before/`
 - **Status:** `[ ] pending`
 
-### Sub-Task 4 — Node.js API
+### Sub-Task 4 â€” Node.js API
 - **Intent:** Build Express API with case CRUD, JSON storage, Playwright runner integration, static artifact serving, and LLM client
 - **Files to create:** All files under `services/api/` including `src/llm/client.ts`, `data/cases/case-001.json`
 - **Status:** `[ ] pending`
 
-### Sub-Task 5 — React Dashboard
+### Sub-Task 5 â€” React Dashboard
 - **Intent:** Build the full dashboard with case list, detail page, evidence panel, patch viewer, and before/after comparison
 - **Files to create:** All files under `apps/dashboard/`
 - **Status:** `[ ] pending`
 
-### Sub-Task 6 — Integration & Demo Polish
+### Sub-Task 6 â€” Integration & Demo Polish
 - **Intent:** Wire everything together, seed demo data, add demo reset, write README
 - **Files to modify:** Root scripts, `data/cases/case-001.json`, `README.md`, `docs/demo-script.md`
 - **Status:** `[ ] pending`

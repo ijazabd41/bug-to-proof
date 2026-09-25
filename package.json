@@ -1,0 +1,28 @@
+{
+  "name": "bug-to-proof",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Turn a bug report into reproducible, evidence-backed proof.",
+  "workspaces": [
+    "packages/*",
+    "apps/*",
+    "services/*",
+    "tests/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:api\" \"npm run dev:dashboard\" \"npm run dev:minishop\"",
+    "dev:api": "npm run dev --workspace=services/api",
+    "dev:dashboard": "npm run dev --workspace=apps/dashboard",
+    "dev:minishop": "npm run dev --workspace=apps/minishop",
+    "test:playwright": "npm run test --workspace=tests/playwright",
+    "build": "npm run build --workspace=apps/dashboard && npm run build --workspace=apps/minishop",
+    "demo": "npm run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
