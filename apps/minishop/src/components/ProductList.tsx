@@ -1,5 +1,5 @@
 import React from "react";
-import { PRODUCTS } from "../types";
+import { PRODUCTS } from "../data/products";
 import { ProductCard } from "./ProductCard";
 
 export function ProductList() {

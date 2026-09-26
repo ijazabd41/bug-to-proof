@@ -1,14 +1,5 @@
 import { create } from "zustand";
-
-export interface Product {
-  id: number;
-  name: string;
-  price: number;
-}
-
-export interface CartItem extends Product {
-  quantity: number;
-}
+import type { Product, CartItem } from "../types";
 
 interface CartStore {
   items: CartItem[];
@@ -18,6 +9,8 @@ interface CartStore {
   /** BUG: reads only items[0].price instead of summing all items */
   total: () => number;
 }
+
+export { type Product, type CartItem };
 
 export const useCartStore = create<CartStore>((set, get) => ({
   items: [],
