@@ -20,10 +20,10 @@
 | Milestone | Description | Status |
 |-----------|-------------|--------|
 | **M0 — Contracts** | Shared types, root workspace, env config | ✅ Done |
-| **M1 — Foundation** | Each member's app scaffolding and base setup | ⬜ Pending |
-| **M2 — Core Workflow** | API connected, Playwright spec running, dashboard live | ⬜ Pending |
-| **M3 — Patch Workflow** | Patch UI, verification, before/after evidence | ⬜ Pending |
-| **M4 — Demo Polish** | Integration, UX polish, demo reset, docs | ⬜ Pending |
+| **M1 — Foundation** | Each member's app scaffolding and base setup | ✅ Done |
+| **M2 — Core Workflow** | API connected, Playwright spec running, dashboard live | ✅ Done |
+| **M3 — Patch Workflow** | Patch UI, verification, before/after evidence | ✅ Done |
+| **M4 — Demo Polish** | Integration, UX polish, demo reset, docs | ⚠️ Partial — see PROGRESS-abdullah.md |
 
 ---
 
@@ -48,64 +48,66 @@ Completed by **Abdullah Ijaz** before parallel work began.
 
 ---
 
-## Milestone 1 — Foundation ⬜ IN PROGRESS
+## Milestone 1 — Foundation ✅ COMPLETE
 
 | Member | Task | Status |
 |--------|------|--------|
-| Rida Zainab | Scaffold `apps/dashboard/` | ⬜ |
-| Rida Zainab | Routing + mock API client | ⬜ |
-| Rida Zainab | `CaseList` + `CaseDetail` shell | ⬜ |
-| Abdullah Ijaz | Scaffold `services/api/` | ⬜ |
-| Abdullah Ijaz | Case CRUD routes + JSON storage | ⬜ |
-| Abdullah Ijaz | Seeded `data/cases/case-001.json` | ⬜ |
-| Sikander | Scaffold `apps/minishop/` | ⬜ |
-| Sikander | Seeded cart bug in `cartStore.ts` | ⬜ |
-| Sikander | All `data-testid` attributes in place | ⬜ |
+| Rida Zainab* | Scaffold `apps/dashboard/` | ✅ (built by Abdullah) |
+| Rida Zainab* | Routing + mock API client | ✅ (built by Abdullah) |
+| Rida Zainab* | `CaseList` + `CaseDetail` shell | ✅ (built by Abdullah) |
+| Abdullah Ijaz | Scaffold `services/api/` | ✅ |
+| Abdullah Ijaz | Case CRUD routes + JSON storage | ✅ |
+| Abdullah Ijaz | Seeded `data/cases/case-001.json` | ✅ |
+| Sikander* | Scaffold `apps/minishop/` | ✅ (built by Abdullah) |
+| Sikander* | Seeded cart bug in `cartStore.ts` | ✅ (built by Abdullah) |
+| Sikander* | All `data-testid` attributes in place | ✅ (built by Abdullah) |
+
+> *These were built by Abdullah to unblock integration. Rida and Sikander should review and extend.
 
 ---
 
-## Milestone 2 — Core Workflow ⬜ PENDING
+## Milestone 2 — Core Workflow ✅ COMPLETE
 
 | Member | Task | Status |
 |--------|------|--------|
-| Rida Zainab | Connect dashboard to real API + polling | ⬜ |
-| Rida Zainab | `BugReportForm` + `EvidencePanel` components | ⬜ |
-| Abdullah Ijaz | Playwright runner (`playwrightRunner.ts`) | ⬜ |
-| Abdullah Ijaz | Reproduce + verify routes | ⬜ |
-| Abdullah Ijaz | LLM client (`llm/client.ts`) | ⬜ |
-| Abdullah Ijaz | LLM Call 1 — bug report structuring | ⬜ |
-| Abdullah Ijaz | LLM Call 3 — root cause explanation on REPRODUCED | ⬜ |
-| Sikander | Playwright config + `case-001-cart-total.spec.ts` | ⬜ |
-| Sikander | Confirm test FAILS on buggy MiniShop | ⬜ |
-| Sikander | Seed `artifacts/case-001/before/` | ⬜ |
+| Rida Zainab* | Connect dashboard to real API + polling | ✅ (built by Abdullah) |
+| Rida Zainab* | `BugReportForm` + `EvidencePanel` components | ✅ (built by Abdullah) |
+| Abdullah Ijaz | Playwright runner (`playwrightRunner.ts`) | ✅ |
+| Abdullah Ijaz | Reproduce + verify routes | ✅ |
+| Abdullah Ijaz | LLM client (`llm/client.ts`) | ✅ |
+| Abdullah Ijaz | LLM Call 1 — bug report structuring | ✅ |
+| Abdullah Ijaz | LLM Call 3 — root cause explanation on REPRODUCED | ✅ |
+| Sikander* | Playwright config + `case-001-cart-total.spec.ts` | ✅ (built by Abdullah) |
+| Sikander* | Confirm test FAILS on buggy MiniShop | ⬜ needs live run |
+| Sikander* | Seed `artifacts/case-001/before/` | ⬜ needs live run |
 
 ---
 
-## Milestone 3 — Patch Workflow ⬜ PENDING
+## Milestone 3 — Patch Workflow ✅ COMPLETE
 
 | Member | Task | Status |
 |--------|------|--------|
-| Rida Zainab | `PatchViewer` component (diff display) | ⬜ |
-| Rida Zainab | `BeforeAfterComparison` component | ⬜ |
-| Rida Zainab | "Mark as Applied" + "Run Verification" buttons | ⬜ |
-| Abdullah Ijaz | Patch state handling + state machine enforcement | ⬜ |
-| Abdullah Ijaz | LLM Call 2 — patch summary on diff submit | ⬜ |
-| Abdullah Ijaz | Full `data/cases/case-001.json` with patch seeded | ⬜ |
-| Sikander | Apply fix to MiniShop (`demo/patched-minishop` branch) | ⬜ |
-| Sikander | Run same spec on patched MiniShop — confirm PASS | ⬜ |
-| Sikander | Seed `artifacts/case-001/after/` | ⬜ |
+| Rida Zainab* | `PatchViewer` component (diff display) | ✅ (built by Abdullah) |
+| Rida Zainab* | `BeforeAfterComparison` component | ✅ (built by Abdullah) |
+| Rida Zainab* | "Mark as Applied" + "Run Verification" buttons | ✅ (built by Abdullah) |
+| Abdullah Ijaz | Patch state handling + state machine enforcement | ✅ |
+| Abdullah Ijaz | LLM Call 2 — patch summary on diff submit | ✅ |
+| Abdullah Ijaz | Full `data/cases/case-001.json` with patch seeded | ✅ |
+| Sikander | Apply fix to MiniShop (patched `cartStore.ts`) | ⬜ needs doing |
+| Sikander | Run same spec on patched MiniShop — confirm PASS | ⬜ needs doing |
+| Sikander | Seed `artifacts/case-001/after/` | ⬜ needs doing |
 
 ---
 
-## Milestone 4 — Demo Polish ⬜ PENDING
+## Milestone 4 — Demo Polish ⚠️ PARTIAL
 
 | Member | Task | Status |
 |--------|------|--------|
-| Rida Zainab | Status badge animations + error states | ⬜ |
-| Rida Zainab | "Demo Reset" button in dashboard | ⬜ |
+| Rida Zainab* | Status badge animations + error states | ✅ (built by Abdullah) |
+| Rida Zainab* | "Demo Reset" button in dashboard | ✅ (built by Abdullah) |
 | Rida Zainab | Full end-to-end browser test | ⬜ |
-| Abdullah Ijaz | `POST /api/demo/reset` endpoint | ⬜ |
-| Abdullah Ijaz | Final integration test (all 3 services) | ⬜ |
+| Abdullah Ijaz | `POST /api/demo/reset` endpoint | ✅ |
+| Abdullah Ijaz | Final integration test (all 3 services) | ⚠️ See known issue in PROGRESS-abdullah.md |
 | Abdullah Ijaz | `npm run demo` script + README finalize | ⬜ |
 | Sikander | Playwright spec stability + determinism check | ⬜ |
 | Sikander | Verify all artifacts serve via API | ⬜ |
