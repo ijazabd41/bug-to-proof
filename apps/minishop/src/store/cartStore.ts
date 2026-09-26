@@ -6,7 +6,7 @@ interface CartStore {
   addItem: (product: Product) => void;
   removeItem: (productId: number) => void;
   clearCart: () => void;
-  /** BUG: reads only items[0].price instead of summing all items */
+  /** Returns the sum of price × quantity for every cart item */
   total: () => number;
 }
 
@@ -35,6 +35,6 @@ export const useCartStore = create<CartStore>((set, get) => ({
 
   clearCart: () => set({ items: [] }),
 
-  // ⚠️ SEEDED BUG: should be items.reduce((sum, item) => sum + item.price * item.quantity, 0)
-  total: () => get().items[0]?.price ?? 0,
+  total: () =>
+    get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),
 }));

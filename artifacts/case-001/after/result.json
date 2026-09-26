@@ -1,0 +1,55 @@
+{
+  "caseId": "case-001",
+  "phase": "after",
+  "runAt": "2026-09-26T10:30:00.000Z",
+  "status": "FIXED",
+  "testFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "tests": [
+    {
+      "name": "cart total should equal sum of all item prices",
+      "passed": true,
+      "expected": "$30.00",
+      "actual": "$30.00",
+      "durationMs": 1200,
+      "evidence": [
+        {
+          "type": "screenshot",
+          "path": "artifacts/case-001/after/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/test-finished-1.png"
+        },
+        {
+          "type": "trace",
+          "path": "artifacts/case-001/after/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/trace.zip"
+        }
+      ]
+    },
+    {
+      "name": "cart total should update when items are added incrementally",
+      "passed": true,
+      "expected": "$30.00",
+      "actual": "$30.00",
+      "durationMs": 995,
+      "evidence": [
+        {
+          "type": "screenshot",
+          "path": "artifacts/case-001/after/case-001-cart-total-Case-0-46116-ems-are-added-incrementally-chromium/test-finished-1.png"
+        },
+        {
+          "type": "trace",
+          "path": "artifacts/case-001/after/case-001-cart-total-Case-0-46116-ems-are-added-incrementally-chromium/trace.zip"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total": 2,
+    "passed": 2,
+    "failed": 0
+  },
+  "fix": {
+    "file": "apps/minishop/src/store/cartStore.ts",
+    "line": 39,
+    "before": "total: () => get().items[0]?.price ?? 0",
+    "after": "total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0)",
+    "description": "Replace first-item-only price read with a reduce-sum over all cart items (price × quantity). This correctly aggregates the total across every product and quantity in the cart."
+  }
+}
