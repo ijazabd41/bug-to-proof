@@ -13,6 +13,12 @@ export class MiniShopPage {
     await this.page.getByTestId(TEST_IDS.addToCart(productId)).click();
   }
 
+  /** Navigate to /cart via the nav link */
+  async goToCart() {
+    await this.page.getByTestId("nav-cart-link").click();
+    await this.page.waitForLoadState("networkidle");
+  }
+
   async getCartTotal(): Promise<string> {
     return this.page.getByTestId(TEST_IDS.cartTotal).innerText();
   }
