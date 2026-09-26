@@ -6,11 +6,21 @@ export class MiniShopPage {
 
   async navigate() {
     await this.page.goto("/");
-    await this.page.waitForLoadState("networkidle");
+    // Wait until product cards are rendered — confirms React hydration is done
+    await this.page
+      .getByTestId(TEST_IDS.addToCart(1))
+      .waitFor({ state: "visible" });
   }
 
   async addToCart(productId: number) {
-    await this.page.getByTestId(TEST_IDS.addToCart(productId)).click();
+    // Ensure the button is interactive before clicking
+    const btn = this.page.getByTestId(TEST_IDS.addToCart(productId));
+    await btn.waitFor({ state: "visible" });
+    await btn.click();
+    // Wait for the cart-total element to appear / update in the sidebar
+    await this.page
+      .getByTestId(TEST_IDS.cartTotal)
+      .waitFor({ state: "visible" });
   }
 
   /** Navigate to /cart via the nav link */
@@ -20,7 +30,9 @@ export class MiniShopPage {
   }
 
   async getCartTotal(): Promise<string> {
-    return this.page.getByTestId(TEST_IDS.cartTotal).innerText();
+    const el = this.page.getByTestId(TEST_IDS.cartTotal);
+    await el.waitFor({ state: "visible" });
+    return el.innerText();
   }
 
   async takeScreenshot(name = "screenshot") {

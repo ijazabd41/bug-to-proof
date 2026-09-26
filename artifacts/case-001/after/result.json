@@ -1,55 +1,181 @@
 {
-  "caseId": "case-001",
-  "phase": "after",
-  "runAt": "2026-09-26T10:30:00.000Z",
-  "status": "FIXED",
-  "testFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
-  "tests": [
-    {
-      "name": "cart total should equal sum of all item prices",
-      "passed": true,
-      "expected": "$30.00",
-      "actual": "$30.00",
-      "durationMs": 1200,
-      "evidence": [
-        {
-          "type": "screenshot",
-          "path": "artifacts/case-001/after/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/test-finished-1.png"
-        },
-        {
-          "type": "trace",
-          "path": "artifacts/case-001/after/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/trace.zip"
-        }
-      ]
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\hackathon\\bug-to-proof\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "tests/playwright/playwright.config.ts",
+      "tests/playwright/cases/case-001-cart-total.spec.ts",
+      "--reporter=json"
+    ],
+    "configFile": "D:\\hackathon\\bug-to-proof\\tests\\playwright\\playwright.config.ts",
+    "rootDir": "D:/hackathon/bug-to-proof/tests/playwright/cases",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
     },
-    {
-      "name": "cart total should update when items are added incrementally",
-      "passed": true,
-      "expected": "$30.00",
-      "actual": "$30.00",
-      "durationMs": 995,
-      "evidence": [
-        {
-          "type": "screenshot",
-          "path": "artifacts/case-001/after/case-001-cart-total-Case-0-46116-ems-are-added-incrementally-chromium/test-finished-1.png"
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/hackathon/bug-to-proof/artifacts/case-001/after",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
         },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "D:/hackathon/bug-to-proof/tests/playwright/cases",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "case-001-cart-total.spec.ts",
+      "file": "case-001-cart-total.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
         {
-          "type": "trace",
-          "path": "artifacts/case-001/after/case-001-cart-total-Case-0-46116-ems-are-added-incrementally-chromium/trace.zip"
+          "title": "Case 001 — Cart total calculation",
+          "file": "case-001-cart-total.spec.ts",
+          "line": 18,
+          "column": 6,
+          "specs": [
+            {
+              "title": "cart total should equal sum of all item prices",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1010,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-26T12:35:54.504Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\hackathon\\bug-to-proof\\artifacts\\case-001\\after\\case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium\\test-finished-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\hackathon\\bug-to-proof\\artifacts\\case-001\\after\\case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b9baa70e2169da733ccd-7e13775ecb5577495b6f",
+              "file": "case-001-cart-total.spec.ts",
+              "line": 19,
+              "column": 7
+            },
+            {
+              "title": "cart total should update when items are added incrementally",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 786,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-26T12:35:55.798Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\hackathon\\bug-to-proof\\artifacts\\case-001\\after\\case-001-cart-total-Case-0-46116-ems-are-added-incrementally-chromium\\test-finished-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\hackathon\\bug-to-proof\\artifacts\\case-001\\after\\case-001-cart-total-Case-0-46116-ems-are-added-incrementally-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b9baa70e2169da733ccd-a4e3994fa2a77a3559ae",
+              "file": "case-001-cart-total.spec.ts",
+              "line": 39,
+              "column": 7
+            }
+          ]
         }
       ]
     }
   ],
-  "summary": {
-    "total": 2,
-    "passed": 2,
-    "failed": 0
-  },
-  "fix": {
-    "file": "apps/minishop/src/store/cartStore.ts",
-    "line": 39,
-    "before": "total: () => get().items[0]?.price ?? 0",
-    "after": "total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0)",
-    "description": "Replace first-item-only price read with a reduce-sum over all cart items (price × quantity). This correctly aggregates the total across every product and quantity in the cart."
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-26T12:35:53.633Z",
+    "duration": 3138.973,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
   }
 }
