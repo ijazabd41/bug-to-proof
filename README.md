@@ -1,8 +1,8 @@
-﻿# Bug-to-Proof
+# Bug-to-Proof
 
 > Turn a bug report into reproducible, evidence-backed proof.
 
-**Reported â†’ Reproduced â†’ Failed â†’ Patched â†’ Verified â†’ Proved**
+**Reported → Reproduced → Failed → Patched → Verified → Proved**
 
 ---
 
@@ -26,9 +26,9 @@ passes after it, with screenshots and traces preserved as proof.
 
 ## Prerequisites
 
-- Node.js â‰¥ 18
-- npm â‰¥ 9
-- (For live Playwright runs) Chromium â€” installed automatically by `npx playwright install`
+- Node.js >= 18
+- npm >= 9
+- (For live Playwright runs) Chromium -- installed automatically by `npx playwright install`
 
 ---
 
@@ -101,27 +101,27 @@ npm run test:playwright
 
 ```
 bug-to-proof/
-â”œâ”€â”€ apps/
-â”‚   â”œâ”€â”€ dashboard/          # React + Vite dashboard (Rida Zainab)
-â”‚   â””â”€â”€ minishop/           # React + Vite demo app with seeded bug (Sikander)
-â”œâ”€â”€ services/
-â”‚   â””â”€â”€ api/                # Node.js + Express API (Abdullah Ijaz)
-â”œâ”€â”€ packages/
-â”‚   â””â”€â”€ shared-types/       # Shared TypeScript types (frozen â€” all agree before changing)
-â”œâ”€â”€ tests/
-â”‚   â””â”€â”€ playwright/         # Playwright reproduction & verification specs (Sikander)
-â”œâ”€â”€ data/
-â”‚   â””â”€â”€ cases/              # JSON case files (persisted state)
-â”œâ”€â”€ artifacts/              # Playwright screenshots, traces, result JSON
-â”œâ”€â”€ plans/                  # Implementation plan
-â””â”€â”€ docs/                   # Demo script and documentation
+├── apps/
+│   ├── dashboard/          # React + Vite dashboard (Rida Zainab)
+│   └── minishop/           # React + Vite demo app with seeded bug (Sikander)
+├── services/
+│   └── api/                # Node.js + Express API (Abdullah Ijaz)
+├── packages/
+│   └── shared-types/       # Shared TypeScript types (frozen -- all agree before changing)
+├── tests/
+│   └── playwright/         # Playwright reproduction & verification specs (Sikander)
+├── data/
+│   └── cases/              # JSON case files (persisted state)
+├── artifacts/              # Playwright screenshots, traces, result JSON
+├── plans/                  # Implementation plan
+└── docs/                   # Demo script and documentation
 ```
 
 ---
 
 ## Demo Bug
 
-**Case 001 â€” Cart total only reflects first item price**
+**Case 001 -- Cart total only reflects first item price**
 
 When two products are added to MiniShop's cart, the total shows only the first item's
 price instead of the sum of both.
@@ -136,9 +136,9 @@ price instead of the sum of both.
 
 Three optional AI enhancements are available when an OpenAI-compatible API key is configured:
 
-1. **Bug report structuring** â€” converts plain description into structured reproduction steps
-2. **Patch summary** â€” explains what the diff changes and why
-3. **Root cause explanation** â€” paragraph explaining the probable root cause
+1. **Bug report structuring** -- converts plain description into structured reproduction steps
+2. **Patch summary** -- explains what the diff changes and why
+3. **Root cause explanation** -- paragraph explaining the probable root cause
 
 The system works fully without a key. Set `LLM_ENABLED=true` and `LLM_API_KEY=<your-key>`
 in `.env` to enable.
@@ -149,13 +149,13 @@ in `.env` to enable.
 
 ```
 React Dashboard (5173)
-       â†“ HTTP
+       ↓ HTTP
 Node.js API (3001)
-       â†“ JSON files        â†“ spawn
+       ↓ JSON files        ↓ spawn
 data/cases/*.json     Playwright Runner
-                           â†“ HTTP
+                           ↓ HTTP
                       MiniShop (5174)
-                           â†“ artifacts
+                           ↓ artifacts
                       artifacts/<caseId>/before|after/
 ```
 
