@@ -4,7 +4,7 @@
   "description": "When two products are added to MiniShop's cart, the total shows only the first item's price instead of the sum of both. For example, adding Keyboard ($10) and Mouse Pad ($20) shows $10.00 instead of $30.00.",
   "status": "REPRODUCED",
   "createdAt": "2024-12-01T10:00:00.000Z",
-  "updatedAt": "2026-09-26T07:58:45.968Z",
+  "updatedAt": "2026-09-27T10:35:08.122Z",
   "reproduction": {
     "preconditions": [
       "MiniShop is running at http://localhost:5174",
@@ -20,16 +20,12 @@
     "actual": "Cart total displays $10.00 (only first item price)",
     "testFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
     "lastRun": {
-      "runAt": "2024-12-01T10:04:00.000Z",
+      "runAt": "2026-09-27T10:35:08.122Z",
       "passed": false,
       "expected": "Cart total displays $30.00",
-      "actual": "Expected cart total to be $30.00 but received $10.00",
-      "durationMs": 3241,
-      "evidenceIds": [
-        "ev-case-001-before-screenshot",
-        "ev-case-001-before-trace",
-        "ev-case-001-before-result"
-      ]
+      "actual": "MiniShop is not running at port 5174",
+      "durationMs": 0,
+      "evidenceIds": []
     }
   },
   "patch": {
@@ -46,16 +42,12 @@
   "verification": {
     "status": "PENDING",
     "beforeRun": {
-      "runAt": "2024-12-01T10:04:00.000Z",
+      "runAt": "2026-09-27T10:35:08.122Z",
       "passed": false,
       "expected": "Cart total displays $30.00",
-      "actual": "Expected cart total to be $30.00 but received $10.00",
-      "durationMs": 3241,
-      "evidenceIds": [
-        "ev-case-001-before-screenshot",
-        "ev-case-001-before-trace",
-        "ev-case-001-before-result"
-      ]
+      "actual": "MiniShop is not running at port 5174",
+      "durationMs": 0,
+      "evidenceIds": []
     },
     "afterRun": null,
     "comparison": null
