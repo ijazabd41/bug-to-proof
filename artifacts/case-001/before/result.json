@@ -1,0 +1,54 @@
+{
+  "caseId": "case-001",
+  "phase": "before",
+  "runAt": "2026-09-26T10:07:45.690Z",
+  "status": "REPRODUCED",
+  "testFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "tests": [
+    {
+      "name": "cart total should equal sum of all item prices",
+      "passed": false,
+      "expected": "$30.00",
+      "actual": "$10.00",
+      "durationMs": 1300,
+      "error": "expect(received).toBe(expected) — Expected: \"$30.00\", Received: \"$10.00\"",
+      "evidence": [
+        {
+          "type": "screenshot",
+          "path": "artifacts/case-001/before/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/test-failed-1.png"
+        },
+        {
+          "type": "trace",
+          "path": "artifacts/case-001/before/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/trace.zip"
+        }
+      ]
+    },
+    {
+      "name": "cart total should update when items are added incrementally",
+      "passed": false,
+      "expected": "$30.00",
+      "actual": "$10.00",
+      "durationMs": 1200,
+      "error": "expect(received).toBe(expected) — Expected: \"$30.00\", Received: \"$10.00\"",
+      "evidence": [
+        {
+          "type": "screenshot",
+          "path": "artifacts/case-001/before/case-001-cart-total-Case-0-46116-ems-are-added-incrementally-chromium/test-failed-1.png"
+        },
+        {
+          "type": "trace",
+          "path": "artifacts/case-001/before/case-001-cart-total-Case-0-46116-ems-are-added-incrementally-chromium/trace.zip"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total": 2,
+    "passed": 0,
+    "failed": 2
+  },
+  "rootCause": "cartStore.total() returns get().items[0]?.price rather than reducing the full items array. When multiple products are in the cart the total reads only the first item's unit price, ignoring all subsequent items and quantities.",
+  "buggyLine": "apps/minishop/src/store/cartStore.ts:39",
+  "buggyCode": "total: () => get().items[0]?.price ?? 0",
+  "expectedCode": "total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0)"
+}

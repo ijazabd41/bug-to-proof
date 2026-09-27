@@ -8,9 +8,10 @@ export function CasesPage() {
   const [cases, setCases] = useState<BugCase[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [resetting, setResetting] = useState(false);
 
   const loadCases = useCallback(async () => {
+    setError(null);
+    setLoading(true);
     try {
       const data = await api.getCases();
       setCases(data);
@@ -29,42 +30,61 @@ export function CasesPage() {
     setCases((prev) => [c, ...prev]);
   };
 
-  const handleReset = async () => {
-    setResetting(true);
-    try {
-      await api.demoReset();
-      await loadCases();
-    } catch (err) {
-      alert(err instanceof Error ? err.message : "Reset failed");
-    } finally {
-      setResetting(false);
-    }
-  };
-
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: 24,
+          flexWrap: "wrap",
+          gap: 12,
+        }}
+      >
         <h1 style={{ fontSize: 22, fontWeight: 700 }}>Bug Cases</h1>
-        <button
-          onClick={handleReset}
-          disabled={resetting}
-          style={{
-            padding: "7px 16px",
-            background: resetting ? "#d1d5db" : "#f3f4f6",
-            border: "1px solid #d1d5db",
-            borderRadius: 6,
-            cursor: resetting ? "not-allowed" : "pointer",
-            fontSize: 13,
-            fontWeight: 500,
-            color: "#374151",
-          }}
-        >
-          {resetting ? "Resetting…" : "↺ Demo Reset"}
-        </button>
       </div>
 
       <BugReportForm onCreated={handleCreated} />
-      <CaseList cases={cases} loading={loading} error={error} />
+
+      {/* Error with retry */}
+      {error && (
+        <div
+          style={{
+            color: "#b91c1c",
+            background: "#fee2e2",
+            padding: "12px 16px",
+            borderRadius: 6,
+            marginBottom: 16,
+            fontSize: 13,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 12,
+            border: "1px solid #fecaca",
+          }}
+        >
+          <span>{error}</span>
+          <button
+            onClick={() => void loadCases()}
+            style={{
+              padding: "4px 12px",
+              background: "#fff",
+              border: "1px solid #fca5a5",
+              borderRadius: 4,
+              cursor: "pointer",
+              fontSize: 12,
+              color: "#b91c1c",
+              fontWeight: 500,
+              whiteSpace: "nowrap",
+            }}
+          >
+            Retry
+          </button>
+        </div>
+      )}
+
+      <CaseList cases={cases} loading={loading} error={null} />
     </div>
   );
 }

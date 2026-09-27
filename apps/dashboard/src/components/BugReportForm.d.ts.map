@@ -1,0 +1,1 @@
+{"version":3,"file":"BugReportForm.d.ts","sourceRoot":"","sources":["BugReportForm.tsx"],"names":[],"mappings":"AAAA,OAAO,KAAsC,MAAM,OAAO,CAAC;AAG3D,OAAO,KAAK,EAAE,OAAO,EAAE,MAAM,UAAU,CAAC;AAExC,UAAU,kBAAkB;IAC1B,SAAS,EAAE,CAAC,CAAC,EAAE,OAAO,KAAK,IAAI,CAAC;CACjC;AAED,wBAAgB,aAAa,CAAC,EAAE,SAAS,EAAE,EAAE,kBAAkB,qBA+P9D"}

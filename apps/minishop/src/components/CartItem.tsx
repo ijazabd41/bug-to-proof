@@ -24,6 +24,7 @@ export function CartItem({ productId }: { productId: number }) {
       </span>
       <span>${(item.price * item.quantity).toFixed(2)}</span>
       <button
+        data-testid={`remove-from-cart-${productId}`}
         onClick={() => removeItem(productId)}
         style={{
           background: "none",

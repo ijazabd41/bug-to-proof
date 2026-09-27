@@ -2,9 +2,9 @@
   "id": "case-001",
   "title": "Cart total only reflects first item price",
   "description": "When two products are added to MiniShop's cart, the total shows only the first item's price instead of the sum of both. For example, adding Keyboard ($10) and Mouse Pad ($20) shows $10.00 instead of $30.00.",
-  "status": "REPRODUCED",
+  "status": "VERIFIED",
   "createdAt": "2024-12-01T10:00:00.000Z",
-  "updatedAt": "2026-09-26T07:58:45.968Z",
+  "updatedAt": "2026-09-27T10:35:08.122Z",
   "reproduction": {
     "preconditions": [
       "MiniShop is running at http://localhost:5174",
@@ -20,16 +20,12 @@
     "actual": "Cart total displays $10.00 (only first item price)",
     "testFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
     "lastRun": {
-      "runAt": "2024-12-01T10:04:00.000Z",
+      "runAt": "2026-09-27T10:35:08.122Z",
       "passed": false,
       "expected": "Cart total displays $30.00",
-      "actual": "Expected cart total to be $30.00 but received $10.00",
-      "durationMs": 3241,
-      "evidenceIds": [
-        "ev-case-001-before-screenshot",
-        "ev-case-001-before-trace",
-        "ev-case-001-before-result"
-      ]
+      "actual": "MiniShop is not running at port 5174",
+      "durationMs": 0,
+      "evidenceIds": []
     }
   },
   "patch": {
@@ -39,23 +35,19 @@
       "apps/minishop/src/store/cartStore.ts"
     ],
     "diff": "--- a/apps/minishop/src/store/cartStore.ts\n+++ b/apps/minishop/src/store/cartStore.ts\n@@ -12,7 +12,7 @@ export const useCartStore = create<CartStore>((set, get) => ({\n   addItem: (product) =>\n     set((state) => ({ items: [...state.items, product] })),\n \n-  total: () => get().items[0]?.price ?? 0,\n+  total: () => get().items.reduce((sum, item) => sum + item.price, 0),\n }));",
-    "status": "PROPOSED",
+    "status": "APPLIED",
     "proposedAt": "2024-12-01T10:05:00.000Z",
-    "appliedAt": null
+    "appliedAt": "2026-09-26T17:35:45.0262255+05:00"
   },
   "verification": {
-    "status": "PENDING",
+    "status": "VERIFIED",
     "beforeRun": {
-      "runAt": "2024-12-01T10:04:00.000Z",
+      "runAt": "2026-09-27T10:35:08.122Z",
       "passed": false,
       "expected": "Cart total displays $30.00",
-      "actual": "Expected cart total to be $30.00 but received $10.00",
-      "durationMs": 3241,
-      "evidenceIds": [
-        "ev-case-001-before-screenshot",
-        "ev-case-001-before-trace",
-        "ev-case-001-before-result"
-      ]
+      "actual": "MiniShop is not running at port 5174",
+      "durationMs": 0,
+      "evidenceIds": []
     },
     "afterRun": null,
     "comparison": null
@@ -84,6 +76,22 @@
       "path": "artifacts/case-001/before/result.json",
       "createdAt": "2024-12-01T10:04:00.000Z",
       "description": "Raw Playwright JSON reporter output for before-patch run"
+    },
+    {
+      "id": "ev-case-001-after-screenshot",
+      "type": "screenshot",
+      "phase": "after",
+      "path": "artifacts/case-001/after/screenshot.png",
+      "createdAt": "2026-09-26T12:35:56.814Z",
+      "description": "Screenshot captured after patch"
+    },
+    {
+      "id": "ev-case-001-after-result",
+      "type": "result-json",
+      "phase": "after",
+      "path": "artifacts/case-001/after/result.json",
+      "createdAt": "2026-09-26T12:35:56.814Z",
+      "description": "Raw Playwright JSON result after patch"
     }
   ],
   "rootCauseExplanation": "The cart total bug originates in cartStore.ts where the total getter reads items[0].price directly instead of summing all item prices. This means the total is always equal to the price of the first item added, regardless of how many additional items are in the cart. Every subsequent product the user adds is silently ignored in the calculation, creating a misleading and incorrect total that could cause users to underpay or lose trust in the application."

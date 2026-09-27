@@ -69,9 +69,17 @@ export async function runTest(
     let stdout = "";
     let stderr = "";
 
+    // Use node directly to avoid npx/shell execution-policy issues on Windows
     const child = spawn(
-      "npx",
-      ["playwright", "test", testFile, "--reporter=json"],
+      process.execPath,
+      [
+        "node_modules/@playwright/test/cli.js",
+        "test",
+        "--config",
+        "tests/playwright/playwright.config.ts",
+        testFile,
+        "--reporter=json",
+      ],
       {
         cwd: WORKSPACE_ROOT,
         env: {
@@ -79,7 +87,7 @@ export async function runTest(
           PHASE: phase,
           CASE_ID: caseId,
         },
-        shell: true,
+        shell: false,
       }
     );
 
