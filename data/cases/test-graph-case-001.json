@@ -1,0 +1,23 @@
+{
+  "id": "test-graph-case-001",
+  "title": "Cart total calculation error",
+  "description": "Adding items shows incorrect total",
+  "status": "READY_TO_REPRODUCE",
+  "createdAt": "2026-10-11T21:33:03.101Z",
+  "updatedAt": "2026-10-11T21:33:03.101Z",
+  "reproduction": {
+    "preconditions": [],
+    "steps": [
+      "Add item 1",
+      "Add item 2"
+    ],
+    "expected": "Total is $30.00",
+    "actual": "Total is $10.00",
+    "testFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+    "lastRun": null
+  },
+  "patch": null,
+  "verification": null,
+  "evidence": [],
+  "rootCauseExplanation": null
+}

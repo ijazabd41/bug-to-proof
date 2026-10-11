@@ -82,7 +82,11 @@ export function validateArtifactContainment(filePath: string, allowedRoot: strin
   }
 
   const normalizedRoot = path.resolve(allowedRoot);
-  const resolved = path.resolve(allowedRoot, filePath);
+  // Treat both separator styles as path syntax regardless of the runner OS.
+  // Otherwise `..\\..\\secret.env` is a harmless filename on POSIX and can
+  // bypass a containment check that will reject the same input on Windows.
+  const portableFilePath = filePath.replace(/[\\/]+/g, path.sep);
+  const resolved = path.resolve(allowedRoot, portableFilePath);
 
   if (!resolved.startsWith(normalizedRoot + path.sep) && resolved !== normalizedRoot) {
     throw new Error(`Path traversal escape rejected: '${filePath}' escapes allowed root '${allowedRoot}'`);

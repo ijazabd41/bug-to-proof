@@ -51,7 +51,8 @@ describe("Benchmark Reference Dataset & Script Integrity", () => {
         const fullSourcePath = path.join(WORKSPACE_ROOT, "apps", "minishop", d.relativePath);
         expect(fs.existsSync(fullSourcePath)).toBe(true);
         const sourceContent = fs.readFileSync(fullSourcePath, "utf-8");
-        expect(sourceContent).toContain(d.fixedContent);
+        const normalizeLineEndings = (content: string) => content.replace(/\r\n?/g, "\n");
+        expect(normalizeLineEndings(sourceContent)).toContain(normalizeLineEndings(d.fixedContent));
       }
     }
 
