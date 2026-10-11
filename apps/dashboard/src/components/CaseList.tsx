@@ -2,68 +2,23 @@ import React from "react";
 import { Link } from "react-router-dom";
 import type { BugCase } from "../types";
 import { StatusBadge } from "./StatusBadge";
-
-interface CaseListProps {
-  cases: BugCase[];
-  loading: boolean;
-  error: string | null;
-}
-
-export function CaseList({ cases, loading, error }: CaseListProps) {
-  if (loading) {
-    return <p style={{ color: "#6b7280", padding: "24px 0" }}>Loading cases…</p>;
-  }
-  if (error) {
-    return (
-      <div style={{ color: "#b91c1c", background: "#fee2e2", padding: 12, borderRadius: 6 }}>
-        {error}
-      </div>
-    );
-  }
-  if (cases.length === 0) {
-    return (
-      <p style={{ color: "#9ca3af", padding: "24px 0" }}>
-        No cases yet. Submit your first bug report above.
-      </p>
-    );
-  }
-
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-      {cases.map((c) => (
-        <Link
-          key={c.id}
-          to={`/cases/${c.id}`}
-          style={{ textDecoration: "none", color: "inherit" }}
-        >
-          <div
-            style={{
-              border: "1px solid #e5e7eb",
-              borderRadius: 8,
-              padding: "16px 20px",
-              background: "#fff",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              transition: "border-color 0.15s",
-            }}
-            onMouseEnter={(e) =>
-              ((e.currentTarget as HTMLDivElement).style.borderColor = "#3b82d4")
-            }
-            onMouseLeave={(e) =>
-              ((e.currentTarget as HTMLDivElement).style.borderColor = "#e5e7eb")
-            }
-          >
-            <div>
-              <p style={{ fontWeight: 600, marginBottom: 4 }}>{c.title}</p>
-              <p style={{ fontSize: 13, color: "#6b7280" }}>
-                {c.id} · {new Date(c.createdAt).toLocaleDateString()}
-              </p>
-            </div>
-            <StatusBadge status={c.status} />
-          </div>
-        </Link>
-      ))}
-    </div>
-  );
+import { Icon } from "./Icon";
+interface CaseListProps { cases: BugCase[]; loading: boolean; error: string | null; emptyMessage?: string; }
+export function CaseList({ cases, loading, error, emptyMessage }: CaseListProps) {
+  if (loading) return <div className="empty-state" role="status"><span className="loading-ring" />Loading your cases…</div>;
+  if (error) return <div className="error-banner" role="alert">{error}</div>;
+  if (!cases.length) return <div className="empty-state"><Icon name="cases" /><h3>{emptyMessage ? "Nothing found." : "A clean slate."}</h3><p>{emptyMessage ?? "Report your first bug to start collecting evidence."}</p>{!emptyMessage && <a href="#bug-title">Write a bug report →</a>}</div>;
+  return <><div className="case-table-wrap"><table className="case-table">
+    <thead><tr><th scope="col">Case</th><th scope="col">Status</th><th scope="col">Updated</th><th scope="col"><span className="sr-only">Open case</span></th></tr></thead>
+    <tbody>{cases.map(c => <tr key={c.id}>
+      <td><Link className="case-title" to={`/cases/${c.id}`}>{c.title}</Link><p className="case-description">{c.description}</p><span className="case-id">{c.id}</span></td>
+      <td><StatusBadge status={c.status} /></td>
+      <td><time dateTime={c.updatedAt}>{new Date(c.updatedAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}<span>{new Date(c.updatedAt).toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}</span></time></td>
+      <td><Link className="case-open" to={`/cases/${c.id}`} aria-label={`Open ${c.title}`}><Icon name="arrow" /></Link></td>
+    </tr>)}</tbody>
+  </table></div><div className="case-cards">{cases.map(c => <Link className="case-card" key={c.id} to={`/cases/${c.id}`}>
+    <div className="case-card-top"><span className="case-id">{c.id}</span><StatusBadge status={c.status} /></div>
+    <h3>{c.title}</h3><p>{c.description}</p>
+    <div className="case-card-footer"><time dateTime={c.updatedAt}>Updated {new Date(c.updatedAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}</time><span aria-hidden="true">Open →</span></div>
+  </Link>)}</div></>;
 }

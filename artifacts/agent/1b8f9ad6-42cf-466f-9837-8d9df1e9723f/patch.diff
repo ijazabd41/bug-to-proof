@@ -1,0 +1,5 @@
+--- a/apps/minishop/src/store/cartStore.ts
++++ b/apps/minishop/src/store/cartStore.ts
+@@
+-  total: () => get().items[0]?.price ?? 0,
++  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),

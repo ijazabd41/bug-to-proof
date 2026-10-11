@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-guard-del-applying-1791628296286-nsir",
+  "caseId": "case-guard-del-applying-1791628296286-nsir",
+  "mode": "dynamic",
+  "state": "BLOCKED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [],
+  "originalSourceFingerprint": "fp-1",
+  "targetSnapshotDir": "",
+  "testFingerprint": "fp-test-1",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "requiredChecks": [],
+  "events": [
+    {
+      "timestamp": "2026-10-10T10:32:01.988Z",
+      "stage": "recovery",
+      "message": "Recovered interrupted run after process restart. Marked as BLOCKED."
+    }
+  ],
+  "createdAt": "2026-10-10T10:31:36.289Z",
+  "updatedAt": "2026-10-10T10:32:01.989Z",
+  "stopReason": "Process was interrupted before completion",
+  "completedAt": "2026-10-10T10:32:01.979Z"
+}

@@ -1,0 +1,14 @@
+[
+  {"id":"cart-total","question":"How is the cart total computed from price and quantity?","relevantSources":["apps/minishop/src/store/cartStore.ts"]},
+  {"id":"repeat-product","question":"What happens when the same product is added again?","relevantSources":["apps/minishop/src/store/cartStore.ts"]},
+  {"id":"remove-product","question":"How does removeItem remove a productId from items?","relevantSources":["apps/minishop/src/store/cartStore.ts"]},
+  {"id":"empty-cart","question":"How does clearCart reset the cart items?","relevantSources":["apps/minishop/src/store/cartStore.ts"]},
+  {"id":"products","question":"Where are the Keyboard and Mouse Pad product prices defined?","relevantSources":["apps/minishop/src/data/products.ts"]},
+  {"id":"browser-spec","question":"Which browser assertions compare the displayed cart total with $30.00?","relevantSources":["tests/playwright/cases/case-001-cart-total.spec.ts"]},
+  {"id":"infra-errors","question":"How are timedOut, skipped and interrupted test results classified?","relevantSources":["services/api/src/runner/classification.ts"]},
+  {"id":"baseline-gate","question":"How does validBaseline check the reportHash and testFingerprint?","relevantSources":["services/api/src/runner/integrity.ts"]},
+  {"id":"reachability","question":"How does the runner check that MiniShop is reachable before spawning Playwright?","relevantSources":["services/api/src/runner/playwrightRunner.ts"]},
+  {"id":"evidence-record","question":"How does attachRun assign evidenceIds and outcome to a TestRun?","relevantSources":["services/api/src/runner/record.ts"]},
+  {"id":"offtopic-astronomy","question":"What is Saturn's orbital eccentricity?","relevantSources":[]},
+  {"id":"offtopic-food","question":"Which spices belong in authentic biryani?","relevantSources":[]}
+]

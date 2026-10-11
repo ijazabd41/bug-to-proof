@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-09a955ac-f847-4e0f-8c0b-61ad9090d647",
+  "caseId": "case-001-cart-total",
+  "mode": "dynamic",
+  "state": "BLOCKED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [],
+  "diagnostics": [],
+  "originalSourceFingerprint": "ea2d05db476de3bbc4d3c84d767bed9a9c6b1efe8f633d1a519c9d8fd68d9ae1",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-09a955ac-f847-4e0f-8c0b-61ad9090d647\\workspace",
+  "testFingerprint": "71ded93e74881cb66804a7ac8dbacd2264d095f1f790aa4ab743e9a8533153c9",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "requiredChecks": [],
+  "events": [
+    {
+      "timestamp": "2026-10-08T22:53:51.110Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot",
+      "data": {
+        "originalSourceFingerprint": "ea2d05db476de3bbc4d3c84d767bed9a9c6b1efe8f633d1a519c9d8fd68d9ae1"
+      }
+    },
+    {
+      "timestamp": "2026-10-08T22:53:51.862Z",
+      "stage": "initialization",
+      "message": "Started isolated MiniShop server on port 5739",
+      "data": {
+        "url": "http://127.0.0.1:5739"
+      }
+    },
+    {
+      "timestamp": "2026-10-08T22:53:51.874Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    },
+    {
+      "timestamp": "2026-10-08T22:54:02.968Z",
+      "stage": "baseline",
+      "message": "Valid baseline failure confirmed:  vs Error: BTP_ASSERTION: Cart total should be $30.00 after adding $10 + $20 items\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: \"$30.00\"\nReceived: \"$10.00\"\nError: BTP_ASSERTION: After adding Mouse Pad, total should be $30.00\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: \"$30.00\"\nReceived: \"$10.00\""
+    },
+    {
+      "timestamp": "2026-10-08T22:54:02.982Z",
+      "stage": "investigation",
+      "message": "Investigating source files and generating minimal patch proposal"
+    },
+    {
+      "timestamp": "2026-10-08T22:54:03.010Z",
+      "stage": "error",
+      "message": "Run blocked by error: Model returned an empty response. Verify LLM configuration and credentials."
+    }
+  ],
+  "createdAt": "2026-10-08T22:53:51.106Z",
+  "updatedAt": "2026-10-08T22:54:03.010Z",
+  "targetPort": 5739,
+  "targetUrl": "http://127.0.0.1:5739",
+  "baselineRun": {
+    "outcome": "ASSERTION_FAILED",
+    "testFingerprint": "71ded93e74881cb66804a7ac8dbacd2264d095f1f790aa4ab743e9a8533153c9",
+    "testIds": [
+      "case-001-cart-total.spec.ts:cart total should equal sum of all item prices:chromium",
+      "case-001-cart-total.spec.ts:cart total should update when items are added incrementally:chromium"
+    ],
+    "runId": "1d6f4409-d812-4a64-bc3c-a19923fd5363",
+    "reportHash": "27d645c5732c26665046edbe62a2423d19ec4bbe7dd1e59b4eaba6f7f50c8e89",
+    "runAt": "2026-10-08T22:54:02.960Z",
+    "passed": false,
+    "expected": "",
+    "actual": "Error: BTP_ASSERTION: Cart total should be $30.00 after adding $10 + $20 items\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: \"$30.00\"\nReceived: \"$10.00\"\nError: BTP_ASSERTION: After adding Mouse Pad, total should be $30.00\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: \"$30.00\"\nReceived: \"$10.00\"",
+    "durationMs": 11061,
+    "evidenceIds": []
+  },
+  "error": "Model returned an empty response. Verify LLM configuration and credentials.",
+  "stopReason": "Model returned an empty response. Verify LLM configuration and credentials.",
+  "completedAt": "2026-10-08T22:54:03.001Z"
+}

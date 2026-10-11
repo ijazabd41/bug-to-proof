@@ -1,0 +1,124 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-bd46eff5-69f6-4a59-ba94-145644d4c12f",
+  "caseId": "case-test-dynamic-service",
+  "mode": "simulated",
+  "state": "CANCELLED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [
+    {
+      "attemptNumber": 1,
+      "proposal": {
+        "schemaVersion": "1.0",
+        "proposalId": "prop-b1089250-09b5-420d-b5ed-8ed4ad3732be",
+        "diagnosis": "Cart reset needs descriptive comment",
+        "assumptions": [
+          "Items array is reset"
+        ],
+        "rationale": "Add descriptive comment to clearCart",
+        "edits": [
+          {
+            "relativePath": "src/store/cartStore.ts",
+            "oldContent": "  clearCart: () => set({ items: [] }),",
+            "newContent": "  clearCart: () => set({ items: [] }), // reset items"
+          }
+        ],
+        "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -36,1 +36,1 @@\n-  clearCart: () => set({ items: [] }),\n+  clearCart: () => set({ items: [] }), // reset items\n",
+        "proposalHash": "3920d3137bbc48b7107a898814ff408859bc638e157a0caabee2817517f3f4af",
+        "proposedAt": "2026-10-09T10:07:58.799Z"
+      },
+      "state": "AWAITING_REVIEW",
+      "startedAt": "2026-10-09T10:07:58.687Z",
+      "stageLatenciesMs": {
+        "baseline": 39,
+        "proposal": 52
+      }
+    }
+  ],
+  "diagnostics": [],
+  "originalSourceFingerprint": "520562cf00f42f5037f21bd2fcfef890d522891cc720c867398dd6397a0d5d26",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-bd46eff5-69f6-4a59-ba94-145644d4c12f\\workspace",
+  "testFingerprint": "71ded93e74881cb66804a7ac8dbacd2264d095f1f790aa4ab743e9a8533153c9",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "requiredChecks": [],
+  "events": [
+    {
+      "timestamp": "2026-10-09T10:07:58.397Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "520562cf00f42f5037f21bd2fcfef890d522891cc720c867398dd6397a0d5d26",
+        "url": "http://localhost:5199"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T10:07:58.497Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    },
+    {
+      "timestamp": "2026-10-09T10:07:58.595Z",
+      "stage": "baseline",
+      "message": "Valid baseline failure confirmed: Cart total displays $30.00 vs Cart total displays $10.00"
+    },
+    {
+      "timestamp": "2026-10-09T10:07:58.662Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T10:07:58.894Z",
+      "stage": "proposal",
+      "message": "Generated and validated patch proposal. Awaiting exact review approval.",
+      "data": {
+        "proposalId": "prop-b1089250-09b5-420d-b5ed-8ed4ad3732be",
+        "proposalHash": "3920d3137bbc48b7107a898814ff408859bc638e157a0caabee2817517f3f4af",
+        "attempt": 1
+      }
+    },
+    {
+      "timestamp": "2026-10-09T10:07:59.073Z",
+      "stage": "cancellation",
+      "message": "Run cancelled: Operator cancelled execution"
+    }
+  ],
+  "createdAt": "2026-10-09T10:07:58.385Z",
+  "updatedAt": "2026-10-09T10:07:59.110Z",
+  "baselineRun": {
+    "outcome": "ASSERTION_FAILED",
+    "testFingerprint": "71ded93e74881cb66804a7ac8dbacd2264d095f1f790aa4ab743e9a8533153c9",
+    "testIds": [
+      "tests/playwright/cases/case-001-cart-total.spec.ts:cart total displays $30.00:chromium"
+    ],
+    "runId": "mock-run-id",
+    "reportHash": "mock-report-hash-12345",
+    "runAt": "2026-10-09T10:07:58.555Z",
+    "passed": false,
+    "expected": "Cart total displays $30.00",
+    "actual": "Cart total displays $10.00",
+    "durationMs": 120,
+    "evidenceIds": []
+  },
+  "proposal": {
+    "schemaVersion": "1.0",
+    "proposalId": "prop-b1089250-09b5-420d-b5ed-8ed4ad3732be",
+    "diagnosis": "Cart reset needs descriptive comment",
+    "assumptions": [
+      "Items array is reset"
+    ],
+    "rationale": "Add descriptive comment to clearCart",
+    "edits": [
+      {
+        "relativePath": "src/store/cartStore.ts",
+        "oldContent": "  clearCart: () => set({ items: [] }),",
+        "newContent": "  clearCart: () => set({ items: [] }), // reset items"
+      }
+    ],
+    "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -36,1 +36,1 @@\n-  clearCart: () => set({ items: [] }),\n+  clearCart: () => set({ items: [] }), // reset items\n",
+    "proposalHash": "3920d3137bbc48b7107a898814ff408859bc638e157a0caabee2817517f3f4af",
+    "proposedAt": "2026-10-09T10:07:58.799Z"
+  },
+  "stopReason": "Operator cancelled execution",
+  "completedAt": "2026-10-09T10:07:59.055Z"
+}

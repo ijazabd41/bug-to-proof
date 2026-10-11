@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-d02f6198-10e3-4b29-a6cf-6d8ed7c0b96c",
+  "caseId": "case-004-cart-clear",
+  "mode": "simulated",
+  "state": "BLOCKED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [],
+  "diagnostics": [],
+  "originalSourceFingerprint": "7043632c87950456cf2bfc4b1a4a43f36d8a2ac71c8e3f58c59bf27eb6bb80a6",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-d02f6198-10e3-4b29-a6cf-6d8ed7c0b96c\\workspace",
+  "testFingerprint": "5b810831c91bf57bc509f17ba6672a18a55d4e46c3b4a34d6353218e34a0fa2c",
+  "reproductionTestFile": "tests/playwright/cases/case-004-cart-clear.spec.ts",
+  "requiredChecks": [],
+  "events": [
+    {
+      "timestamp": "2026-10-09T02:17:52.316Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "7043632c87950456cf2bfc4b1a4a43f36d8a2ac71c8e3f58c59bf27eb6bb80a6",
+        "url": "http://localhost:5210"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T02:17:52.351Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    }
+  ],
+  "createdAt": "2026-10-09T02:17:52.310Z",
+  "updatedAt": "2026-10-09T02:17:52.370Z",
+  "error": "testFingerprint is not defined",
+  "completedAt": "2026-10-09T02:17:52.370Z"
+}

@@ -1,4 +1,6 @@
 # Rida Zainab — Progress Tracker
+
+> **Archive notice:** Historical team tracker retained for attribution. Use [`arbitrary-bug-reproduction.md`](arbitrary-bug-reproduction.md) for active work.
 ### Track: React Dashboard · Branch: `feature/dashboard`
 
 > Import types from `@bug-to-proof/shared-types`.

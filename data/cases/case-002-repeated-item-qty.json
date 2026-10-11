@@ -1,0 +1,22 @@
+{
+  "id": "case-002-repeated-item-qty",
+  "title": "Adding an existing item does not increment its quantity",
+  "description": "Adding the same product multiple times leaves the quantity at 1 instead of incrementing it.",
+  "status": "READY_TO_REPRODUCE",
+  "createdAt": "2026-10-09T08:30:07.670Z",
+  "updatedAt": "2026-10-09T08:30:07.670Z",
+  "reproduction": {
+    "preconditions": [],
+    "steps": [
+      "Run reproduction test"
+    ],
+    "expected": "All assertions pass",
+    "actual": "Defect observed",
+    "testFile": "tests/playwright/cases/case-002-repeated-item-qty.spec.ts",
+    "lastRun": null
+  },
+  "patch": null,
+  "verification": null,
+  "evidence": [],
+  "rootCauseExplanation": null
+}

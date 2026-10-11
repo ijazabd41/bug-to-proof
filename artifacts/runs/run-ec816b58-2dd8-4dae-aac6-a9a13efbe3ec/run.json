@@ -1,0 +1,237 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-ec816b58-2dd8-4dae-aac6-a9a13efbe3ec",
+  "caseId": "case-001",
+  "mode": "dynamic",
+  "state": "VERIFIED",
+  "attempt": 1,
+  "maxAttempts": 1,
+  "attempts": [
+    {
+      "attemptNumber": 1,
+      "proposal": {
+        "schemaVersion": "1.0",
+        "proposalId": "prop-browser-flow-1791543313933",
+        "diagnosis": "Cart total only reads first item price instead of summing all items",
+        "assumptions": [
+          "Standard cart reduction over item price and quantity"
+        ],
+        "rationale": "Sum all item prices multiplied by quantities",
+        "edits": [
+          {
+            "relativePath": "src/store/cartStore.ts",
+            "oldContent": "  total: () => get().items[0]?.price ?? 0,",
+            "newContent": "  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),"
+          }
+        ],
+        "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -38,1 +38,1 @@\n-  total: () => get().items[0]?.price ?? 0,\n+  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),\n",
+        "proposalHash": "f90cecfee6e37e8a9d338df397b0b9c9ecd0299ad23a9ed2b9aa3690bfbb438d",
+        "proposedAt": "2026-10-09T10:55:13.933Z"
+      },
+      "state": "VERIFIED",
+      "startedAt": "2026-10-09T10:55:49.872Z",
+      "stageLatenciesMs": {
+        "baseline": 23233,
+        "proposal": 1,
+        "postPatchReproduction": 13392,
+        "regressionChecks": 25032
+      },
+      "completedAt": "2026-10-09T10:56:30.426Z"
+    }
+  ],
+  "diagnostics": [],
+  "originalSourceFingerprint": "ea2d05db476de3bbc4d3c84d767bed9a9c6b1efe8f633d1a519c9d8fd68d9ae1",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-ec816b58-2dd8-4dae-aac6-a9a13efbe3ec\\workspace",
+  "testFingerprint": "71ded93e74881cb66804a7ac8dbacd2264d095f1f790aa4ab743e9a8533153c9",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "requiredChecks": [
+    {
+      "checkId": "check-typecheck",
+      "name": "TypeScript compilation",
+      "type": "typecheck",
+      "command": "tsc --project artifacts/runs/run-ec816b58-2dd8-4dae-aac6-a9a13efbe3ec/workspace/apps/minishop/tsconfig.json --noEmit",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 7068,
+      "output": "",
+      "artifactPath": "artifacts/runs/run-ec816b58-2dd8-4dae-aac6-a9a13efbe3ec/attempt-1/checks/checks/typecheck.log"
+    },
+    {
+      "checkId": "check-build",
+      "name": "Production Vite build",
+      "type": "build",
+      "command": "vite build artifacts/runs/run-ec816b58-2dd8-4dae-aac6-a9a13efbe3ec/workspace/apps/minishop --config artifacts/runs/run-ec816b58-2dd8-4dae-aac6-a9a13efbe3ec/workspace/apps/minishop/vite.config.ts",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 5476,
+      "output": "3:56:16 PM [vite] warning: `esbuild` option was specified by \"vite:react-babel\" plugin. This option is deprecated, please use `oxc` instead.\n`optimizeDeps.rollupOptions` / `ssr.optimizeDeps.rollupOptions` is deprecated. Use `optimizeDeps.rolldownOptions` instead. Note that this option may be set by a plugin. Set VITE_DEPRECATION_TRACE=1 to see where it is called.\n[vite:react-babel] We recommend switching to `@vitejs/plugin-react-oxc` for improved performance. More information at https://vite.dev/rolldown\nvite v8.3.1 building client environment for production...\ntransforming...\n✓ 32 modules transformed.\nrendering chunks...\ncomputing gzip size...\nartifacts/runs/run-ec816b58-2dd8-4dae-aac6-a9a13efbe3ec/workspace/apps/minishop/dist/index.html                  0.45 kB │ gzip:  0.32 kB\nartifacts/runs/run-ec816b58-2dd8-4dae-aac6-a9a13efbe3ec/workspace/apps/minishop/dist/assets/index-Bhzmuuku.js  169.98 kB │ gzip: 55.68 kB\n\n✓ built in 526ms\n",
+      "artifactPath": "artifacts/runs/run-ec816b58-2dd8-4dae-aac6-a9a13efbe3ec/attempt-1/checks/checks/build.log"
+    },
+    {
+      "checkId": "check-unit-tests",
+      "name": "MiniShop unit tests",
+      "type": "unit-tests",
+      "command": "vitest run --root artifacts/runs/run-ec816b58-2dd8-4dae-aac6-a9a13efbe3ec/workspace/apps/minishop",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 12404,
+      "output": "3:56:23 PM [vite] warning: `esbuild` option was specified by \"vite:react-babel\" plugin. This option is deprecated, please use `oxc` instead.\n`optimizeDeps.rollupOptions` / `ssr.optimizeDeps.rollupOptions` is deprecated. Use `optimizeDeps.rolldownOptions` instead. Note that this option may be set by a plugin. Set VITE_DEPRECATION_TRACE=1 to see where it is called.\nBoth esbuild and oxc options were set. oxc options will be used and esbuild options will be ignored. The following esbuild options were set: `{ jsx: 'automatic', jsxImportSource: undefined }`\n[vite:react-babel] We recommend switching to `@vitejs/plugin-react-oxc` for improved performance. More information at https://vite.dev/rolldown\n\n RUN  v5.0.2 D:/bug-to-proof/artifacts/runs/run-ec816b58-2dd8-4dae-aac6-a9a13efbe3ec/workspace/apps/minishop\n\n\n Test Files  2 passed (2)\n      Tests  4 passed (4)\n   Start at  15:56:23\n   Duration  6.29s (environment 79%, setup 10%, transform 4%, import 3%, tests 3%, worker 1%)\n\n",
+      "artifactPath": "artifacts/runs/run-ec816b58-2dd8-4dae-aac6-a9a13efbe3ec/attempt-1/checks/checks/unit-tests.log"
+    }
+  ],
+  "events": [
+    {
+      "timestamp": "2026-10-09T10:55:14.050Z",
+      "stage": "initialization",
+      "message": "Repair run initialized and queued for background execution"
+    },
+    {
+      "timestamp": "2026-10-09T10:55:17.356Z",
+      "stage": "recovery",
+      "message": "Recovered interrupted run after process restart. Marked as BLOCKED."
+    },
+    {
+      "timestamp": "2026-10-09T10:55:26.433Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "ea2d05db476de3bbc4d3c84d767bed9a9c6b1efe8f633d1a519c9d8fd68d9ae1",
+        "url": "http://127.0.0.1:6101"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T10:55:26.471Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    },
+    {
+      "timestamp": "2026-10-09T10:55:37.570Z",
+      "stage": "recovery",
+      "message": "Recovered interrupted run after process restart. Marked as BLOCKED."
+    },
+    {
+      "timestamp": "2026-10-09T10:55:49.763Z",
+      "stage": "baseline",
+      "message": "Valid baseline failure confirmed:  vs Error: BTP_ASSERTION: Cart total should be $30.00 after adding $10 + $20 items\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: \"$30.00\"\nReceived: \"$10.00\"\nError: BTP_ASSERTION: After adding Mouse Pad, total should be $30.00\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: \"$30.00\"\nReceived: \"$10.00\""
+    },
+    {
+      "timestamp": "2026-10-09T10:55:49.856Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T10:55:50.005Z",
+      "stage": "proposal",
+      "message": "Generated and validated patch proposal. Awaiting exact review approval.",
+      "data": {
+        "proposalId": "prop-browser-flow-1791543313933",
+        "proposalHash": "f90cecfee6e37e8a9d338df397b0b9c9ecd0299ad23a9ed2b9aa3690bfbb438d",
+        "attempt": 1
+      }
+    },
+    {
+      "timestamp": "2026-10-09T10:55:51.224Z",
+      "stage": "patch_applied",
+      "message": "Exact reviewed patch applied transactionally to candidate workspace",
+      "data": {
+        "proposalId": "prop-browser-flow-1791543313933",
+        "proposalHash": "f90cecfee6e37e8a9d338df397b0b9c9ecd0299ad23a9ed2b9aa3690bfbb438d",
+        "modifiedFiles": [
+          "src/store/cartStore.ts"
+        ],
+        "expectedPatchedFingerprint": "934ddaa5ee8750edf73b0fc05285fabc92c99ac4462dc54db24b7392c633e4fe"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T10:55:51.275Z",
+      "stage": "verification",
+      "message": "Running post-patch reproduction verification (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T10:56:04.687Z",
+      "stage": "verification",
+      "message": "Post-patch reproduction outcome: PASSED (passed: true)"
+    },
+    {
+      "timestamp": "2026-10-09T10:56:04.774Z",
+      "stage": "regression",
+      "message": "Running required candidate regression checks (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T10:56:16.538Z",
+      "stage": "recovery",
+      "message": "Recovered interrupted run after process restart. Marked as BLOCKED."
+    },
+    {
+      "timestamp": "2026-10-09T10:56:29.813Z",
+      "stage": "regression",
+      "message": "All 3 candidate regression checks passed cleanly."
+    },
+    {
+      "timestamp": "2026-10-09T10:56:30.427Z",
+      "stage": "completion",
+      "message": "Run finalized with status: VERIFIED (All verification gates and regression checks passed cleanly.)"
+    }
+  ],
+  "createdAt": "2026-10-09T10:55:14.050Z",
+  "updatedAt": "2026-10-09T10:56:30.432Z",
+  "stopReason": "All verification gates and regression checks passed cleanly.",
+  "completedAt": "2026-10-09T10:56:30.426Z",
+  "baselineRun": {
+    "outcome": "ASSERTION_FAILED",
+    "testFingerprint": "71ded93e74881cb66804a7ac8dbacd2264d095f1f790aa4ab743e9a8533153c9",
+    "testIds": [
+      "case-001-cart-total.spec.ts:cart total should equal sum of all item prices:chromium",
+      "case-001-cart-total.spec.ts:cart total should update when items are added incrementally:chromium"
+    ],
+    "runId": "run-ec816b58-2dd8-4dae-aac6-a9a13efbe3ec",
+    "reportHash": "2752e1bcb3614195542a93bd75004a130c07b237f92980319e4f1306000c6eca",
+    "runAt": "2026-10-09T10:55:49.711Z",
+    "passed": false,
+    "expected": "",
+    "actual": "Error: BTP_ASSERTION: Cart total should be $30.00 after adding $10 + $20 items\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: \"$30.00\"\nReceived: \"$10.00\"\nError: BTP_ASSERTION: After adding Mouse Pad, total should be $30.00\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: \"$30.00\"\nReceived: \"$10.00\"",
+    "durationMs": 23046,
+    "evidenceIds": []
+  },
+  "proposal": {
+    "schemaVersion": "1.0",
+    "proposalId": "prop-browser-flow-1791543313933",
+    "diagnosis": "Cart total only reads first item price instead of summing all items",
+    "assumptions": [
+      "Standard cart reduction over item price and quantity"
+    ],
+    "rationale": "Sum all item prices multiplied by quantities",
+    "edits": [
+      {
+        "relativePath": "src/store/cartStore.ts",
+        "oldContent": "  total: () => get().items[0]?.price ?? 0,",
+        "newContent": "  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),"
+      }
+    ],
+    "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -38,1 +38,1 @@\n-  total: () => get().items[0]?.price ?? 0,\n+  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),\n",
+    "proposalHash": "f90cecfee6e37e8a9d338df397b0b9c9ecd0299ad23a9ed2b9aa3690bfbb438d",
+    "proposedAt": "2026-10-09T10:55:13.933Z"
+  },
+  "review": {
+    "proposalId": "prop-browser-flow-1791543313933",
+    "proposalHash": "f90cecfee6e37e8a9d338df397b0b9c9ecd0299ad23a9ed2b9aa3690bfbb438d",
+    "decision": "APPROVED",
+    "reviewerNotes": "Verified exact patch in browser test run"
+  },
+  "postPatchRun": {
+    "outcome": "PASSED",
+    "testFingerprint": "71ded93e74881cb66804a7ac8dbacd2264d095f1f790aa4ab743e9a8533153c9",
+    "testIds": [
+      "case-001-cart-total.spec.ts:cart total should equal sum of all item prices:chromium",
+      "case-001-cart-total.spec.ts:cart total should update when items are added incrementally:chromium"
+    ],
+    "runId": "run-ec816b58-2dd8-4dae-aac6-a9a13efbe3ec",
+    "reportHash": "3036fcf58ab1592722ca26ee0dda3cf5e9a5ae611aa9d3f969fc06faf320e0a9",
+    "runAt": "2026-10-09T10:56:04.685Z",
+    "passed": true,
+    "expected": "",
+    "actual": "All selected tests passed",
+    "durationMs": 13315,
+    "evidenceIds": []
+  }
+}

@@ -1,0 +1,216 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-abc7e675-0640-4429-abd7-86f39e8f6c63",
+  "caseId": "case-002-repeated-item-qty",
+  "mode": "simulated",
+  "state": "VERIFIED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [
+    {
+      "attemptNumber": 1,
+      "proposal": {
+        "schemaVersion": "1.0",
+        "proposalId": "prop-sim-case-002-repeated-item-qty",
+        "diagnosis": "The addItem method resets quantity to 1 when a matching existing item is found instead of incrementing quantity by 1.",
+        "assumptions": [
+          "Standard MiniShop cart operations"
+        ],
+        "rationale": "Fix defective logic in src/store/cartStore.ts",
+        "edits": [
+          {
+            "relativePath": "src/store/cartStore.ts",
+            "oldContent": "            i.id === product.id ? { ...i, quantity: 1 } : i",
+            "newContent": "            i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i"
+          }
+        ],
+        "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -31,1 +31,1 @@\n-            i.id === product.id ? { ...i, quantity: 1 } : i\n+            i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i\n",
+        "proposalHash": "88c94349f78a58786f151a94a9bf8db22ef3eeece7f1d7cb2074ac9ba604059a",
+        "proposedAt": "2026-10-09T14:29:37.832Z"
+      },
+      "state": "VERIFIED",
+      "startedAt": "2026-10-09T14:29:37.771Z",
+      "stageLatenciesMs": {
+        "baseline": 22,
+        "proposal": 0,
+        "postPatchReproduction": 47,
+        "regressionChecks": 0
+      },
+      "completedAt": "2026-10-09T14:29:41.054Z"
+    }
+  ],
+  "diagnostics": [],
+  "originalSourceFingerprint": "9b41ba8b6c1576afdafa9cd335920104fa8d7be477f83c902395e54d18c3d2d2",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-abc7e675-0640-4429-abd7-86f39e8f6c63\\workspace",
+  "testFingerprint": "31f035df068b8a85d332b00e905c852f89f7be3ceba1915cec1b5502ce66882c",
+  "reproductionTestFile": "tests/playwright/cases/case-002-repeated-item-qty.spec.ts",
+  "requiredChecks": [
+    {
+      "checkId": "check-typecheck",
+      "name": "TypeScript compilation",
+      "type": "typecheck",
+      "command": "tsc --noEmit",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 320,
+      "output": "Found 0 errors"
+    },
+    {
+      "checkId": "check-build",
+      "name": "Production Vite build",
+      "type": "build",
+      "command": "vite build",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 450,
+      "output": "built in 0.4s"
+    },
+    {
+      "checkId": "check-unit-tests",
+      "name": "MiniShop unit tests",
+      "type": "unit-tests",
+      "command": "vitest run apps/minishop",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 250,
+      "output": "3 passed"
+    }
+  ],
+  "events": [
+    {
+      "timestamp": "2026-10-09T14:29:36.762Z",
+      "stage": "initialization",
+      "message": "Repair run initialized and queued for background execution"
+    },
+    {
+      "timestamp": "2026-10-09T14:29:37.355Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "9b41ba8b6c1576afdafa9cd335920104fa8d7be477f83c902395e54d18c3d2d2",
+        "url": "http://localhost:5210"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T14:29:37.492Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    },
+    {
+      "timestamp": "2026-10-09T14:29:37.567Z",
+      "stage": "baseline",
+      "message": "Valid baseline failure confirmed: Expected value matches calculation vs Defective value received"
+    },
+    {
+      "timestamp": "2026-10-09T14:29:37.746Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T14:29:37.899Z",
+      "stage": "proposal",
+      "message": "Generated and validated patch proposal. Awaiting exact review approval.",
+      "data": {
+        "proposalId": "prop-sim-case-002-repeated-item-qty",
+        "proposalHash": "88c94349f78a58786f151a94a9bf8db22ef3eeece7f1d7cb2074ac9ba604059a",
+        "attempt": 1
+      }
+    },
+    {
+      "timestamp": "2026-10-09T14:29:40.201Z",
+      "stage": "patch_applied",
+      "message": "Exact reviewed patch applied transactionally to candidate workspace",
+      "data": {
+        "proposalId": "prop-sim-case-002-repeated-item-qty",
+        "proposalHash": "88c94349f78a58786f151a94a9bf8db22ef3eeece7f1d7cb2074ac9ba604059a",
+        "modifiedFiles": [
+          "src/store/cartStore.ts"
+        ],
+        "expectedPatchedFingerprint": "a569393604065635e42b85db12ffc935508f9cb445b93b89c3437ea4f1a99b46"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T14:29:40.402Z",
+      "stage": "verification",
+      "message": "Running post-patch reproduction verification (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T14:29:40.514Z",
+      "stage": "verification",
+      "message": "Post-patch reproduction outcome: PASSED (passed: true)"
+    },
+    {
+      "timestamp": "2026-10-09T14:29:40.665Z",
+      "stage": "regression",
+      "message": "Running required candidate regression checks (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T14:29:40.682Z",
+      "stage": "regression",
+      "message": "All 3 candidate regression checks passed cleanly."
+    },
+    {
+      "timestamp": "2026-10-09T14:29:41.081Z",
+      "stage": "completion",
+      "message": "Run finalized with status: VERIFIED (All verification gates and regression checks passed cleanly.)"
+    }
+  ],
+  "createdAt": "2026-10-09T14:29:36.762Z",
+  "updatedAt": "2026-10-09T14:29:41.103Z",
+  "baselineRun": {
+    "outcome": "ASSERTION_FAILED",
+    "testFingerprint": "31f035df068b8a85d332b00e905c852f89f7be3ceba1915cec1b5502ce66882c",
+    "testIds": [
+      "case-002-repeated-item-qty.spec.ts:Adding an existing item does not increment its quantity:chromium"
+    ],
+    "runId": "sim-eval-before",
+    "reportHash": "sim-hash",
+    "runAt": "2026-10-09T14:29:37.538Z",
+    "passed": false,
+    "expected": "Expected value matches calculation",
+    "actual": "Defective value received",
+    "durationMs": 150,
+    "evidenceIds": []
+  },
+  "proposal": {
+    "schemaVersion": "1.0",
+    "proposalId": "prop-sim-case-002-repeated-item-qty",
+    "diagnosis": "The addItem method resets quantity to 1 when a matching existing item is found instead of incrementing quantity by 1.",
+    "assumptions": [
+      "Standard MiniShop cart operations"
+    ],
+    "rationale": "Fix defective logic in src/store/cartStore.ts",
+    "edits": [
+      {
+        "relativePath": "src/store/cartStore.ts",
+        "oldContent": "            i.id === product.id ? { ...i, quantity: 1 } : i",
+        "newContent": "            i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i"
+      }
+    ],
+    "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -31,1 +31,1 @@\n-            i.id === product.id ? { ...i, quantity: 1 } : i\n+            i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i\n",
+    "proposalHash": "88c94349f78a58786f151a94a9bf8db22ef3eeece7f1d7cb2074ac9ba604059a",
+    "proposedAt": "2026-10-09T14:29:37.832Z"
+  },
+  "review": {
+    "proposalId": "prop-sim-case-002-repeated-item-qty",
+    "proposalHash": "88c94349f78a58786f151a94a9bf8db22ef3eeece7f1d7cb2074ac9ba604059a",
+    "decision": "APPROVED"
+  },
+  "postPatchRun": {
+    "outcome": "PASSED",
+    "testFingerprint": "31f035df068b8a85d332b00e905c852f89f7be3ceba1915cec1b5502ce66882c",
+    "testIds": [
+      "case-002-repeated-item-qty.spec.ts:Adding an existing item does not increment its quantity:chromium"
+    ],
+    "runId": "sim-eval-after",
+    "reportHash": "sim-hash",
+    "runAt": "2026-10-09T14:29:40.500Z",
+    "passed": true,
+    "expected": "Expected value matches calculation",
+    "actual": "Expected value matches calculation",
+    "durationMs": 150,
+    "evidenceIds": []
+  },
+  "stopReason": "All verification gates and regression checks passed cleanly.",
+  "completedAt": "2026-10-09T14:29:41.054Z"
+}

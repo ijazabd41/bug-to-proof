@@ -1,0 +1,157 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-730a04bf-e469-4509-8c22-797aa63065f3",
+  "caseId": "case-007-promo-discount",
+  "mode": "simulated",
+  "state": "BLOCKED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [
+    {
+      "attemptNumber": 1,
+      "proposal": {
+        "schemaVersion": "1.0",
+        "proposalId": "prop-sim-case-007-promo-discount",
+        "diagnosis": "The applyPromoCode method captures a stale snapshot of get().items prior to the async validation delay, overwriting state.items upon resolution and losing concurrent items added during the network delay.",
+        "assumptions": [
+          "Standard MiniShop cart operations"
+        ],
+        "rationale": "Fix defective logic in src/store/cartStore.ts",
+        "edits": [
+          {
+            "relativePath": "src/store/cartStore.ts",
+            "oldContent": "  applyPromoCode: async (code: string) => {\n    const staleItems = get().items;\n    // Simulate async promo validation\n    await new Promise((resolve) => setTimeout(resolve, 80));\n    const normalized = code.trim().toUpperCase();\n    if (normalized === \"SAVE20\") {\n      set({\n        promoCode: \"SAVE20\",\n        discountPercent: 20,\n        items: staleItems.map((i) => ({ ...i, price: Number((i.price * 0.8).toFixed(2)) })),\n      });\n      return true;\n    }\n    return false;\n  },",
+            "newContent": "  applyPromoCode: async (code: string) => {\n    // Simulate async promo validation\n    await new Promise((resolve) => setTimeout(resolve, 80));\n    const normalized = code.trim().toUpperCase();\n    if (normalized === \"SAVE20\") {\n      set((state) => ({\n        promoCode: \"SAVE20\",\n        discountPercent: 20,\n        items: state.items.map((i) => ({ ...i, price: Number((i.price * 0.8).toFixed(2)) })),\n      }));\n      return true;\n    }\n    return false;\n  },"
+          }
+        ],
+        "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -45,15 +45,14 @@\n-  applyPromoCode: async (code: string) => {\n-    const staleItems = get().items;\n-    // Simulate async promo validation\n-    await new Promise((resolve) => setTimeout(resolve, 80));\n-    const normalized = code.trim().toUpperCase();\n-    if (normalized === \"SAVE20\") {\n-      set({\n-        promoCode: \"SAVE20\",\n-        discountPercent: 20,\n-        items: staleItems.map((i) => ({ ...i, price: Number((i.price * 0.8).toFixed(2)) })),\n-      });\n-      return true;\n-    }\n-    return false;\n-  },\n+  applyPromoCode: async (code: string) => {\n+    // Simulate async promo validation\n+    await new Promise((resolve) => setTimeout(resolve, 80));\n+    const normalized = code.trim().toUpperCase();\n+    if (normalized === \"SAVE20\") {\n+      set((state) => ({\n+        promoCode: \"SAVE20\",\n+        discountPercent: 20,\n+        items: state.items.map((i) => ({ ...i, price: Number((i.price * 0.8).toFixed(2)) })),\n+      }));\n+      return true;\n+    }\n+    return false;\n+  },\n",
+        "proposalHash": "8d3a6fde395e5a67cc5842d1687aa7df26a02677eb8cc7b16b0a93ccf6e7ce17",
+        "proposedAt": "2026-10-09T14:27:22.248Z"
+      },
+      "state": "AWAITING_REVIEW",
+      "startedAt": "2026-10-09T14:27:22.230Z",
+      "stageLatenciesMs": {
+        "baseline": 5,
+        "proposal": 0
+      }
+    }
+  ],
+  "diagnostics": [],
+  "originalSourceFingerprint": "0a04f98c97d6200542ccbe49afc777f97454ae072776e997ebb93ea92b76b8a9",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-730a04bf-e469-4509-8c22-797aa63065f3\\workspace",
+  "testFingerprint": "aa0f4b95add3e4ade27e4e56a83338c3bd7b26e595ba86a0b5b97ca1c3bb3b13",
+  "reproductionTestFile": "tests/playwright/cases/case-007-promo-discount.spec.ts",
+  "requiredChecks": [],
+  "events": [
+    {
+      "timestamp": "2026-10-09T14:27:21.672Z",
+      "stage": "initialization",
+      "message": "Repair run initialized and queued for background execution"
+    },
+    {
+      "timestamp": "2026-10-09T14:27:22.147Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "0a04f98c97d6200542ccbe49afc777f97454ae072776e997ebb93ea92b76b8a9",
+        "url": "http://localhost:5210"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T14:27:22.168Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    },
+    {
+      "timestamp": "2026-10-09T14:27:22.190Z",
+      "stage": "baseline",
+      "message": "Valid baseline failure confirmed: Expected value matches calculation vs Defective value received"
+    },
+    {
+      "timestamp": "2026-10-09T14:27:22.219Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T14:27:22.272Z",
+      "stage": "proposal",
+      "message": "Generated and validated patch proposal. Awaiting exact review approval.",
+      "data": {
+        "proposalId": "prop-sim-case-007-promo-discount",
+        "proposalHash": "8d3a6fde395e5a67cc5842d1687aa7df26a02677eb8cc7b16b0a93ccf6e7ce17",
+        "attempt": 1
+      }
+    },
+    {
+      "timestamp": "2026-10-09T14:27:22.497Z",
+      "stage": "patch_applied",
+      "message": "Exact reviewed patch applied transactionally to candidate workspace",
+      "data": {
+        "proposalId": "prop-sim-case-007-promo-discount",
+        "proposalHash": "8d3a6fde395e5a67cc5842d1687aa7df26a02677eb8cc7b16b0a93ccf6e7ce17",
+        "modifiedFiles": [
+          "src/store/cartStore.ts"
+        ],
+        "expectedPatchedFingerprint": "a569393604065635e42b85db12ffc935508f9cb445b93b89c3437ea4f1a99b46"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T14:27:22.583Z",
+      "stage": "verification",
+      "message": "Running post-patch reproduction verification (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T14:27:22.613Z",
+      "stage": "verification",
+      "message": "Post-patch reproduction outcome: PASSED (passed: true)"
+    },
+    {
+      "timestamp": "2026-10-09T14:47:31.099Z",
+      "stage": "recovery",
+      "message": "Recovered interrupted run after process restart. Marked as BLOCKED."
+    }
+  ],
+  "createdAt": "2026-10-09T14:27:21.672Z",
+  "updatedAt": "2026-10-09T14:47:31.099Z",
+  "baselineRun": {
+    "outcome": "ASSERTION_FAILED",
+    "testFingerprint": "aa0f4b95add3e4ade27e4e56a83338c3bd7b26e595ba86a0b5b97ca1c3bb3b13",
+    "testIds": [
+      "case-007-promo-discount.spec.ts:Async promo code application race condition drops concurrent cart updates:chromium"
+    ],
+    "runId": "sim-eval-before",
+    "reportHash": "sim-hash",
+    "runAt": "2026-10-09T14:27:22.181Z",
+    "passed": false,
+    "expected": "Expected value matches calculation",
+    "actual": "Defective value received",
+    "durationMs": 150,
+    "evidenceIds": []
+  },
+  "proposal": {
+    "schemaVersion": "1.0",
+    "proposalId": "prop-sim-case-007-promo-discount",
+    "diagnosis": "The applyPromoCode method captures a stale snapshot of get().items prior to the async validation delay, overwriting state.items upon resolution and losing concurrent items added during the network delay.",
+    "assumptions": [
+      "Standard MiniShop cart operations"
+    ],
+    "rationale": "Fix defective logic in src/store/cartStore.ts",
+    "edits": [
+      {
+        "relativePath": "src/store/cartStore.ts",
+        "oldContent": "  applyPromoCode: async (code: string) => {\n    const staleItems = get().items;\n    // Simulate async promo validation\n    await new Promise((resolve) => setTimeout(resolve, 80));\n    const normalized = code.trim().toUpperCase();\n    if (normalized === \"SAVE20\") {\n      set({\n        promoCode: \"SAVE20\",\n        discountPercent: 20,\n        items: staleItems.map((i) => ({ ...i, price: Number((i.price * 0.8).toFixed(2)) })),\n      });\n      return true;\n    }\n    return false;\n  },",
+        "newContent": "  applyPromoCode: async (code: string) => {\n    // Simulate async promo validation\n    await new Promise((resolve) => setTimeout(resolve, 80));\n    const normalized = code.trim().toUpperCase();\n    if (normalized === \"SAVE20\") {\n      set((state) => ({\n        promoCode: \"SAVE20\",\n        discountPercent: 20,\n        items: state.items.map((i) => ({ ...i, price: Number((i.price * 0.8).toFixed(2)) })),\n      }));\n      return true;\n    }\n    return false;\n  },"
+      }
+    ],
+    "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -45,15 +45,14 @@\n-  applyPromoCode: async (code: string) => {\n-    const staleItems = get().items;\n-    // Simulate async promo validation\n-    await new Promise((resolve) => setTimeout(resolve, 80));\n-    const normalized = code.trim().toUpperCase();\n-    if (normalized === \"SAVE20\") {\n-      set({\n-        promoCode: \"SAVE20\",\n-        discountPercent: 20,\n-        items: staleItems.map((i) => ({ ...i, price: Number((i.price * 0.8).toFixed(2)) })),\n-      });\n-      return true;\n-    }\n-    return false;\n-  },\n+  applyPromoCode: async (code: string) => {\n+    // Simulate async promo validation\n+    await new Promise((resolve) => setTimeout(resolve, 80));\n+    const normalized = code.trim().toUpperCase();\n+    if (normalized === \"SAVE20\") {\n+      set((state) => ({\n+        promoCode: \"SAVE20\",\n+        discountPercent: 20,\n+        items: state.items.map((i) => ({ ...i, price: Number((i.price * 0.8).toFixed(2)) })),\n+      }));\n+      return true;\n+    }\n+    return false;\n+  },\n",
+    "proposalHash": "8d3a6fde395e5a67cc5842d1687aa7df26a02677eb8cc7b16b0a93ccf6e7ce17",
+    "proposedAt": "2026-10-09T14:27:22.248Z"
+  },
+  "review": {
+    "proposalId": "prop-sim-case-007-promo-discount",
+    "proposalHash": "8d3a6fde395e5a67cc5842d1687aa7df26a02677eb8cc7b16b0a93ccf6e7ce17",
+    "decision": "APPROVED"
+  },
+  "stopReason": "Process was interrupted before completion",
+  "completedAt": "2026-10-09T14:47:31.086Z"
+}

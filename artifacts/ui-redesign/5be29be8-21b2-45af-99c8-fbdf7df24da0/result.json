@@ -1,0 +1,232 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\bug-to-proof\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "tests/playwright/playwright.config.ts",
+      "tests/playwright/cases/ui-smoke-5be29be8-21b2-45af-99c8-fbdf7df24da0.spec.ts",
+      "--reporter=json",
+      "--output",
+      "D:\\bug-to-proof\\artifacts\\ui-redesign\\5be29be8-21b2-45af-99c8-fbdf7df24da0"
+    ],
+    "configFile": "D:\\bug-to-proof\\tests\\playwright\\playwright.config.ts",
+    "rootDir": "D:/bug-to-proof/tests/playwright/cases",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/bug-to-proof/artifacts/ui-redesign/5be29be8-21b2-45af-99c8-fbdf7df24da0",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "D:/bug-to-proof/tests/playwright/cases",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "ui-smoke-5be29be8-21b2-45af-99c8-fbdf7df24da0.spec.ts",
+      "file": "ui-smoke-5be29be8-21b2-45af-99c8-fbdf7df24da0.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "desktop case workspace and report submission",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 15817,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('table')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('table') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('table')\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('table')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('table') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('table')\u001b[22m\n\n    at D:\\bug-to-proof\\tests\\playwright\\cases\\ui-smoke-5be29be8-21b2-45af-99c8-fbdf7df24da0.spec.ts:10:41",
+                    "location": {
+                      "file": "D:\\bug-to-proof\\tests\\playwright\\cases\\ui-smoke-5be29be8-21b2-45af-99c8-fbdf7df24da0.spec.ts",
+                      "column": 41,
+                      "line": 10
+                    },
+                    "snippet": "   8 |   await page.goto(\"/\");\n   9 |   await expect(page.getByRole(\"heading\", { name: \"Bug cases.\" })).toBeVisible();\n> 10 |   await expect(page.getByRole(\"table\")).toBeVisible();\n     |                                         ^\n  11 |   const cases = await (await page.request.get(\"/api/cases\")).json();\n  12 |   expect(cases.length).toBeGreaterThan(0);\n  13 |   await expect(page.locator(\".case-title\").first()).toBeVisible();"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\bug-to-proof\\tests\\playwright\\cases\\ui-smoke-5be29be8-21b2-45af-99c8-fbdf7df24da0.spec.ts",
+                        "column": 41,
+                        "line": 10
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('table')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('table') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('table')\u001b[22m\n\n\n   8 |   await page.goto(\"/\");\n   9 |   await expect(page.getByRole(\"heading\", { name: \"Bug cases.\" })).toBeVisible();\n> 10 |   await expect(page.getByRole(\"table\")).toBeVisible();\n     |                                         ^\n  11 |   const cases = await (await page.request.get(\"/api/cases\")).json();\n  12 |   expect(cases.length).toBeGreaterThan(0);\n  13 |   await expect(page.locator(\".case-title\").first()).toBeVisible();\n    at D:\\bug-to-proof\\tests\\playwright\\cases\\ui-smoke-5be29be8-21b2-45af-99c8-fbdf7df24da0.spec.ts:10:41"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T19:07:31.336Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\bug-to-proof\\artifacts\\ui-redesign\\5be29be8-21b2-45af-99c8-fbdf7df24da0\\ui-smoke-5be29be8-21b2-45a-18559-space-and-report-submission-chromium\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\bug-to-proof\\artifacts\\ui-redesign\\5be29be8-21b2-45af-99c8-fbdf7df24da0\\ui-smoke-5be29be8-21b2-45a-18559-space-and-report-submission-chromium\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\bug-to-proof\\artifacts\\ui-redesign\\5be29be8-21b2-45af-99c8-fbdf7df24da0\\ui-smoke-5be29be8-21b2-45a-18559-space-and-report-submission-chromium\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\bug-to-proof\\tests\\playwright\\cases\\ui-smoke-5be29be8-21b2-45af-99c8-fbdf7df24da0.spec.ts",
+                    "column": 41,
+                    "line": 10
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "d625e73e6f3633750c43-386daf89a09fa18a5015",
+          "file": "ui-smoke-5be29be8-21b2-45af-99c8-fbdf7df24da0.spec.ts",
+          "line": 5,
+          "column": 5
+        },
+        {
+          "title": "real case evidence on desktop and mobile",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 7748,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('table')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('table') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('table')\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('table')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('table') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('table')\u001b[22m\n\n    at D:\\bug-to-proof\\tests\\playwright\\cases\\ui-smoke-5be29be8-21b2-45af-99c8-fbdf7df24da0.spec.ts:55:41",
+                    "location": {
+                      "file": "D:\\bug-to-proof\\tests\\playwright\\cases\\ui-smoke-5be29be8-21b2-45af-99c8-fbdf7df24da0.spec.ts",
+                      "column": 41,
+                      "line": 55
+                    },
+                    "snippet": "  53 | test(\"real case evidence on desktop and mobile\", async ({ page }, testInfo) => {\n  54 |   await page.goto(\"/\");\n> 55 |   await expect(page.getByRole(\"table\")).toBeVisible();\n     |                                         ^\n  56 |   const cases = await (await page.request.get(\"/api/cases\")).json();\n  57 |   const selected = cases.find((c: any) => c.evidence?.length) ?? cases[0];\n  58 |   await page.goto(\"/cases/\" + selected.id);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\bug-to-proof\\tests\\playwright\\cases\\ui-smoke-5be29be8-21b2-45af-99c8-fbdf7df24da0.spec.ts",
+                        "column": 41,
+                        "line": 55
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('table')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('table') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('table')\u001b[22m\n\n\n  53 | test(\"real case evidence on desktop and mobile\", async ({ page }, testInfo) => {\n  54 |   await page.goto(\"/\");\n> 55 |   await expect(page.getByRole(\"table\")).toBeVisible();\n     |                                         ^\n  56 |   const cases = await (await page.request.get(\"/api/cases\")).json();\n  57 |   const selected = cases.find((c: any) => c.evidence?.length) ?? cases[0];\n  58 |   await page.goto(\"/cases/\" + selected.id);\n    at D:\\bug-to-proof\\tests\\playwright\\cases\\ui-smoke-5be29be8-21b2-45af-99c8-fbdf7df24da0.spec.ts:55:41"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T19:07:57.906Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\bug-to-proof\\artifacts\\ui-redesign\\5be29be8-21b2-45af-99c8-fbdf7df24da0\\ui-smoke-5be29be8-21b2-45a-32451-dence-on-desktop-and-mobile-chromium\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\bug-to-proof\\artifacts\\ui-redesign\\5be29be8-21b2-45af-99c8-fbdf7df24da0\\ui-smoke-5be29be8-21b2-45a-32451-dence-on-desktop-and-mobile-chromium\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\bug-to-proof\\artifacts\\ui-redesign\\5be29be8-21b2-45af-99c8-fbdf7df24da0\\ui-smoke-5be29be8-21b2-45a-32451-dence-on-desktop-and-mobile-chromium\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\bug-to-proof\\tests\\playwright\\cases\\ui-smoke-5be29be8-21b2-45af-99c8-fbdf7df24da0.spec.ts",
+                    "column": 41,
+                    "line": 55
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "d625e73e6f3633750c43-915d71319ed73ef6f2a0",
+          "file": "ui-smoke-5be29be8-21b2-45af-99c8-fbdf7df24da0.spec.ts",
+          "line": 53,
+          "column": 5
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-11T19:07:27.385Z",
+    "duration": 41059.952000000005,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

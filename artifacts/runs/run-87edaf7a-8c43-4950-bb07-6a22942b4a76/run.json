@@ -1,0 +1,216 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-87edaf7a-8c43-4950-bb07-6a22942b4a76",
+  "caseId": "case-001-cart-total",
+  "mode": "simulated",
+  "state": "VERIFIED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [
+    {
+      "attemptNumber": 1,
+      "proposal": {
+        "schemaVersion": "1.0",
+        "proposalId": "prop-sim-case-001-cart-total",
+        "diagnosis": "The total method in cartStore only accesses the first item's price at index 0 rather than reducing over all items and multiplying price by quantity.",
+        "assumptions": [
+          "Standard MiniShop cart operations"
+        ],
+        "rationale": "Fix defective logic in src/store/cartStore.ts",
+        "edits": [
+          {
+            "relativePath": "src/store/cartStore.ts",
+            "oldContent": "  total: () => get().items[0]?.price ?? 0,",
+            "newContent": "  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),"
+          }
+        ],
+        "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -64,1 +64,1 @@\n-  total: () => get().items[0]?.price ?? 0,\n+  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),\n",
+        "proposalHash": "2ec0887b2ee7dee217278e3157af99b77a31a6ac277b7dcf5443d6b64c431140",
+        "proposedAt": "2026-10-09T14:29:35.698Z"
+      },
+      "state": "VERIFIED",
+      "startedAt": "2026-10-09T14:29:35.665Z",
+      "stageLatenciesMs": {
+        "baseline": 9,
+        "proposal": 1,
+        "postPatchReproduction": 14,
+        "regressionChecks": 1
+      },
+      "completedAt": "2026-10-09T14:29:36.630Z"
+    }
+  ],
+  "diagnostics": [],
+  "originalSourceFingerprint": "6fdaf167595d7e430957a9f90129d79bb45deff54a234cc492f2d462579b16c6",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-87edaf7a-8c43-4950-bb07-6a22942b4a76\\workspace",
+  "testFingerprint": "bc3ded85db78e4735c59884ee2ef9b83b445c0a22c90f5cace95b9221ed5ff6d",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "requiredChecks": [
+    {
+      "checkId": "check-typecheck",
+      "name": "TypeScript compilation",
+      "type": "typecheck",
+      "command": "tsc --noEmit",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 320,
+      "output": "Found 0 errors"
+    },
+    {
+      "checkId": "check-build",
+      "name": "Production Vite build",
+      "type": "build",
+      "command": "vite build",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 450,
+      "output": "built in 0.4s"
+    },
+    {
+      "checkId": "check-unit-tests",
+      "name": "MiniShop unit tests",
+      "type": "unit-tests",
+      "command": "vitest run apps/minishop",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 250,
+      "output": "3 passed"
+    }
+  ],
+  "events": [
+    {
+      "timestamp": "2026-10-09T14:29:35.055Z",
+      "stage": "initialization",
+      "message": "Repair run initialized and queued for background execution"
+    },
+    {
+      "timestamp": "2026-10-09T14:29:35.473Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "6fdaf167595d7e430957a9f90129d79bb45deff54a234cc492f2d462579b16c6",
+        "url": "http://localhost:5210"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T14:29:35.520Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    },
+    {
+      "timestamp": "2026-10-09T14:29:35.579Z",
+      "stage": "baseline",
+      "message": "Valid baseline failure confirmed: Expected value matches calculation vs Defective value received"
+    },
+    {
+      "timestamp": "2026-10-09T14:29:35.652Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T14:29:35.738Z",
+      "stage": "proposal",
+      "message": "Generated and validated patch proposal. Awaiting exact review approval.",
+      "data": {
+        "proposalId": "prop-sim-case-001-cart-total",
+        "proposalHash": "2ec0887b2ee7dee217278e3157af99b77a31a6ac277b7dcf5443d6b64c431140",
+        "attempt": 1
+      }
+    },
+    {
+      "timestamp": "2026-10-09T14:29:36.246Z",
+      "stage": "patch_applied",
+      "message": "Exact reviewed patch applied transactionally to candidate workspace",
+      "data": {
+        "proposalId": "prop-sim-case-001-cart-total",
+        "proposalHash": "2ec0887b2ee7dee217278e3157af99b77a31a6ac277b7dcf5443d6b64c431140",
+        "modifiedFiles": [
+          "src/store/cartStore.ts"
+        ],
+        "expectedPatchedFingerprint": "a569393604065635e42b85db12ffc935508f9cb445b93b89c3437ea4f1a99b46"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T14:29:36.305Z",
+      "stage": "verification",
+      "message": "Running post-patch reproduction verification (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T14:29:36.339Z",
+      "stage": "verification",
+      "message": "Post-patch reproduction outcome: PASSED (passed: true)"
+    },
+    {
+      "timestamp": "2026-10-09T14:29:36.390Z",
+      "stage": "regression",
+      "message": "Running required candidate regression checks (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T14:29:36.404Z",
+      "stage": "regression",
+      "message": "All 3 candidate regression checks passed cleanly."
+    },
+    {
+      "timestamp": "2026-10-09T14:29:36.632Z",
+      "stage": "completion",
+      "message": "Run finalized with status: VERIFIED (All verification gates and regression checks passed cleanly.)"
+    }
+  ],
+  "createdAt": "2026-10-09T14:29:35.055Z",
+  "updatedAt": "2026-10-09T14:29:36.644Z",
+  "baselineRun": {
+    "outcome": "ASSERTION_FAILED",
+    "testFingerprint": "bc3ded85db78e4735c59884ee2ef9b83b445c0a22c90f5cace95b9221ed5ff6d",
+    "testIds": [
+      "case-001-cart-total.spec.ts:Cart total only reflects first item price:chromium"
+    ],
+    "runId": "sim-eval-before",
+    "reportHash": "sim-hash",
+    "runAt": "2026-10-09T14:29:35.535Z",
+    "passed": false,
+    "expected": "Expected value matches calculation",
+    "actual": "Defective value received",
+    "durationMs": 150,
+    "evidenceIds": []
+  },
+  "proposal": {
+    "schemaVersion": "1.0",
+    "proposalId": "prop-sim-case-001-cart-total",
+    "diagnosis": "The total method in cartStore only accesses the first item's price at index 0 rather than reducing over all items and multiplying price by quantity.",
+    "assumptions": [
+      "Standard MiniShop cart operations"
+    ],
+    "rationale": "Fix defective logic in src/store/cartStore.ts",
+    "edits": [
+      {
+        "relativePath": "src/store/cartStore.ts",
+        "oldContent": "  total: () => get().items[0]?.price ?? 0,",
+        "newContent": "  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),"
+      }
+    ],
+    "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -64,1 +64,1 @@\n-  total: () => get().items[0]?.price ?? 0,\n+  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),\n",
+    "proposalHash": "2ec0887b2ee7dee217278e3157af99b77a31a6ac277b7dcf5443d6b64c431140",
+    "proposedAt": "2026-10-09T14:29:35.698Z"
+  },
+  "review": {
+    "proposalId": "prop-sim-case-001-cart-total",
+    "proposalHash": "2ec0887b2ee7dee217278e3157af99b77a31a6ac277b7dcf5443d6b64c431140",
+    "decision": "APPROVED"
+  },
+  "postPatchRun": {
+    "outcome": "PASSED",
+    "testFingerprint": "bc3ded85db78e4735c59884ee2ef9b83b445c0a22c90f5cace95b9221ed5ff6d",
+    "testIds": [
+      "case-001-cart-total.spec.ts:Cart total only reflects first item price:chromium"
+    ],
+    "runId": "sim-eval-after",
+    "reportHash": "sim-hash",
+    "runAt": "2026-10-09T14:29:36.335Z",
+    "passed": true,
+    "expected": "Expected value matches calculation",
+    "actual": "Expected value matches calculation",
+    "durationMs": 150,
+    "evidenceIds": []
+  },
+  "stopReason": "All verification gates and regression checks passed cleanly.",
+  "completedAt": "2026-10-09T14:29:36.630Z"
+}

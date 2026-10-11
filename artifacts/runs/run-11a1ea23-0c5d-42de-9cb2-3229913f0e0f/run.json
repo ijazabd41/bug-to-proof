@@ -1,0 +1,215 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-11a1ea23-0c5d-42de-9cb2-3229913f0e0f",
+  "caseId": "case-002-repeated-item-qty",
+  "mode": "dynamic",
+  "state": "VERIFIED",
+  "attempt": 1,
+  "maxAttempts": 2,
+  "attempts": [
+    {
+      "attemptNumber": 1,
+      "proposal": {
+        "schemaVersion": "1.0",
+        "proposalId": "prop-4ce1e520-069f-4a8f-9725-d2c920953686",
+        "diagnosis": "The `addItem` action always resets the quantity of an existing cart item to 1 instead of incrementing it, causing repeated additions to not increase the quantity.",
+        "assumptions": [
+          "The `CartItem` interface correctly extends `Product` with a `quantity` field.",
+          "No other parts of the application rely on the quantity being set to 1 when an item already exists."
+        ],
+        "rationale": "By updating the quantity to `i.quantity + 1` when an existing item is found, the cart correctly reflects the number of times a product has been added. This change preserves all other item properties and does not affect the logic for adding new items or removing items.",
+        "edits": [
+          {
+            "relativePath": "src/store/cartStore.ts",
+            "oldContent": "addItem: (product) =>\n    set((state) => {\n      const existing = state.items.find((i) => i.id === product.id);\n      if (existing) {\n        return {\n          items: state.items.map((i) =>\n            i.id === product.id ? { ...i, quantity: 1 } : i\n          ),\n        };\n      }\n      return { items: [...state.items, { ...product, quantity: 1 }] };\n    }),",
+            "newContent": "addItem: (product) =>\n    set((state) => {\n      const existing = state.items.find((i) => i.id === product.id);\n      if (existing) {\n        return {\n          items: state.items.map((i) =>\n            i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i\n          ),\n        };\n      }\n      return { items: [...state.items, { ...product, quantity: 1 }] };\n    }),"
+          }
+        ],
+        "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -18,12 +18,12 @@\n-addItem: (product) =>\n-    set((state) => {\n-      const existing = state.items.find((i) => i.id === product.id);\n-      if (existing) {\n-        return {\n-          items: state.items.map((i) =>\n-            i.id === product.id ? { ...i, quantity: 1 } : i\n-          ),\n-        };\n-      }\n-      return { items: [...state.items, { ...product, quantity: 1 }] };\n-    }),\n+addItem: (product) =>\n+    set((state) => {\n+      const existing = state.items.find((i) => i.id === product.id);\n+      if (existing) {\n+        return {\n+          items: state.items.map((i) =>\n+            i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i\n+          ),\n+        };\n+      }\n+      return { items: [...state.items, { ...product, quantity: 1 }] };\n+    }),\n",
+        "proposalHash": "97347f610cf3d7f518a34c6dafa9e4a24bf29362ba00c744f787214ba74fd727",
+        "proposedAt": "2026-10-09T08:30:19.491Z"
+      },
+      "state": "VERIFIED",
+      "startedAt": "2026-10-09T08:30:17.858Z",
+      "stageLatenciesMs": {
+        "baseline": 5990,
+        "proposal": 1615,
+        "postPatchReproduction": 6169,
+        "regressionChecks": 14112
+      },
+      "completedAt": "2026-10-09T08:30:40.808Z"
+    }
+  ],
+  "diagnostics": [],
+  "originalSourceFingerprint": "6b9e4e065a5e9f314f0b33b00ef95c0f0be55005feb108fbd9b3976fa9d662cf",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-11a1ea23-0c5d-42de-9cb2-3229913f0e0f\\workspace",
+  "testFingerprint": "a25a0a4295708656ad116f7978d27683d96c595e5093b1ca9066afa629e9f425",
+  "reproductionTestFile": "tests/playwright/cases/case-002-repeated-item-qty.spec.ts",
+  "requiredChecks": [
+    {
+      "checkId": "check-typecheck",
+      "name": "TypeScript compilation",
+      "type": "typecheck",
+      "command": "tsc --project artifacts/runs/run-11a1ea23-0c5d-42de-9cb2-3229913f0e0f/workspace/apps/minishop/tsconfig.json --noEmit",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 3239,
+      "output": "",
+      "artifactPath": "artifacts/runs/run-11a1ea23-0c5d-42de-9cb2-3229913f0e0f/attempt-1/checks/checks/typecheck.log"
+    },
+    {
+      "checkId": "check-build",
+      "name": "Production Vite build",
+      "type": "build",
+      "command": "vite build artifacts/runs/run-11a1ea23-0c5d-42de-9cb2-3229913f0e0f/workspace/apps/minishop --config artifacts/runs/run-11a1ea23-0c5d-42de-9cb2-3229913f0e0f/workspace/apps/minishop/vite.config.ts",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 3795,
+      "output": "\u001b[2m1:30:32 PM\u001b[22m \u001b[33m\u001b[1m[vite]\u001b[22m\u001b[39m \u001b[33mwarning: `esbuild` option was specified by \"vite:react-babel\" plugin. This option is deprecated, please use `oxc` instead.\u001b[39m\n`optimizeDeps.rollupOptions` / `ssr.optimizeDeps.rollupOptions` is deprecated. Use `optimizeDeps.rolldownOptions` instead. Note that this option may be set by a plugin. Set VITE_DEPRECATION_TRACE=1 to see where it is called.\n[vite:react-babel] We recommend switching to `@vitejs/plugin-react-oxc` for improved performance. More information at https://vite.dev/rolldown\n\u001b[36mvite v8.3.1 \u001b[32mbuilding client environment for production...\u001b[36m\u001b[39m\ntransforming...\n✓ 32 modules transformed.\nrendering chunks...\ncomputing gzip size...\nartifacts/runs/run-11a1ea23-0c5d-42de-9cb2-3229913f0e0f/workspace/apps/minishop/dist/index.html                  0.45 kB │ gzip:  0.32 kB\nartifacts/runs/run-11a1ea23-0c5d-42de-9cb2-3229913f0e0f/workspace/apps/minishop/dist/assets/index-Bhzmuuku.js  169.98 kB │ gzip: 55.68 kB\n\n\u001b[32m✓ built in 281ms\u001b[39m\n",
+      "artifactPath": "artifacts/runs/run-11a1ea23-0c5d-42de-9cb2-3229913f0e0f/attempt-1/checks/checks/build.log"
+    },
+    {
+      "checkId": "check-unit-tests",
+      "name": "MiniShop unit tests",
+      "type": "unit-tests",
+      "command": "vitest run --root artifacts/runs/run-11a1ea23-0c5d-42de-9cb2-3229913f0e0f/workspace/apps/minishop",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 7063,
+      "output": "\u001b[2m1:30:36 PM\u001b[22m \u001b[33m\u001b[1m[vite]\u001b[22m\u001b[39m \u001b[33mwarning: `esbuild` option was specified by \"vite:react-babel\" plugin. This option is deprecated, please use `oxc` instead.\u001b[39m\n`optimizeDeps.rollupOptions` / `ssr.optimizeDeps.rollupOptions` is deprecated. Use `optimizeDeps.rolldownOptions` instead. Note that this option may be set by a plugin. Set VITE_DEPRECATION_TRACE=1 to see where it is called.\n\u001b[33mBoth esbuild and oxc options were set. oxc options will be used and esbuild options will be ignored.\u001b[39m The following esbuild options were set: `{ jsx: 'automatic', jsxImportSource: undefined }`\n[vite:react-babel] We recommend switching to `@vitejs/plugin-react-oxc` for improved performance. More information at https://vite.dev/rolldown\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv5.0.2 \u001b[39m\u001b[90mD:/bug-to-proof/artifacts/runs/run-11a1ea23-0c5d-42de-9cb2-3229913f0e0f/workspace/apps/minishop\u001b[39m\n\n \u001b[32m✓\u001b[39m src/store/cartStore.test.ts \u001b[2m(\u001b[22m\u001b[2m3 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 10\u001b[2mms\u001b[22m\u001b[39m\n\u001b[90mstderr\u001b[2m | src/App.test.tsx\u001b[2m > \u001b[22m\u001b[2mApp\u001b[2m > \u001b[22m\u001b[2mrenders MiniShop text\n\u001b[22m\u001b[39m⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.\n⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.\n\n \u001b[32m✓\u001b[39m src/App.test.tsx \u001b[2m(\u001b[22m\u001b[2m1 test\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 201\u001b[2mms\u001b[22m\u001b[39m\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[1m\u001b[32m4 passed\u001b[39m\u001b[22m\u001b[90m (4)\u001b[39m\n\u001b[2m   Start at \u001b[22m 13:30:36\n\u001b[2m   Duration \u001b[22m 3.26s\u001b[2m (environment 75%, setup 11%, transform 6%, tests 4%, import 4%, worker 1%)\u001b[22m\n\n",
+      "artifactPath": "artifacts/runs/run-11a1ea23-0c5d-42de-9cb2-3229913f0e0f/attempt-1/checks/checks/unit-tests.log"
+    }
+  ],
+  "events": [
+    {
+      "timestamp": "2026-10-09T08:30:11.796Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "6b9e4e065a5e9f314f0b33b00ef95c0f0be55005feb108fbd9b3976fa9d662cf",
+        "url": "http://127.0.0.1:5619"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T08:30:11.817Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    },
+    {
+      "timestamp": "2026-10-09T08:30:17.811Z",
+      "stage": "baseline",
+      "message": "Valid baseline failure confirmed:  vs Error: BTP_ASSERTION: Item quantity should be ×2 after adding Keyboard twice\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: \"×2\"\nReceived: \"×1\""
+    },
+    {
+      "timestamp": "2026-10-09T08:30:17.845Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T08:30:19.511Z",
+      "stage": "proposal",
+      "message": "Generated and validated patch proposal. Awaiting exact review approval.",
+      "data": {
+        "proposalId": "prop-4ce1e520-069f-4a8f-9725-d2c920953686",
+        "proposalHash": "97347f610cf3d7f518a34c6dafa9e4a24bf29362ba00c744f787214ba74fd727",
+        "attempt": 1
+      }
+    },
+    {
+      "timestamp": "2026-10-09T08:30:19.749Z",
+      "stage": "patch_applied",
+      "message": "Exact reviewed patch applied transactionally to candidate workspace",
+      "data": {
+        "proposalId": "prop-4ce1e520-069f-4a8f-9725-d2c920953686",
+        "proposalHash": "97347f610cf3d7f518a34c6dafa9e4a24bf29362ba00c744f787214ba74fd727",
+        "modifiedFiles": [
+          "src/store/cartStore.ts"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-10-09T08:30:19.792Z",
+      "stage": "verification",
+      "message": "Running post-patch reproduction verification (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T08:30:25.980Z",
+      "stage": "verification",
+      "message": "Post-patch reproduction outcome: PASSED (passed: true)"
+    },
+    {
+      "timestamp": "2026-10-09T08:30:26.015Z",
+      "stage": "regression",
+      "message": "Running required candidate regression checks (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T08:30:40.132Z",
+      "stage": "regression",
+      "message": "All 3 candidate regression checks passed cleanly."
+    },
+    {
+      "timestamp": "2026-10-09T08:30:40.808Z",
+      "stage": "completion",
+      "message": "Run finalized with status: VERIFIED (All verification gates and regression checks passed cleanly.)"
+    }
+  ],
+  "createdAt": "2026-10-09T08:30:11.791Z",
+  "updatedAt": "2026-10-09T08:30:40.813Z",
+  "baselineRun": {
+    "outcome": "ASSERTION_FAILED",
+    "testFingerprint": "a25a0a4295708656ad116f7978d27683d96c595e5093b1ca9066afa629e9f425",
+    "testIds": [
+      "case-002-repeated-item-qty.spec.ts:adding an item twice should increment its quantity to 2:chromium"
+    ],
+    "runId": "34a3a856-1293-4ca2-8184-5ebfab164047",
+    "reportHash": "bed86da41f9e6ebdf2f91a33c12d712d44df1349902f56c553fee1943f0a20c6",
+    "runAt": "2026-10-09T08:30:17.810Z",
+    "passed": false,
+    "expected": "",
+    "actual": "Error: BTP_ASSERTION: Item quantity should be ×2 after adding Keyboard twice\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: \"×2\"\nReceived: \"×1\"",
+    "durationMs": 5974,
+    "evidenceIds": []
+  },
+  "proposal": {
+    "schemaVersion": "1.0",
+    "proposalId": "prop-4ce1e520-069f-4a8f-9725-d2c920953686",
+    "diagnosis": "The `addItem` action always resets the quantity of an existing cart item to 1 instead of incrementing it, causing repeated additions to not increase the quantity.",
+    "assumptions": [
+      "The `CartItem` interface correctly extends `Product` with a `quantity` field.",
+      "No other parts of the application rely on the quantity being set to 1 when an item already exists."
+    ],
+    "rationale": "By updating the quantity to `i.quantity + 1` when an existing item is found, the cart correctly reflects the number of times a product has been added. This change preserves all other item properties and does not affect the logic for adding new items or removing items.",
+    "edits": [
+      {
+        "relativePath": "src/store/cartStore.ts",
+        "oldContent": "addItem: (product) =>\n    set((state) => {\n      const existing = state.items.find((i) => i.id === product.id);\n      if (existing) {\n        return {\n          items: state.items.map((i) =>\n            i.id === product.id ? { ...i, quantity: 1 } : i\n          ),\n        };\n      }\n      return { items: [...state.items, { ...product, quantity: 1 }] };\n    }),",
+        "newContent": "addItem: (product) =>\n    set((state) => {\n      const existing = state.items.find((i) => i.id === product.id);\n      if (existing) {\n        return {\n          items: state.items.map((i) =>\n            i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i\n          ),\n        };\n      }\n      return { items: [...state.items, { ...product, quantity: 1 }] };\n    }),"
+      }
+    ],
+    "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -18,12 +18,12 @@\n-addItem: (product) =>\n-    set((state) => {\n-      const existing = state.items.find((i) => i.id === product.id);\n-      if (existing) {\n-        return {\n-          items: state.items.map((i) =>\n-            i.id === product.id ? { ...i, quantity: 1 } : i\n-          ),\n-        };\n-      }\n-      return { items: [...state.items, { ...product, quantity: 1 }] };\n-    }),\n+addItem: (product) =>\n+    set((state) => {\n+      const existing = state.items.find((i) => i.id === product.id);\n+      if (existing) {\n+        return {\n+          items: state.items.map((i) =>\n+            i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i\n+          ),\n+        };\n+      }\n+      return { items: [...state.items, { ...product, quantity: 1 }] };\n+    }),\n",
+    "proposalHash": "97347f610cf3d7f518a34c6dafa9e4a24bf29362ba00c744f787214ba74fd727",
+    "proposedAt": "2026-10-09T08:30:19.491Z"
+  },
+  "review": {
+    "proposalId": "prop-4ce1e520-069f-4a8f-9725-d2c920953686",
+    "proposalHash": "97347f610cf3d7f518a34c6dafa9e4a24bf29362ba00c744f787214ba74fd727",
+    "decision": "APPROVED"
+  },
+  "postPatchRun": {
+    "outcome": "PASSED",
+    "testFingerprint": "a25a0a4295708656ad116f7978d27683d96c595e5093b1ca9066afa629e9f425",
+    "testIds": [
+      "case-002-repeated-item-qty.spec.ts:adding an item twice should increment its quantity to 2:chromium"
+    ],
+    "runId": "ccb9e049-fb08-4acc-a6fc-4677a047a204",
+    "reportHash": "a14aadf1306869f6af2408071e5373a34d30bcf63d89c86c85833ae877210117",
+    "runAt": "2026-10-09T08:30:25.979Z",
+    "passed": true,
+    "expected": "",
+    "actual": "All selected tests passed",
+    "durationMs": 6152,
+    "evidenceIds": []
+  },
+  "stopReason": "All verification gates and regression checks passed cleanly.",
+  "completedAt": "2026-10-09T08:30:40.808Z"
+}

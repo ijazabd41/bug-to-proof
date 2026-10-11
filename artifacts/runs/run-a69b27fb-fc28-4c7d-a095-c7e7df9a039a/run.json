@@ -1,0 +1,216 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-a69b27fb-fc28-4c7d-a095-c7e7df9a039a",
+  "caseId": "case-004-cart-clear",
+  "mode": "simulated",
+  "state": "VERIFIED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [
+    {
+      "attemptNumber": 1,
+      "proposal": {
+        "schemaVersion": "1.0",
+        "proposalId": "prop-sim-case-004-cart-clear",
+        "diagnosis": "The clearCart method resets store state cleanly.",
+        "assumptions": [
+          "Standard MiniShop cart operations"
+        ],
+        "rationale": "Fix defective logic in src/store/cartStore.ts",
+        "edits": [
+          {
+            "relativePath": "src/store/cartStore.ts",
+            "oldContent": "  clearCart: () => set({ items: [], promoCode: null, discountPercent: 0 }),\n\n  applyPromoCode:",
+            "newContent": "  clearCart: () => set({ items: [], promoCode: null, discountPercent: 0 }),\n\n  applyPromoCode:"
+          }
+        ],
+        "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -44,3 +44,3 @@\n-  clearCart: () => set({ items: [], promoCode: null, discountPercent: 0 }),\n-\n-  applyPromoCode:\n+  clearCart: () => set({ items: [], promoCode: null, discountPercent: 0 }),\n+\n+  applyPromoCode:\n",
+        "proposalHash": "46e22c43012f69bf370a2c2093f388519bb51b01f626b6651dc040e6925b552e",
+        "proposedAt": "2026-10-09T13:11:25.158Z"
+      },
+      "state": "VERIFIED",
+      "startedAt": "2026-10-09T13:11:25.143Z",
+      "stageLatenciesMs": {
+        "baseline": 6,
+        "proposal": 0,
+        "postPatchReproduction": 6,
+        "regressionChecks": 0
+      },
+      "completedAt": "2026-10-09T13:11:25.590Z"
+    }
+  ],
+  "diagnostics": [],
+  "originalSourceFingerprint": "e02b815f08cb77b6344ae52311e6dac524c3eb6632c43622c7a1e10d184558fa",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-a69b27fb-fc28-4c7d-a095-c7e7df9a039a\\workspace",
+  "testFingerprint": "0b22f99a1ec79761d6b482b71772091ff941c339777567dd16f5d2dbfef4feee",
+  "reproductionTestFile": "tests/playwright/cases/case-004-cart-clear.spec.ts",
+  "requiredChecks": [
+    {
+      "checkId": "check-typecheck",
+      "name": "TypeScript compilation",
+      "type": "typecheck",
+      "command": "tsc --noEmit",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 320,
+      "output": "Found 0 errors"
+    },
+    {
+      "checkId": "check-build",
+      "name": "Production Vite build",
+      "type": "build",
+      "command": "vite build",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 450,
+      "output": "built in 0.4s"
+    },
+    {
+      "checkId": "check-unit-tests",
+      "name": "MiniShop unit tests",
+      "type": "unit-tests",
+      "command": "vitest run apps/minishop",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 250,
+      "output": "3 passed"
+    }
+  ],
+  "events": [
+    {
+      "timestamp": "2026-10-09T13:11:24.877Z",
+      "stage": "initialization",
+      "message": "Repair run initialized and queued for background execution"
+    },
+    {
+      "timestamp": "2026-10-09T13:11:25.074Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "e02b815f08cb77b6344ae52311e6dac524c3eb6632c43622c7a1e10d184558fa",
+        "url": "http://localhost:5210"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T13:11:25.092Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    },
+    {
+      "timestamp": "2026-10-09T13:11:25.112Z",
+      "stage": "baseline",
+      "message": "Valid baseline failure confirmed: Expected value matches calculation vs Defective value received"
+    },
+    {
+      "timestamp": "2026-10-09T13:11:25.134Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T13:11:25.177Z",
+      "stage": "proposal",
+      "message": "Generated and validated patch proposal. Awaiting exact review approval.",
+      "data": {
+        "proposalId": "prop-sim-case-004-cart-clear",
+        "proposalHash": "46e22c43012f69bf370a2c2093f388519bb51b01f626b6651dc040e6925b552e",
+        "attempt": 1
+      }
+    },
+    {
+      "timestamp": "2026-10-09T13:11:25.368Z",
+      "stage": "patch_applied",
+      "message": "Exact reviewed patch applied transactionally to candidate workspace",
+      "data": {
+        "proposalId": "prop-sim-case-004-cart-clear",
+        "proposalHash": "46e22c43012f69bf370a2c2093f388519bb51b01f626b6651dc040e6925b552e",
+        "modifiedFiles": [
+          "src/store/cartStore.ts"
+        ],
+        "expectedPatchedFingerprint": "e02b815f08cb77b6344ae52311e6dac524c3eb6632c43622c7a1e10d184558fa"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T13:11:25.395Z",
+      "stage": "verification",
+      "message": "Running post-patch reproduction verification (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T13:11:25.413Z",
+      "stage": "verification",
+      "message": "Post-patch reproduction outcome: PASSED (passed: true)"
+    },
+    {
+      "timestamp": "2026-10-09T13:11:25.448Z",
+      "stage": "regression",
+      "message": "Running required candidate regression checks (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T13:11:25.456Z",
+      "stage": "regression",
+      "message": "All 3 candidate regression checks passed cleanly."
+    },
+    {
+      "timestamp": "2026-10-09T13:11:25.590Z",
+      "stage": "completion",
+      "message": "Run finalized with status: VERIFIED (All verification gates and regression checks passed cleanly.)"
+    }
+  ],
+  "createdAt": "2026-10-09T13:11:24.877Z",
+  "updatedAt": "2026-10-09T13:11:25.597Z",
+  "baselineRun": {
+    "outcome": "ASSERTION_FAILED",
+    "testFingerprint": "0b22f99a1ec79761d6b482b71772091ff941c339777567dd16f5d2dbfef4feee",
+    "testIds": [
+      "case-004-cart-clear.spec.ts:Clear cart leaves items in state:chromium"
+    ],
+    "runId": "sim-eval-before",
+    "reportHash": "sim-hash",
+    "runAt": "2026-10-09T13:11:25.104Z",
+    "passed": false,
+    "expected": "Expected value matches calculation",
+    "actual": "Defective value received",
+    "durationMs": 150,
+    "evidenceIds": []
+  },
+  "proposal": {
+    "schemaVersion": "1.0",
+    "proposalId": "prop-sim-case-004-cart-clear",
+    "diagnosis": "The clearCart method resets store state cleanly.",
+    "assumptions": [
+      "Standard MiniShop cart operations"
+    ],
+    "rationale": "Fix defective logic in src/store/cartStore.ts",
+    "edits": [
+      {
+        "relativePath": "src/store/cartStore.ts",
+        "oldContent": "  clearCart: () => set({ items: [], promoCode: null, discountPercent: 0 }),\n\n  applyPromoCode:",
+        "newContent": "  clearCart: () => set({ items: [], promoCode: null, discountPercent: 0 }),\n\n  applyPromoCode:"
+      }
+    ],
+    "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -44,3 +44,3 @@\n-  clearCart: () => set({ items: [], promoCode: null, discountPercent: 0 }),\n-\n-  applyPromoCode:\n+  clearCart: () => set({ items: [], promoCode: null, discountPercent: 0 }),\n+\n+  applyPromoCode:\n",
+    "proposalHash": "46e22c43012f69bf370a2c2093f388519bb51b01f626b6651dc040e6925b552e",
+    "proposedAt": "2026-10-09T13:11:25.158Z"
+  },
+  "review": {
+    "proposalId": "prop-sim-case-004-cart-clear",
+    "proposalHash": "46e22c43012f69bf370a2c2093f388519bb51b01f626b6651dc040e6925b552e",
+    "decision": "APPROVED"
+  },
+  "postPatchRun": {
+    "outcome": "PASSED",
+    "testFingerprint": "0b22f99a1ec79761d6b482b71772091ff941c339777567dd16f5d2dbfef4feee",
+    "testIds": [
+      "case-004-cart-clear.spec.ts:Clear cart leaves items in state:chromium"
+    ],
+    "runId": "sim-eval-after",
+    "reportHash": "sim-hash",
+    "runAt": "2026-10-09T13:11:25.411Z",
+    "passed": true,
+    "expected": "Expected value matches calculation",
+    "actual": "Expected value matches calculation",
+    "durationMs": 150,
+    "evidenceIds": []
+  },
+  "stopReason": "All verification gates and regression checks passed cleanly.",
+  "completedAt": "2026-10-09T13:11:25.590Z"
+}

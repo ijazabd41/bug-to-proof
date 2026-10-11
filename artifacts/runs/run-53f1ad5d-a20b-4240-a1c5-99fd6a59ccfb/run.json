@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-53f1ad5d-a20b-4240-a1c5-99fd6a59ccfb",
+  "caseId": "case-002-repeated-item-qty",
+  "mode": "simulated",
+  "state": "BLOCKED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [],
+  "diagnostics": [],
+  "originalSourceFingerprint": "9b41ba8b6c1576afdafa9cd335920104fa8d7be477f83c902395e54d18c3d2d2",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-53f1ad5d-a20b-4240-a1c5-99fd6a59ccfb\\workspace",
+  "testFingerprint": "31f035df068b8a85d332b00e905c852f89f7be3ceba1915cec1b5502ce66882c",
+  "reproductionTestFile": "tests/playwright/cases/case-002-repeated-item-qty.spec.ts",
+  "requiredChecks": [],
+  "events": [
+    {
+      "timestamp": "2026-10-09T14:28:06.912Z",
+      "stage": "initialization",
+      "message": "Repair run initialized and queued for background execution"
+    },
+    {
+      "timestamp": "2026-10-09T14:28:07.368Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "9b41ba8b6c1576afdafa9cd335920104fa8d7be477f83c902395e54d18c3d2d2",
+        "url": "http://localhost:5210"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T14:28:07.450Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    }
+  ],
+  "createdAt": "2026-10-09T14:28:06.911Z",
+  "updatedAt": "2026-10-09T14:28:07.509Z",
+  "error": "Failed to atomically persist repair run run-53f1ad5d-a20b-4240-a1c5-99fd6a59ccfb: EPERM: operation not permitted, rename 'D:\\bug-to-proof\\artifacts\\runs\\run-53f1ad5d-a20b-4240-a1c5-99fd6a59ccfb\\run.json.10404.1791556087477.mltj3x.tmp' -> 'D:\\bug-to-proof\\artifacts\\runs\\run-53f1ad5d-a20b-4240-a1c5-99fd6a59ccfb\\run.json'",
+  "completedAt": "2026-10-09T14:28:07.509Z"
+}

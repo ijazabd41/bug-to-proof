@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "graph-run-unreproduced-1791533490473",
+  "caseId": "test-graph-case-001",
+  "mode": "dynamic",
+  "state": "BLOCKED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [],
+  "diagnostics": [],
+  "originalSourceFingerprint": "520562cf00f42f5037f21bd2fcfef890d522891cc720c867398dd6397a0d5d26",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\graph-run-unreproduced-1791533490473\\workspace",
+  "testFingerprint": "fp-test",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "requiredChecks": [],
+  "events": [
+    {
+      "timestamp": "2026-10-09T08:11:30.603Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "520562cf00f42f5037f21bd2fcfef890d522891cc720c867398dd6397a0d5d26",
+        "url": "http://localhost:5311"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T08:11:30.620Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    },
+    {
+      "timestamp": "2026-10-09T08:11:30.625Z",
+      "stage": "baseline",
+      "message": "Baseline verification stopped: The reported failure was not reproduced on original source."
+    },
+    {
+      "timestamp": "2026-10-09T08:11:30.662Z",
+      "stage": "completion",
+      "message": "Run finalized with status: BLOCKED (The reported failure was not reproduced on original source.)"
+    }
+  ],
+  "createdAt": "2026-10-09T08:11:30.599Z",
+  "updatedAt": "2026-10-09T08:11:30.669Z",
+  "baselineRun": {
+    "outcome": "PASSED",
+    "testFingerprint": "fp-test",
+    "testIds": [
+      "test-graph-case-001"
+    ],
+    "runId": "run-passed",
+    "runAt": "2026-10-09T08:11:30.623Z",
+    "passed": true,
+    "expected": "Total is $30.00",
+    "actual": "Total is $30.00",
+    "durationMs": 100,
+    "evidenceIds": []
+  },
+  "stopReason": "The reported failure was not reproduced on original source.",
+  "completedAt": "2026-10-09T08:11:30.659Z"
+}

@@ -1,0 +1,151 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-09a21e9f-5b76-48a1-a021-28d91083278d",
+  "caseId": "case-test-dynamic-service",
+  "mode": "simulated",
+  "state": "REJECTED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [
+    {
+      "attemptNumber": 1,
+      "proposal": {
+        "schemaVersion": "1.0",
+        "proposalId": "prop-1d3d8b3c-25a7-4a50-b095-12227bec90d3",
+        "diagnosis": "Cart reset needs descriptive comment",
+        "assumptions": [
+          "Items array is reset"
+        ],
+        "rationale": "Add descriptive comment to clearCart",
+        "edits": [
+          {
+            "relativePath": "src/store/cartStore.ts",
+            "oldContent": "  clearCart: () => set({ items: [] }),",
+            "newContent": "  clearCart: () => set({ items: [] }), // reset items"
+          }
+        ],
+        "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -36,1 +36,1 @@\n-  clearCart: () => set({ items: [] }),\n+  clearCart: () => set({ items: [] }), // reset items\n",
+        "proposalHash": "3920d3137bbc48b7107a898814ff408859bc638e157a0caabee2817517f3f4af",
+        "proposedAt": "2026-10-08T22:21:46.940Z"
+      },
+      "state": "REJECTED",
+      "startedAt": "2026-10-08T22:21:46.940Z",
+      "stageLatenciesMs": {
+        "baseline": 1,
+        "proposal": 7
+      },
+      "review": {
+        "reviewId": "rev-2c62bfba-c7b5-4fb2-b473-f329d4cf0078",
+        "proposalId": "prop-1d3d8b3c-25a7-4a50-b095-12227bec90d3",
+        "proposalHash": "3920d3137bbc48b7107a898814ff408859bc638e157a0caabee2817517f3f4af",
+        "decision": "REJECTED",
+        "reviewedAt": "2026-10-08T22:21:46.966Z",
+        "reviewerNotes": "Rejected for testing"
+      },
+      "failureReason": "Rejected for testing",
+      "completedAt": "2026-10-08T22:21:46.966Z"
+    }
+  ],
+  "diagnostics": [],
+  "originalSourceFingerprint": "520562cf00f42f5037f21bd2fcfef890d522891cc720c867398dd6397a0d5d26",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-09a21e9f-5b76-48a1-a021-28d91083278d\\workspace",
+  "testFingerprint": "71ded93e74881cb66804a7ac8dbacd2264d095f1f790aa4ab743e9a8533153c9",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "requiredChecks": [],
+  "events": [
+    {
+      "timestamp": "2026-10-08T22:21:46.860Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot",
+      "data": {
+        "originalSourceFingerprint": "520562cf00f42f5037f21bd2fcfef890d522891cc720c867398dd6397a0d5d26"
+      }
+    },
+    {
+      "timestamp": "2026-10-08T22:21:46.875Z",
+      "stage": "initialization",
+      "message": "Started isolated MiniShop server on port 5199",
+      "data": {
+        "url": "http://localhost:5199"
+      }
+    },
+    {
+      "timestamp": "2026-10-08T22:21:46.892Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    },
+    {
+      "timestamp": "2026-10-08T22:21:46.906Z",
+      "stage": "baseline",
+      "message": "Valid baseline failure confirmed: Cart total displays $30.00 vs Cart total displays $10.00"
+    },
+    {
+      "timestamp": "2026-10-08T22:21:46.928Z",
+      "stage": "investigation",
+      "message": "Investigating source files and generating minimal patch proposal"
+    },
+    {
+      "timestamp": "2026-10-08T22:21:46.951Z",
+      "stage": "proposal",
+      "message": "Generated and validated patch proposal. Awaiting exact review approval.",
+      "data": {
+        "proposalId": "prop-1d3d8b3c-25a7-4a50-b095-12227bec90d3",
+        "proposalHash": "3920d3137bbc48b7107a898814ff408859bc638e157a0caabee2817517f3f4af",
+        "attempt": 1
+      }
+    },
+    {
+      "timestamp": "2026-10-08T22:21:46.977Z",
+      "stage": "review",
+      "message": "Proposal rejected by reviewer"
+    }
+  ],
+  "createdAt": "2026-10-08T22:21:46.854Z",
+  "updatedAt": "2026-10-08T22:21:46.977Z",
+  "targetPort": 5199,
+  "targetUrl": "http://localhost:5199",
+  "baselineRun": {
+    "outcome": "ASSERTION_FAILED",
+    "testFingerprint": "test-fp-123",
+    "testIds": [
+      "cart-total-spec"
+    ],
+    "runId": "mock-run-id",
+    "reportHash": "mock-report-hash",
+    "runAt": "2026-10-08T22:21:46.898Z",
+    "passed": false,
+    "expected": "Cart total displays $30.00",
+    "actual": "Cart total displays $10.00",
+    "durationMs": 120,
+    "evidenceIds": []
+  },
+  "proposal": {
+    "schemaVersion": "1.0",
+    "proposalId": "prop-1d3d8b3c-25a7-4a50-b095-12227bec90d3",
+    "diagnosis": "Cart reset needs descriptive comment",
+    "assumptions": [
+      "Items array is reset"
+    ],
+    "rationale": "Add descriptive comment to clearCart",
+    "edits": [
+      {
+        "relativePath": "src/store/cartStore.ts",
+        "oldContent": "  clearCart: () => set({ items: [] }),",
+        "newContent": "  clearCart: () => set({ items: [] }), // reset items"
+      }
+    ],
+    "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -36,1 +36,1 @@\n-  clearCart: () => set({ items: [] }),\n+  clearCart: () => set({ items: [] }), // reset items\n",
+    "proposalHash": "3920d3137bbc48b7107a898814ff408859bc638e157a0caabee2817517f3f4af",
+    "proposedAt": "2026-10-08T22:21:46.940Z"
+  },
+  "review": {
+    "reviewId": "rev-2c62bfba-c7b5-4fb2-b473-f329d4cf0078",
+    "proposalId": "prop-1d3d8b3c-25a7-4a50-b095-12227bec90d3",
+    "proposalHash": "3920d3137bbc48b7107a898814ff408859bc638e157a0caabee2817517f3f4af",
+    "decision": "REJECTED",
+    "reviewedAt": "2026-10-08T22:21:46.966Z",
+    "reviewerNotes": "Rejected for testing"
+  },
+  "stopReason": "Proposal was rejected during review",
+  "completedAt": "2026-10-08T22:21:46.966Z"
+}

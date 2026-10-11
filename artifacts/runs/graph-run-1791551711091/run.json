@@ -1,0 +1,155 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "graph-run-1791551711091",
+  "caseId": "test-graph-case-001",
+  "mode": "simulated",
+  "state": "BLOCKED",
+  "attempt": 3,
+  "maxAttempts": 3,
+  "attempts": [
+    {
+      "attemptNumber": 1,
+      "proposal": {
+        "schemaVersion": "1.0",
+        "proposalId": "prop-graph-test-1",
+        "diagnosis": "Total only reads first item price",
+        "assumptions": [
+          "Standard cart logic"
+        ],
+        "rationale": "Use array reduce to calculate total",
+        "edits": [
+          {
+            "relativePath": "src/store/cartStore.ts",
+            "oldContent": "  total: () => get().items[0]?.price ?? 0,",
+            "newContent": "  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),"
+          }
+        ],
+        "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@\n-total: () => get().items[0]?.price ?? 0,\n+total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),\n",
+        "proposalHash": "8106cc64f6709eebf1300df92da94b93c7c3d33666a9f2cfd6d21b6a4958b1d8",
+        "proposedAt": "2026-10-09T13:15:11.065Z"
+      },
+      "state": "VERIFICATION_FAILED",
+      "startedAt": "2026-10-09T13:15:11.565Z",
+      "completedAt": "2026-10-09T13:15:11.675Z",
+      "failureReason": "Proposal validation failed: oldContent not found in src/store/cartStore.ts. Proposal may be stale or mismatched.",
+      "stageLatenciesMs": {
+        "baseline": 0,
+        "proposal": 0
+      }
+    },
+    {
+      "attemptNumber": 2,
+      "proposal": {
+        "schemaVersion": "1.0",
+        "proposalId": "prop-graph-test-1",
+        "diagnosis": "Total only reads first item price",
+        "assumptions": [
+          "Standard cart logic"
+        ],
+        "rationale": "Use array reduce to calculate total",
+        "edits": [
+          {
+            "relativePath": "src/store/cartStore.ts",
+            "oldContent": "  total: () => get().items[0]?.price ?? 0,",
+            "newContent": "  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),"
+          }
+        ],
+        "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@\n-total: () => get().items[0]?.price ?? 0,\n+total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),\n",
+        "proposalHash": "8106cc64f6709eebf1300df92da94b93c7c3d33666a9f2cfd6d21b6a4958b1d8",
+        "proposedAt": "2026-10-09T13:15:11.065Z"
+      },
+      "state": "VERIFICATION_FAILED",
+      "startedAt": "2026-10-09T13:15:11.710Z",
+      "completedAt": "2026-10-09T13:15:11.816Z",
+      "failureReason": "Proposal validation failed: oldContent not found in src/store/cartStore.ts. Proposal may be stale or mismatched.",
+      "stageLatenciesMs": {
+        "baseline": 0,
+        "proposal": 0
+      }
+    }
+  ],
+  "diagnostics": [
+    "Proposal validation failed: oldContent not found in src/store/cartStore.ts. Proposal may be stale or mismatched.",
+    "Proposal validation failed: oldContent not found in src/store/cartStore.ts. Proposal may be stale or mismatched."
+  ],
+  "originalSourceFingerprint": "e02b815f08cb77b6344ae52311e6dac524c3eb6632c43622c7a1e10d184558fa",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\graph-run-1791551711091\\workspace",
+  "testFingerprint": "fp-test",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "requiredChecks": [],
+  "events": [
+    {
+      "timestamp": "2026-10-09T13:15:11.435Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "e02b815f08cb77b6344ae52311e6dac524c3eb6632c43622c7a1e10d184558fa",
+        "url": "http://localhost:5310"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T13:15:11.507Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    },
+    {
+      "timestamp": "2026-10-09T13:15:11.523Z",
+      "stage": "baseline",
+      "message": "Baseline verification stopped: Baseline evidence gates violated: Baseline test fingerprint (fp-test) does not match current disk test (685844a3b7f9e73f5a0b8a7bd0de96ef82af411bcc57f5cba7caf2b0c9ae3e3d); Reproduction test inputs changed: recorded fp-test vs current disk 685844a3b7f9e73f5a0b8a7bd0de96ef82af411bcc57f5cba7caf2b0c9ae3e3d"
+    },
+    {
+      "timestamp": "2026-10-09T13:15:11.555Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T13:15:11.619Z",
+      "stage": "retry",
+      "message": "Attempt 1 failed: Proposal validation failed: oldContent not found in src/store/cartStore.ts. Proposal may be stale or mismatched.. Restoring pristine workspace."
+    },
+    {
+      "timestamp": "2026-10-09T13:15:11.700Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 2)"
+    },
+    {
+      "timestamp": "2026-10-09T13:15:11.756Z",
+      "stage": "retry",
+      "message": "Attempt 2 failed: Proposal validation failed: oldContent not found in src/store/cartStore.ts. Proposal may be stale or mismatched.. Restoring pristine workspace."
+    },
+    {
+      "timestamp": "2026-10-09T13:15:11.841Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 3)"
+    },
+    {
+      "timestamp": "2026-10-09T13:15:12.042Z",
+      "stage": "completion",
+      "message": "Run finalized with status: INVESTIGATING (Baseline evidence gates violated: Baseline test fingerprint (fp-test) does not match current disk test (685844a3b7f9e73f5a0b8a7bd0de96ef82af411bcc57f5cba7caf2b0c9ae3e3d); Reproduction test inputs changed: recorded fp-test vs current disk 685844a3b7f9e73f5a0b8a7bd0de96ef82af411bcc57f5cba7caf2b0c9ae3e3d)"
+    },
+    {
+      "timestamp": "2026-10-09T13:15:18.446Z",
+      "stage": "recovery",
+      "message": "Recovered interrupted run after process restart. Marked as BLOCKED."
+    }
+  ],
+  "createdAt": "2026-10-09T13:15:11.429Z",
+  "updatedAt": "2026-10-09T13:15:18.446Z",
+  "baselineRun": {
+    "outcome": "ASSERTION_FAILED",
+    "testFingerprint": "fp-test",
+    "testIds": [
+      "tests/playwright/cases/case-001-cart-total.spec.ts:cart total should equal sum:chromium"
+    ],
+    "runId": "run-before",
+    "reportHash": "hash-test",
+    "runAt": "2026-10-09T13:15:11.514Z",
+    "passed": false,
+    "expected": "Total is $30.00",
+    "actual": "Total is $10.00",
+    "durationMs": 120,
+    "evidenceIds": []
+  },
+  "stopReason": "Process was interrupted before completion",
+  "completedAt": "2026-10-09T13:15:18.435Z"
+}

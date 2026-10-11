@@ -1,0 +1,210 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "audit-graph-twoproc-1791534021222",
+  "caseId": "case-001",
+  "mode": "simulated",
+  "state": "VERIFIED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [
+    {
+      "attemptNumber": 1,
+      "proposal": {
+        "schemaVersion": "1.0",
+        "proposalId": "prop-audit-twoproc-1",
+        "diagnosis": "Cart total calculation defect",
+        "assumptions": [
+          "Standard cart reduction"
+        ],
+        "rationale": "Sum all item prices with quantity",
+        "edits": [
+          {
+            "relativePath": "src/store/cartStore.ts",
+            "oldContent": "  total: () => get().items[0]?.price ?? 0,",
+            "newContent": "  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),"
+          }
+        ],
+        "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -38,1 +38,1 @@\n-  total: () => get().items[0]?.price ?? 0,\n+  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),\n",
+        "proposalHash": "da33bf6daf2e70f0081178ed13451a136910ebf9c5a522ab595a164201e0d9f7",
+        "proposedAt": "2026-10-09T08:20:24.497Z"
+      },
+      "state": "VERIFIED",
+      "startedAt": "2026-10-09T08:20:24.727Z",
+      "stageLatenciesMs": {
+        "baseline": 0,
+        "proposal": 0,
+        "postPatchReproduction": 0,
+        "regressionChecks": 2
+      },
+      "completedAt": "2026-10-09T08:20:28.497Z"
+    }
+  ],
+  "diagnostics": [],
+  "originalSourceFingerprint": "ea2d05db476de3bbc4d3c84d767bed9a9c6b1efe8f633d1a519c9d8fd68d9ae1",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\audit-graph-twoproc-1791534021222\\workspace",
+  "testFingerprint": "71ded93e74881cb66804a7ac8dbacd2264d095f1f790aa4ab743e9a8533153c9",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "requiredChecks": [
+    {
+      "checkId": "check-typecheck",
+      "name": "TypeScript compilation",
+      "type": "typecheck",
+      "command": "tsc --noEmit",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 250,
+      "output": "Found 0 errors"
+    },
+    {
+      "checkId": "check-build",
+      "name": "Vite build",
+      "type": "build",
+      "command": "vite build",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 350,
+      "output": "built in 0.3s"
+    },
+    {
+      "checkId": "check-unit-tests",
+      "name": "MiniShop unit tests",
+      "type": "unit-tests",
+      "command": "vitest run apps/minishop",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 180,
+      "output": "3 passed"
+    }
+  ],
+  "events": [
+    {
+      "timestamp": "2026-10-09T08:20:24.675Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "ea2d05db476de3bbc4d3c84d767bed9a9c6b1efe8f633d1a519c9d8fd68d9ae1",
+        "url": "http://localhost:5420"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T08:20:24.693Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    },
+    {
+      "timestamp": "2026-10-09T08:20:24.698Z",
+      "stage": "baseline",
+      "message": "Valid baseline failure confirmed: Total is $30 vs Total is $10"
+    },
+    {
+      "timestamp": "2026-10-09T08:20:24.721Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T08:20:24.755Z",
+      "stage": "proposal",
+      "message": "Generated and validated patch proposal. Awaiting exact review approval.",
+      "data": {
+        "proposalId": "prop-audit-twoproc-1",
+        "proposalHash": "da33bf6daf2e70f0081178ed13451a136910ebf9c5a522ab595a164201e0d9f7",
+        "attempt": 1
+      }
+    },
+    {
+      "timestamp": "2026-10-09T08:20:28.310Z",
+      "stage": "patch_applied",
+      "message": "Exact reviewed patch applied transactionally to candidate workspace",
+      "data": {
+        "proposalId": "prop-audit-twoproc-1",
+        "proposalHash": "da33bf6daf2e70f0081178ed13451a136910ebf9c5a522ab595a164201e0d9f7",
+        "modifiedFiles": [
+          "src/store/cartStore.ts"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-10-09T08:20:28.356Z",
+      "stage": "verification",
+      "message": "Running post-patch reproduction verification (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T08:20:28.373Z",
+      "stage": "verification",
+      "message": "Post-patch reproduction outcome: PASSED (passed: true)"
+    },
+    {
+      "timestamp": "2026-10-09T08:20:28.417Z",
+      "stage": "regression",
+      "message": "Running required candidate regression checks (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T08:20:28.430Z",
+      "stage": "regression",
+      "message": "All 3 candidate regression checks passed cleanly."
+    },
+    {
+      "timestamp": "2026-10-09T08:20:28.500Z",
+      "stage": "completion",
+      "message": "Run finalized with status: VERIFIED (All verification gates and regression checks passed cleanly.)"
+    }
+  ],
+  "createdAt": "2026-10-09T08:20:24.672Z",
+  "updatedAt": "2026-10-09T08:20:28.508Z",
+  "baselineRun": {
+    "outcome": "ASSERTION_FAILED",
+    "testFingerprint": "71ded93e74881cb66804a7ac8dbacd2264d095f1f790aa4ab743e9a8533153c9",
+    "testIds": [
+      "case-001-cart-total.spec.ts:Cart Total Calculation:chromium"
+    ],
+    "runId": "run-before",
+    "reportHash": "h-twoproc",
+    "runAt": "2026-10-09T08:20:24.696Z",
+    "passed": false,
+    "expected": "Total is $30",
+    "actual": "Total is $10",
+    "durationMs": 100,
+    "evidenceIds": []
+  },
+  "proposal": {
+    "schemaVersion": "1.0",
+    "proposalId": "prop-audit-twoproc-1",
+    "diagnosis": "Cart total calculation defect",
+    "assumptions": [
+      "Standard cart reduction"
+    ],
+    "rationale": "Sum all item prices with quantity",
+    "edits": [
+      {
+        "relativePath": "src/store/cartStore.ts",
+        "oldContent": "  total: () => get().items[0]?.price ?? 0,",
+        "newContent": "  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),"
+      }
+    ],
+    "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -38,1 +38,1 @@\n-  total: () => get().items[0]?.price ?? 0,\n+  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),\n",
+    "proposalHash": "da33bf6daf2e70f0081178ed13451a136910ebf9c5a522ab595a164201e0d9f7",
+    "proposedAt": "2026-10-09T08:20:24.497Z"
+  },
+  "review": {
+    "proposalId": "prop-audit-twoproc-1",
+    "proposalHash": "da33bf6daf2e70f0081178ed13451a136910ebf9c5a522ab595a164201e0d9f7",
+    "decision": "APPROVED"
+  },
+  "postPatchRun": {
+    "outcome": "PASSED",
+    "testFingerprint": "71ded93e74881cb66804a7ac8dbacd2264d095f1f790aa4ab743e9a8533153c9",
+    "testIds": [
+      "case-001-cart-total.spec.ts:Cart Total Calculation:chromium"
+    ],
+    "runId": "run-after",
+    "reportHash": "h-twoproc",
+    "runAt": "2026-10-09T08:20:28.370Z",
+    "passed": true,
+    "expected": "Total is $30",
+    "actual": "Total is $30",
+    "durationMs": 100,
+    "evidenceIds": []
+  },
+  "stopReason": "All verification gates and regression checks passed cleanly.",
+  "completedAt": "2026-10-09T08:20:28.497Z"
+}

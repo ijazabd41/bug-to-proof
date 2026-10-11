@@ -1,0 +1,118 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "graph-run-1791553408270",
+  "caseId": "test-graph-case-001",
+  "mode": "simulated",
+  "state": "AWAITING_REVIEW",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [
+    {
+      "attemptNumber": 1,
+      "proposal": {
+        "schemaVersion": "1.0",
+        "proposalId": "prop-graph-test-1",
+        "diagnosis": "Total only reads first item price",
+        "assumptions": [
+          "Standard cart logic"
+        ],
+        "rationale": "Use array reduce to calculate total",
+        "edits": [
+          {
+            "relativePath": "src/store/cartStore.ts",
+            "oldContent": "  total: () => get().items[0]?.price ?? 0,",
+            "newContent": "  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),"
+          }
+        ],
+        "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -64,1 +64,1 @@\n-  total: () => get().items[0]?.price ?? 0,\n+  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),\n",
+        "proposalHash": "8106cc64f6709eebf1300df92da94b93c7c3d33666a9f2cfd6d21b6a4958b1d8",
+        "proposedAt": "2026-10-09T13:43:28.238Z"
+      },
+      "state": "AWAITING_REVIEW",
+      "startedAt": "2026-10-09T13:43:28.673Z",
+      "stageLatenciesMs": {
+        "baseline": 1,
+        "proposal": 0
+      }
+    }
+  ],
+  "diagnostics": [],
+  "originalSourceFingerprint": "8ecc04df98e8a2704870f3c4871ec5b8dca7b917de8b75df4fbf69a22d2d8eb2",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\graph-run-1791553408270\\workspace",
+  "testFingerprint": "fp-test",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "requiredChecks": [],
+  "events": [
+    {
+      "timestamp": "2026-10-09T13:43:28.574Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "8ecc04df98e8a2704870f3c4871ec5b8dca7b917de8b75df4fbf69a22d2d8eb2",
+        "url": "http://localhost:5310"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T13:43:28.610Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    },
+    {
+      "timestamp": "2026-10-09T13:43:28.628Z",
+      "stage": "baseline",
+      "message": "Baseline verification stopped: Baseline evidence gates violated: Baseline test fingerprint (fp-test) does not match current disk test (685844a3b7f9e73f5a0b8a7bd0de96ef82af411bcc57f5cba7caf2b0c9ae3e3d); Reproduction test inputs changed: recorded fp-test vs current disk 685844a3b7f9e73f5a0b8a7bd0de96ef82af411bcc57f5cba7caf2b0c9ae3e3d"
+    },
+    {
+      "timestamp": "2026-10-09T13:43:28.662Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T13:43:28.719Z",
+      "stage": "proposal",
+      "message": "Generated and validated patch proposal. Awaiting exact review approval.",
+      "data": {
+        "proposalId": "prop-graph-test-1",
+        "proposalHash": "8106cc64f6709eebf1300df92da94b93c7c3d33666a9f2cfd6d21b6a4958b1d8",
+        "attempt": 1
+      }
+    }
+  ],
+  "createdAt": "2026-10-09T13:43:28.569Z",
+  "updatedAt": "2026-10-09T13:43:28.726Z",
+  "baselineRun": {
+    "outcome": "ASSERTION_FAILED",
+    "testFingerprint": "fp-test",
+    "testIds": [
+      "tests/playwright/cases/case-001-cart-total.spec.ts:cart total should equal sum:chromium"
+    ],
+    "runId": "run-before",
+    "reportHash": "hash-test",
+    "runAt": "2026-10-09T13:43:28.617Z",
+    "passed": false,
+    "expected": "Total is $30.00",
+    "actual": "Total is $10.00",
+    "durationMs": 120,
+    "evidenceIds": []
+  },
+  "stopReason": "Baseline evidence gates violated: Baseline test fingerprint (fp-test) does not match current disk test (685844a3b7f9e73f5a0b8a7bd0de96ef82af411bcc57f5cba7caf2b0c9ae3e3d); Reproduction test inputs changed: recorded fp-test vs current disk 685844a3b7f9e73f5a0b8a7bd0de96ef82af411bcc57f5cba7caf2b0c9ae3e3d",
+  "proposal": {
+    "schemaVersion": "1.0",
+    "proposalId": "prop-graph-test-1",
+    "diagnosis": "Total only reads first item price",
+    "assumptions": [
+      "Standard cart logic"
+    ],
+    "rationale": "Use array reduce to calculate total",
+    "edits": [
+      {
+        "relativePath": "src/store/cartStore.ts",
+        "oldContent": "  total: () => get().items[0]?.price ?? 0,",
+        "newContent": "  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),"
+      }
+    ],
+    "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -64,1 +64,1 @@\n-  total: () => get().items[0]?.price ?? 0,\n+  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),\n",
+    "proposalHash": "8106cc64f6709eebf1300df92da94b93c7c3d33666a9f2cfd6d21b6a4958b1d8",
+    "proposedAt": "2026-10-09T13:43:28.238Z"
+  }
+}

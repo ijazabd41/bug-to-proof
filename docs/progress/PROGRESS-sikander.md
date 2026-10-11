@@ -1,4 +1,6 @@
 # Sikander — Progress Tracker
+
+> **Archive notice:** Historical team tracker retained for attribution. Use [`arbitrary-bug-reproduction.md`](arbitrary-bug-reproduction.md) for active work.
 ### Track: MiniShop + Playwright · Branch: `feature/playwright-minishop`
 
 > Own: `apps/minishop/`, `tests/playwright/`

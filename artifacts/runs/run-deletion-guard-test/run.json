@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-deletion-guard-test",
+  "caseId": "case-deletion-guard-test",
+  "mode": "dynamic",
+  "state": "AWAITING_REVIEW",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [],
+  "originalSourceFingerprint": "fp-1",
+  "targetSnapshotDir": "",
+  "testFingerprint": "fp-test-1",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "requiredChecks": [],
+  "events": [],
+  "createdAt": "2026-10-09T11:02:38.617Z",
+  "updatedAt": "2026-10-09T11:02:38.618Z"
+}

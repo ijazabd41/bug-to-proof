@@ -49,15 +49,14 @@ export function StatusBadge({ status }: { status: CaseStatus }) {
         display: "inline-flex",
         alignItems: "center",
         gap: 6,
-        padding: "3px 10px",
-        borderRadius: 9999,
+        padding: "6px 10px",
+        borderRadius: 6,
         fontSize: 11,
         fontWeight: 700,
         background: bg,
         color: text,
-        letterSpacing: "0.03em",
-        textTransform: "uppercase",
-        whiteSpace: "nowrap",
+        letterSpacing: "0.01em",
+        lineHeight: 1.4,
       }}
     >
       {isPulsing && (

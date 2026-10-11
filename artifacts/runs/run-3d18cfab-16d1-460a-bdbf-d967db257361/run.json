@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-3d18cfab-16d1-460a-bdbf-d967db257361",
+  "caseId": "case-test-async-start",
+  "mode": "dynamic",
+  "state": "BLOCKED",
+  "attempt": 1,
+  "maxAttempts": 1,
+  "originalSourceFingerprint": "",
+  "targetSnapshotDir": "",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "testFingerprint": "685844a3b7f9e73f5a0b8a7bd0de96ef82af411bcc57f5cba7caf2b0c9ae3e3d",
+  "createdAt": "2026-10-09T13:55:43.874Z",
+  "updatedAt": "2026-10-09T13:55:47.856Z",
+  "attempts": [],
+  "diagnostics": [],
+  "requiredChecks": [],
+  "events": [
+    {
+      "timestamp": "2026-10-09T13:55:43.874Z",
+      "stage": "initialization",
+      "message": "Repair run initialized and queued for background execution"
+    },
+    {
+      "timestamp": "2026-10-09T13:55:47.855Z",
+      "stage": "recovery",
+      "message": "Recovered interrupted run after process restart. Marked as BLOCKED."
+    }
+  ],
+  "stopReason": "Process was interrupted before completion",
+  "completedAt": "2026-10-09T13:55:47.838Z"
+}

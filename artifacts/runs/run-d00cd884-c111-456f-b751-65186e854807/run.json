@@ -1,0 +1,217 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-d00cd884-c111-456f-b751-65186e854807",
+  "caseId": "case-001-cart-total",
+  "mode": "dynamic",
+  "state": "VERIFIED",
+  "attempt": 1,
+  "maxAttempts": 2,
+  "attempts": [
+    {
+      "attemptNumber": 1,
+      "proposal": {
+        "schemaVersion": "1.0",
+        "proposalId": "prop-34eaef80-5ae5-4c8e-8ddc-79d1f2af31cd",
+        "diagnosis": "The `total` selector in `cartStore` incorrectly returns only the price of the first cart item instead of summing all items' price × quantity.",
+        "assumptions": [
+          "The `total` function is intended to compute the aggregate cost of all items in the cart.",
+          "No other parts of the code rely on the current incorrect behavior."
+        ],
+        "rationale": "Replacing the body of `total` with a reduction over all cart items correctly calculates the cart total. This change preserves the existing API (a function returning a number) and does not affect other store operations.",
+        "edits": [
+          {
+            "relativePath": "src/store/cartStore.ts",
+            "oldContent": "  total: () => get().items[0]?.price ?? 0,",
+            "newContent": "  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),"
+          }
+        ],
+        "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -38,1 +38,1 @@\n-  total: () => get().items[0]?.price ?? 0,\n+  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),\n",
+        "proposalHash": "8a9aced8587b51e4d6d0c1abe75e18a9aae8884f19fe39fcc5e603c7ae99f8d9",
+        "proposedAt": "2026-10-09T08:29:43.459Z"
+      },
+      "state": "VERIFIED",
+      "startedAt": "2026-10-09T08:29:42.179Z",
+      "stageLatenciesMs": {
+        "baseline": 10621,
+        "proposal": 1255,
+        "postPatchReproduction": 8112,
+        "regressionChecks": 15051
+      },
+      "completedAt": "2026-10-09T08:30:07.644Z"
+    }
+  ],
+  "diagnostics": [],
+  "originalSourceFingerprint": "ea2d05db476de3bbc4d3c84d767bed9a9c6b1efe8f633d1a519c9d8fd68d9ae1",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-d00cd884-c111-456f-b751-65186e854807\\workspace",
+  "testFingerprint": "71ded93e74881cb66804a7ac8dbacd2264d095f1f790aa4ab743e9a8533153c9",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "requiredChecks": [
+    {
+      "checkId": "check-typecheck",
+      "name": "TypeScript compilation",
+      "type": "typecheck",
+      "command": "tsc --project artifacts/runs/run-d00cd884-c111-456f-b751-65186e854807/workspace/apps/minishop/tsconfig.json --noEmit",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 3480,
+      "output": "",
+      "artifactPath": "artifacts/runs/run-d00cd884-c111-456f-b751-65186e854807/attempt-1/checks/checks/typecheck.log"
+    },
+    {
+      "checkId": "check-build",
+      "name": "Production Vite build",
+      "type": "build",
+      "command": "vite build artifacts/runs/run-d00cd884-c111-456f-b751-65186e854807/workspace/apps/minishop --config artifacts/runs/run-d00cd884-c111-456f-b751-65186e854807/workspace/apps/minishop/vite.config.ts",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 4135,
+      "output": "\u001b[2m1:29:59 PM\u001b[22m \u001b[33m\u001b[1m[vite]\u001b[22m\u001b[39m \u001b[33mwarning: `esbuild` option was specified by \"vite:react-babel\" plugin. This option is deprecated, please use `oxc` instead.\u001b[39m\n`optimizeDeps.rollupOptions` / `ssr.optimizeDeps.rollupOptions` is deprecated. Use `optimizeDeps.rolldownOptions` instead. Note that this option may be set by a plugin. Set VITE_DEPRECATION_TRACE=1 to see where it is called.\n[vite:react-babel] We recommend switching to `@vitejs/plugin-react-oxc` for improved performance. More information at https://vite.dev/rolldown\n\u001b[36mvite v8.3.1 \u001b[32mbuilding client environment for production...\u001b[36m\u001b[39m\ntransforming...\n✓ 32 modules transformed.\nrendering chunks...\ncomputing gzip size...\nartifacts/runs/run-d00cd884-c111-456f-b751-65186e854807/workspace/apps/minishop/dist/index.html                  0.45 kB │ gzip:  0.32 kB\nartifacts/runs/run-d00cd884-c111-456f-b751-65186e854807/workspace/apps/minishop/dist/assets/index-Bhzmuuku.js  169.98 kB │ gzip: 55.68 kB\n\n\u001b[32m✓ built in 265ms\u001b[39m\n",
+      "artifactPath": "artifacts/runs/run-d00cd884-c111-456f-b751-65186e854807/attempt-1/checks/checks/build.log"
+    },
+    {
+      "checkId": "check-unit-tests",
+      "name": "MiniShop unit tests",
+      "type": "unit-tests",
+      "command": "vitest run --root artifacts/runs/run-d00cd884-c111-456f-b751-65186e854807/workspace/apps/minishop",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 7417,
+      "output": "\u001b[2m1:30:03 PM\u001b[22m \u001b[33m\u001b[1m[vite]\u001b[22m\u001b[39m \u001b[33mwarning: `esbuild` option was specified by \"vite:react-babel\" plugin. This option is deprecated, please use `oxc` instead.\u001b[39m\n`optimizeDeps.rollupOptions` / `ssr.optimizeDeps.rollupOptions` is deprecated. Use `optimizeDeps.rolldownOptions` instead. Note that this option may be set by a plugin. Set VITE_DEPRECATION_TRACE=1 to see where it is called.\n\u001b[33mBoth esbuild and oxc options were set. oxc options will be used and esbuild options will be ignored.\u001b[39m The following esbuild options were set: `{ jsx: 'automatic', jsxImportSource: undefined }`\n[vite:react-babel] We recommend switching to `@vitejs/plugin-react-oxc` for improved performance. More information at https://vite.dev/rolldown\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv5.0.2 \u001b[39m\u001b[90mD:/bug-to-proof/artifacts/runs/run-d00cd884-c111-456f-b751-65186e854807/workspace/apps/minishop\u001b[39m\n\n \u001b[32m✓\u001b[39m src/store/cartStore.test.ts \u001b[2m(\u001b[22m\u001b[2m3 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 13\u001b[2mms\u001b[22m\u001b[39m\n\u001b[90mstderr\u001b[2m | src/App.test.tsx\u001b[2m > \u001b[22m\u001b[2mApp\u001b[2m > \u001b[22m\u001b[2mrenders MiniShop text\n\u001b[22m\u001b[39m⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.\n⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.\n\n \u001b[32m✓\u001b[39m src/App.test.tsx \u001b[2m(\u001b[22m\u001b[2m1 test\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 236\u001b[2mms\u001b[22m\u001b[39m\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[1m\u001b[32m4 passed\u001b[39m\u001b[22m\u001b[90m (4)\u001b[39m\n\u001b[2m   Start at \u001b[22m 13:30:03\n\u001b[2m   Duration \u001b[22m 3.41s\u001b[2m (environment 71%, setup 12%, transform 7%, import 5%, tests 4%, worker 1%)\u001b[22m\n\n",
+      "artifactPath": "artifacts/runs/run-d00cd884-c111-456f-b751-65186e854807/attempt-1/checks/checks/unit-tests.log"
+    }
+  ],
+  "events": [
+    {
+      "timestamp": "2026-10-09T08:29:31.458Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "ea2d05db476de3bbc4d3c84d767bed9a9c6b1efe8f633d1a519c9d8fd68d9ae1",
+        "url": "http://127.0.0.1:5965"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T08:29:31.487Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    },
+    {
+      "timestamp": "2026-10-09T08:29:42.113Z",
+      "stage": "baseline",
+      "message": "Valid baseline failure confirmed:  vs Error: BTP_ASSERTION: Cart total should be $30.00 after adding $10 + $20 items\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: \"$30.00\"\nReceived: \"$10.00\"\nError: BTP_ASSERTION: After adding Mouse Pad, total should be $30.00\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: \"$30.00\"\nReceived: \"$10.00\""
+    },
+    {
+      "timestamp": "2026-10-09T08:29:42.160Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T08:29:43.477Z",
+      "stage": "proposal",
+      "message": "Generated and validated patch proposal. Awaiting exact review approval.",
+      "data": {
+        "proposalId": "prop-34eaef80-5ae5-4c8e-8ddc-79d1f2af31cd",
+        "proposalHash": "8a9aced8587b51e4d6d0c1abe75e18a9aae8884f19fe39fcc5e603c7ae99f8d9",
+        "attempt": 1
+      }
+    },
+    {
+      "timestamp": "2026-10-09T08:29:43.604Z",
+      "stage": "patch_applied",
+      "message": "Exact reviewed patch applied transactionally to candidate workspace",
+      "data": {
+        "proposalId": "prop-34eaef80-5ae5-4c8e-8ddc-79d1f2af31cd",
+        "proposalHash": "8a9aced8587b51e4d6d0c1abe75e18a9aae8884f19fe39fcc5e603c7ae99f8d9",
+        "modifiedFiles": [
+          "src/store/cartStore.ts"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-10-09T08:29:43.637Z",
+      "stage": "verification",
+      "message": "Running post-patch reproduction verification (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T08:29:51.760Z",
+      "stage": "verification",
+      "message": "Post-patch reproduction outcome: PASSED (passed: true)"
+    },
+    {
+      "timestamp": "2026-10-09T08:29:51.811Z",
+      "stage": "regression",
+      "message": "Running required candidate regression checks (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T08:30:06.868Z",
+      "stage": "regression",
+      "message": "All 3 candidate regression checks passed cleanly."
+    },
+    {
+      "timestamp": "2026-10-09T08:30:07.645Z",
+      "stage": "completion",
+      "message": "Run finalized with status: VERIFIED (All verification gates and regression checks passed cleanly.)"
+    }
+  ],
+  "createdAt": "2026-10-09T08:29:31.454Z",
+  "updatedAt": "2026-10-09T08:30:07.650Z",
+  "baselineRun": {
+    "outcome": "ASSERTION_FAILED",
+    "testFingerprint": "71ded93e74881cb66804a7ac8dbacd2264d095f1f790aa4ab743e9a8533153c9",
+    "testIds": [
+      "case-001-cart-total.spec.ts:cart total should equal sum of all item prices:chromium",
+      "case-001-cart-total.spec.ts:cart total should update when items are added incrementally:chromium"
+    ],
+    "runId": "435026ac-29ff-453c-ad36-2853e07b0e84",
+    "reportHash": "12966a8463c0fe6208e127e3d1a49d39077edd0a1924cea800684a70c71d90c5",
+    "runAt": "2026-10-09T08:29:42.112Z",
+    "passed": false,
+    "expected": "",
+    "actual": "Error: BTP_ASSERTION: Cart total should be $30.00 after adding $10 + $20 items\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: \"$30.00\"\nReceived: \"$10.00\"\nError: BTP_ASSERTION: After adding Mouse Pad, total should be $30.00\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: \"$30.00\"\nReceived: \"$10.00\"",
+    "durationMs": 10596,
+    "evidenceIds": []
+  },
+  "proposal": {
+    "schemaVersion": "1.0",
+    "proposalId": "prop-34eaef80-5ae5-4c8e-8ddc-79d1f2af31cd",
+    "diagnosis": "The `total` selector in `cartStore` incorrectly returns only the price of the first cart item instead of summing all items' price × quantity.",
+    "assumptions": [
+      "The `total` function is intended to compute the aggregate cost of all items in the cart.",
+      "No other parts of the code rely on the current incorrect behavior."
+    ],
+    "rationale": "Replacing the body of `total` with a reduction over all cart items correctly calculates the cart total. This change preserves the existing API (a function returning a number) and does not affect other store operations.",
+    "edits": [
+      {
+        "relativePath": "src/store/cartStore.ts",
+        "oldContent": "  total: () => get().items[0]?.price ?? 0,",
+        "newContent": "  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),"
+      }
+    ],
+    "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -38,1 +38,1 @@\n-  total: () => get().items[0]?.price ?? 0,\n+  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),\n",
+    "proposalHash": "8a9aced8587b51e4d6d0c1abe75e18a9aae8884f19fe39fcc5e603c7ae99f8d9",
+    "proposedAt": "2026-10-09T08:29:43.459Z"
+  },
+  "review": {
+    "proposalId": "prop-34eaef80-5ae5-4c8e-8ddc-79d1f2af31cd",
+    "proposalHash": "8a9aced8587b51e4d6d0c1abe75e18a9aae8884f19fe39fcc5e603c7ae99f8d9",
+    "decision": "APPROVED"
+  },
+  "postPatchRun": {
+    "outcome": "PASSED",
+    "testFingerprint": "71ded93e74881cb66804a7ac8dbacd2264d095f1f790aa4ab743e9a8533153c9",
+    "testIds": [
+      "case-001-cart-total.spec.ts:cart total should equal sum of all item prices:chromium",
+      "case-001-cart-total.spec.ts:cart total should update when items are added incrementally:chromium"
+    ],
+    "runId": "faf55eee-a1ee-45dc-a381-e4c20d905a4c",
+    "reportHash": "1768b4e7fd73c3a159e43e7080938a664302a5c902695f86122ae7baf45c3579",
+    "runAt": "2026-10-09T08:29:51.759Z",
+    "passed": true,
+    "expected": "",
+    "actual": "All selected tests passed",
+    "durationMs": 8093,
+    "evidenceIds": []
+  },
+  "stopReason": "All verification gates and regression checks passed cleanly.",
+  "completedAt": "2026-10-09T08:30:07.644Z"
+}

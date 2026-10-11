@@ -1,0 +1,422 @@
+{
+  "bugCase": {
+    "id": "case-001",
+    "title": "Cart total only reflects first item price",
+    "description": "When two products are added to MiniShop's cart, the total shows only the first item's price instead of the sum of both. For example, adding Keyboard ($10) and Mouse Pad ($20) shows $10.00 instead of $30.00.",
+    "status": "VERIFIED",
+    "createdAt": "2024-12-01T10:00:00.000Z",
+    "updatedAt": "2026-10-08T18:53:20.688Z",
+    "reproduction": {
+      "preconditions": [
+        "MiniShop is running at http://localhost:5174",
+        "Cart is empty at start"
+      ],
+      "steps": [
+        "Navigate to http://localhost:5174",
+        "Click 'Add to Cart' for Keyboard ($10.00)",
+        "Click 'Add to Cart' for Mouse Pad ($20.00)",
+        "Observe the cart total displayed on the page"
+      ],
+      "expected": "Cart total displays $30.00",
+      "actual": "Cart total displays $10.00 (only first item price)",
+      "testFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+      "lastRun": {
+        "runAt": "2026-10-08T18:53:11.803Z",
+        "passed": false,
+        "outcome": "ASSERTION_FAILED",
+        "actual": "Error: BTP_ASSERTION: Cart total should be $30.00 after adding $10 + $20 items\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: \"$30.00\"\nReceived: \"$10.00\"\nError: BTP_ASSERTION: After adding Mouse Pad, total should be $30.00\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: \"$30.00\"\nReceived: \"$10.00\"",
+        "expected": "Cart total displays $30.00",
+        "durationMs": 11160,
+        "runId": "3af89515-454e-45c8-9b6e-0298c64fbce2",
+        "testFingerprint": "0881ec9542058856b644c2ef5425d4c8ae544e33a68f25fea917f02b214d0677",
+        "testIds": [
+          "case-001-cart-total.spec.ts:cart total should equal sum of all item prices:chromium",
+          "case-001-cart-total.spec.ts:cart total should update when items are added incrementally:chromium"
+        ],
+        "reportHash": "f86b4bd18e698162d5cccf913312bda4bf4d53b04b460b7559dad76174b54e87",
+        "evidenceIds": [
+          "ev-3af89515-454e-45c8-9b6e-0298c64fbce2-resultJson",
+          "ev-3af89515-454e-45c8-9b6e-0298c64fbce2-screenshot",
+          "ev-3af89515-454e-45c8-9b6e-0298c64fbce2-trace"
+        ]
+      }
+    },
+    "patch": {
+      "summary": "Sum every item price multiplied by quantity",
+      "reasoning": "The recorded cart assertion failed. Source reads only items[0].price; the proposed reduction includes every item and its quantity.",
+      "filesChanged": [
+        "apps/minishop/src/store/cartStore.ts"
+      ],
+      "diff": "--- a/apps/minishop/src/store/cartStore.ts\n+++ b/apps/minishop/src/store/cartStore.ts\n@@ -38,1 +38,1 @@\n-  total: () => get().items[0]?.price ?? 0,\n+  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),\n",
+      "status": "APPLIED",
+      "proposedAt": "2026-10-08T18:53:11.841Z",
+      "appliedAt": "2026-10-08T18:53:11.878Z"
+    },
+    "verification": {
+      "status": "VERIFIED",
+      "beforeRun": {
+        "runAt": "2026-10-08T18:53:11.803Z",
+        "passed": false,
+        "outcome": "ASSERTION_FAILED",
+        "actual": "Error: BTP_ASSERTION: Cart total should be $30.00 after adding $10 + $20 items\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: \"$30.00\"\nReceived: \"$10.00\"\nError: BTP_ASSERTION: After adding Mouse Pad, total should be $30.00\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: \"$30.00\"\nReceived: \"$10.00\"",
+        "expected": "Cart total displays $30.00",
+        "durationMs": 11160,
+        "runId": "3af89515-454e-45c8-9b6e-0298c64fbce2",
+        "testFingerprint": "0881ec9542058856b644c2ef5425d4c8ae544e33a68f25fea917f02b214d0677",
+        "testIds": [
+          "case-001-cart-total.spec.ts:cart total should equal sum of all item prices:chromium",
+          "case-001-cart-total.spec.ts:cart total should update when items are added incrementally:chromium"
+        ],
+        "reportHash": "f86b4bd18e698162d5cccf913312bda4bf4d53b04b460b7559dad76174b54e87",
+        "evidenceIds": [
+          "ev-3af89515-454e-45c8-9b6e-0298c64fbce2-resultJson",
+          "ev-3af89515-454e-45c8-9b6e-0298c64fbce2-screenshot",
+          "ev-3af89515-454e-45c8-9b6e-0298c64fbce2-trace"
+        ]
+      },
+      "afterRun": {
+        "runAt": "2026-10-08T18:53:20.688Z",
+        "passed": true,
+        "outcome": "PASSED",
+        "actual": "All selected tests passed",
+        "expected": "Cart total displays $30.00",
+        "durationMs": 8765,
+        "runId": "f8de2211-0c4d-4c82-b218-de90aaa189b1",
+        "testFingerprint": "0881ec9542058856b644c2ef5425d4c8ae544e33a68f25fea917f02b214d0677",
+        "testIds": [
+          "case-001-cart-total.spec.ts:cart total should equal sum of all item prices:chromium",
+          "case-001-cart-total.spec.ts:cart total should update when items are added incrementally:chromium"
+        ],
+        "reportHash": "ad671289eec650e36f8d1b1cc4198a65ef8c0a8bb8d052fc79b8791f19dbf138",
+        "evidenceIds": [
+          "ev-f8de2211-0c4d-4c82-b218-de90aaa189b1-resultJson",
+          "ev-f8de2211-0c4d-4c82-b218-de90aaa189b1-screenshot",
+          "ev-f8de2211-0c4d-4c82-b218-de90aaa189b1-trace"
+        ]
+      },
+      "comparison": {
+        "statusChanged": true,
+        "beforeStatus": "FAILED",
+        "afterStatus": "PASSED"
+      }
+    },
+    "evidence": [
+      {
+        "id": "ev-case-001-before-screenshot",
+        "type": "screenshot",
+        "phase": "before",
+        "path": "artifacts/case-001/before/screenshot.png",
+        "createdAt": "2024-12-01T10:04:00.000Z",
+        "description": "Screenshot showing cart total of $10.00 when two items are added"
+      },
+      {
+        "id": "ev-case-001-before-trace",
+        "type": "trace",
+        "phase": "before",
+        "path": "artifacts/case-001/before/trace.zip",
+        "createdAt": "2024-12-01T10:04:00.000Z",
+        "description": "Playwright trace for before-patch run"
+      },
+      {
+        "id": "ev-case-001-before-result",
+        "type": "result-json",
+        "phase": "before",
+        "path": "artifacts/case-001/before/result.json",
+        "createdAt": "2024-12-01T10:04:00.000Z",
+        "description": "Raw Playwright JSON reporter output for before-patch run"
+      },
+      {
+        "id": "ev-case-001-after-screenshot",
+        "type": "screenshot",
+        "phase": "after",
+        "path": "artifacts/case-001/after/screenshot.png",
+        "createdAt": "2026-09-27T15:05:18.675Z",
+        "description": "Screenshot captured after patch"
+      },
+      {
+        "id": "ev-case-001-after-result",
+        "type": "result-json",
+        "phase": "after",
+        "path": "artifacts/case-001/after/result.json",
+        "createdAt": "2026-09-27T15:05:18.675Z",
+        "description": "Raw Playwright JSON result after patch"
+      },
+      {
+        "id": "ev-3c332e4e-046e-4e13-a186-9cdc5d6f2bc8-resultJson",
+        "type": "result-json",
+        "phase": "before",
+        "path": "artifacts/case-001/before/3c332e4e-046e-4e13-a186-9cdc5d6f2bc8/result.json",
+        "createdAt": "2026-10-08T18:37:12.314Z",
+        "description": "Recorded before resultJson"
+      },
+      {
+        "id": "ev-3c332e4e-046e-4e13-a186-9cdc5d6f2bc8-screenshot",
+        "type": "screenshot",
+        "phase": "before",
+        "path": "artifacts/case-001/before/3c332e4e-046e-4e13-a186-9cdc5d6f2bc8/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/test-failed-1.png",
+        "createdAt": "2026-10-08T18:37:12.314Z",
+        "description": "Recorded before screenshot"
+      },
+      {
+        "id": "ev-3c332e4e-046e-4e13-a186-9cdc5d6f2bc8-trace",
+        "type": "trace",
+        "phase": "before",
+        "path": "artifacts/case-001/before/3c332e4e-046e-4e13-a186-9cdc5d6f2bc8/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/trace.zip",
+        "createdAt": "2026-10-08T18:37:12.314Z",
+        "description": "Recorded before trace"
+      },
+      {
+        "id": "ev-a20d4727-bd74-4151-a571-7555b17c496a-resultJson",
+        "type": "result-json",
+        "phase": "after",
+        "path": "artifacts/case-001/after/a20d4727-bd74-4151-a571-7555b17c496a/result.json",
+        "createdAt": "2026-10-08T18:37:19.382Z",
+        "description": "Recorded after resultJson"
+      },
+      {
+        "id": "ev-a20d4727-bd74-4151-a571-7555b17c496a-screenshot",
+        "type": "screenshot",
+        "phase": "after",
+        "path": "artifacts/case-001/after/a20d4727-bd74-4151-a571-7555b17c496a/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/test-finished-1.png",
+        "createdAt": "2026-10-08T18:37:19.382Z",
+        "description": "Recorded after screenshot"
+      },
+      {
+        "id": "ev-a20d4727-bd74-4151-a571-7555b17c496a-trace",
+        "type": "trace",
+        "phase": "after",
+        "path": "artifacts/case-001/after/a20d4727-bd74-4151-a571-7555b17c496a/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/trace.zip",
+        "createdAt": "2026-10-08T18:37:19.382Z",
+        "description": "Recorded after trace"
+      },
+      {
+        "id": "ev-487bc642-e7ed-4303-92dd-f091d8e4ced7-resultJson",
+        "type": "result-json",
+        "phase": "before",
+        "path": "artifacts/case-001/before/487bc642-e7ed-4303-92dd-f091d8e4ced7/result.json",
+        "createdAt": "2026-10-08T18:47:10.274Z",
+        "description": "Recorded before resultJson"
+      },
+      {
+        "id": "ev-487bc642-e7ed-4303-92dd-f091d8e4ced7-screenshot",
+        "type": "screenshot",
+        "phase": "before",
+        "path": "artifacts/case-001/before/487bc642-e7ed-4303-92dd-f091d8e4ced7/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/test-failed-1.png",
+        "createdAt": "2026-10-08T18:47:10.274Z",
+        "description": "Recorded before screenshot"
+      },
+      {
+        "id": "ev-487bc642-e7ed-4303-92dd-f091d8e4ced7-trace",
+        "type": "trace",
+        "phase": "before",
+        "path": "artifacts/case-001/before/487bc642-e7ed-4303-92dd-f091d8e4ced7/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/trace.zip",
+        "createdAt": "2026-10-08T18:47:10.274Z",
+        "description": "Recorded before trace"
+      },
+      {
+        "id": "ev-415fd5ef-1fe8-4e41-a795-632fa252c3cb-resultJson",
+        "type": "result-json",
+        "phase": "after",
+        "path": "artifacts/case-001/after/415fd5ef-1fe8-4e41-a795-632fa252c3cb/result.json",
+        "createdAt": "2026-10-08T18:47:19.198Z",
+        "description": "Recorded after resultJson"
+      },
+      {
+        "id": "ev-415fd5ef-1fe8-4e41-a795-632fa252c3cb-screenshot",
+        "type": "screenshot",
+        "phase": "after",
+        "path": "artifacts/case-001/after/415fd5ef-1fe8-4e41-a795-632fa252c3cb/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/test-finished-1.png",
+        "createdAt": "2026-10-08T18:47:19.198Z",
+        "description": "Recorded after screenshot"
+      },
+      {
+        "id": "ev-415fd5ef-1fe8-4e41-a795-632fa252c3cb-trace",
+        "type": "trace",
+        "phase": "after",
+        "path": "artifacts/case-001/after/415fd5ef-1fe8-4e41-a795-632fa252c3cb/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/trace.zip",
+        "createdAt": "2026-10-08T18:47:19.198Z",
+        "description": "Recorded after trace"
+      },
+      {
+        "id": "ev-4437db92-0b0c-47b6-aa74-9b9657f42d15-resultJson",
+        "type": "result-json",
+        "phase": "before",
+        "path": "artifacts/case-001/before/4437db92-0b0c-47b6-aa74-9b9657f42d15/result.json",
+        "createdAt": "2026-10-08T18:51:43.569Z",
+        "description": "Recorded before resultJson"
+      },
+      {
+        "id": "ev-4437db92-0b0c-47b6-aa74-9b9657f42d15-screenshot",
+        "type": "screenshot",
+        "phase": "before",
+        "path": "artifacts/case-001/before/4437db92-0b0c-47b6-aa74-9b9657f42d15/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/test-failed-1.png",
+        "createdAt": "2026-10-08T18:51:43.569Z",
+        "description": "Recorded before screenshot"
+      },
+      {
+        "id": "ev-4437db92-0b0c-47b6-aa74-9b9657f42d15-trace",
+        "type": "trace",
+        "phase": "before",
+        "path": "artifacts/case-001/before/4437db92-0b0c-47b6-aa74-9b9657f42d15/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/trace.zip",
+        "createdAt": "2026-10-08T18:51:43.569Z",
+        "description": "Recorded before trace"
+      },
+      {
+        "id": "ev-67976331-e02f-4b72-ab2b-0c57d8dc2ae0-resultJson",
+        "type": "result-json",
+        "phase": "after",
+        "path": "artifacts/case-001/after/67976331-e02f-4b72-ab2b-0c57d8dc2ae0/result.json",
+        "createdAt": "2026-10-08T18:51:52.843Z",
+        "description": "Recorded after resultJson"
+      },
+      {
+        "id": "ev-67976331-e02f-4b72-ab2b-0c57d8dc2ae0-screenshot",
+        "type": "screenshot",
+        "phase": "after",
+        "path": "artifacts/case-001/after/67976331-e02f-4b72-ab2b-0c57d8dc2ae0/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/test-finished-1.png",
+        "createdAt": "2026-10-08T18:51:52.843Z",
+        "description": "Recorded after screenshot"
+      },
+      {
+        "id": "ev-67976331-e02f-4b72-ab2b-0c57d8dc2ae0-trace",
+        "type": "trace",
+        "phase": "after",
+        "path": "artifacts/case-001/after/67976331-e02f-4b72-ab2b-0c57d8dc2ae0/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/trace.zip",
+        "createdAt": "2026-10-08T18:51:52.843Z",
+        "description": "Recorded after trace"
+      },
+      {
+        "id": "ev-3af89515-454e-45c8-9b6e-0298c64fbce2-resultJson",
+        "type": "result-json",
+        "phase": "before",
+        "path": "artifacts/case-001/before/3af89515-454e-45c8-9b6e-0298c64fbce2/result.json",
+        "createdAt": "2026-10-08T18:53:11.803Z",
+        "description": "Recorded before resultJson"
+      },
+      {
+        "id": "ev-3af89515-454e-45c8-9b6e-0298c64fbce2-screenshot",
+        "type": "screenshot",
+        "phase": "before",
+        "path": "artifacts/case-001/before/3af89515-454e-45c8-9b6e-0298c64fbce2/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/test-failed-1.png",
+        "createdAt": "2026-10-08T18:53:11.803Z",
+        "description": "Recorded before screenshot"
+      },
+      {
+        "id": "ev-3af89515-454e-45c8-9b6e-0298c64fbce2-trace",
+        "type": "trace",
+        "phase": "before",
+        "path": "artifacts/case-001/before/3af89515-454e-45c8-9b6e-0298c64fbce2/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/trace.zip",
+        "createdAt": "2026-10-08T18:53:11.803Z",
+        "description": "Recorded before trace"
+      },
+      {
+        "id": "ev-f8de2211-0c4d-4c82-b218-de90aaa189b1-resultJson",
+        "type": "result-json",
+        "phase": "after",
+        "path": "artifacts/case-001/after/f8de2211-0c4d-4c82-b218-de90aaa189b1/result.json",
+        "createdAt": "2026-10-08T18:53:20.688Z",
+        "description": "Recorded after resultJson"
+      },
+      {
+        "id": "ev-f8de2211-0c4d-4c82-b218-de90aaa189b1-screenshot",
+        "type": "screenshot",
+        "phase": "after",
+        "path": "artifacts/case-001/after/f8de2211-0c4d-4c82-b218-de90aaa189b1/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/test-finished-1.png",
+        "createdAt": "2026-10-08T18:53:20.688Z",
+        "description": "Recorded after screenshot"
+      },
+      {
+        "id": "ev-f8de2211-0c4d-4c82-b218-de90aaa189b1-trace",
+        "type": "trace",
+        "phase": "after",
+        "path": "artifacts/case-001/after/f8de2211-0c4d-4c82-b218-de90aaa189b1/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/trace.zip",
+        "createdAt": "2026-10-08T18:53:20.688Z",
+        "description": "Recorded after trace"
+      }
+    ],
+    "rootCauseExplanation": "The cart total bug originates in cartStore.ts where the total getter reads items[0].price directly instead of summing all item prices. This means the total is always equal to the price of the first item added, regardless of how many additional items are in the cart. Every subsequent product the user adds is silently ignored in the calculation, creating a misleading and incorrect total that could cause users to underpay or lose trust in the application."
+  },
+  "applyPatch": true,
+  "context": {
+    "answer": "[README.md#08d5ab6b5d3d]\nWhen two products are added to MiniShop's cart, the total shows only the first item's\nprice instead of the sum of both.\n\n| Step | Expected | Actual (buggy) |\n|------|----------|----------------|\n| Add Keyboard ($10) + Mouse Pad ($20) | $30.00 | $10.00 |\n\n---\n\n## LLM Integration (optional)\n\nThree optional AI enhancements are available when an OpenAI-compatible API key is configured:\n\n1. **Bug report structuring** â€” converts plain description into structured reproduction steps\n2. **Patch summary** â€” explains what the diff changes and why\n3. **Root cause explanation** â€” paragraph explaining the probable root cause\n\nThe system works fully without a key. Set `LLM_ENABLED=true` and `LLM_API_KEY=<your-key>`\nin `.env` to enable.\n\n---\n\n## Architecture\n\n```\nReact Dashboard (5173)\n       â†“ HTTP\nNode.js API (3001)\n       â†“ JSON files        â†“ spawn\ndata/cases/*.json     Playwright Runner\n                           â†“ HTTP\n                      MiniShop (5174)\n                           â†“ artifacts\n                      artifacts/<caseId>/before|after/\n```\n\n---\n\n[README.md#0efebeb40706]\n```bash\nnpm run dev:minishop\n```\n\n---\n\n## Running Tests\n\n```bash\n# Run the Playwright reproduction/verification test suite\nnpm run test:playwright\n```\n\n---\n\n## Project Structure\n\n```\nbug-to-proof/\nâ”œâ”€â”€ apps/\nâ”‚   â”œâ”€â”€ dashboard/          # React + Vite dashboard (Rida Zainab)\nâ”‚   â””â”€â”€ minishop/           # React + Vite demo app with seeded bug (Sikander)\nâ”œâ”€â”€ services/\nâ”‚   â””â”€â”€ api/                # Node.js + Express API (Abdullah Ijaz)\nâ”œâ”€â”€ packages/\nâ”‚   â””â”€â”€ shared-types/       # Shared TypeScript types (frozen â€” all agree before changing)\nâ”œâ”€â”€ tests/\nâ”‚   â””â”€â”€ playwright/         # Playwright reproduction & verification specs (Sikander)\nâ”œâ”€â”€ data/\nâ”‚   â””â”€â”€ cases/              # JSON case files (persisted state)\nâ”œâ”€â”€ artifacts/              # Playwright screenshots, traces, result JSON\nâ”œâ”€â”€ plans/                  # Implementation plan\nâ””â”€â”€ docs/                   # Demo script and documentation\n```\n\n---\n\n## Demo Bug\n\n**Case 001 â€” Cart total only reflects first item price**\n\nWhen two products are added to MiniShop's cart, the total shows only the first item's\nprice instead of the sum of both.\n\n[tests/playwright/cases/case-001-cart-total.spec.ts#424f1c8ea584]\nimport { test, expect } from \"@playwright/test\";\nimport { MiniShopPage } from \"./helpers/minishop\";\n\n/**\n * Case 001 — Cart total only reflects first item price\n *\n * Expected: Adding Keyboard ($10) + Mouse Pad ($20) should show total $30.00\n * Actual (buggy): Total shows $10.00 — only first item's price\n *\n * This test FAILS on the buggy MiniShop (before patch).\n * This test PASSES on the fixed MiniShop (after patch).\n *\n * Phase is controlled by PHASE env var (set by API runner):\n *   PHASE=before → test expected to fail\n *   PHASE=after  → test expected to pass\n */\n\nasync function assertTotal(actual: string, expected: string, message: string) {\n  if (actual !== expected) {\n    await test.info().attach(\"btp-assertion\", {\n      body: Buffer.from(JSON.stringify({ actual, expected })), contentType: \"application/json\",\n    });\n  }\n  expect(actual, message).toBe(expected);\n}\n\ntest.describe(\"Case 001 — Cart total calculation\", () => {\n  test(\"cart total should equal sum of all item prices\", async ({ page }) => {\n    const shop = new MiniShopPage(page);\n\n    // Navigate to MiniShop\n    await shop.navigate();\n\n    // Add Keyboard ($10.00)\n    await shop.addToCart(1);\n\n[tests/playwright/cases/case-001-cart-total.spec.ts#f3bd8a373c64]\n// Navigate to MiniShop\n    await shop.navigate();\n\n    // Add Keyboard ($10.00)\n    await shop.addToCart(1);\n\n    // Add Mouse Pad ($20.00)\n    await shop.addToCart(2);\n\n    // Take screenshot (saved to artifacts/<caseId>/<phase>/screenshot.png)\n    await shop.takeScreenshot(\"screenshot\");\n\n    // Assert: cart total must be $30.00\n    const total = await shop.getCartTotal();\n    await assertTotal(total, \"$30.00\", \"BTP_ASSERTION: Cart total should be $30.00 after adding $10 + $20 items\");\n  });\n\n  test(\"cart total should update when items are added incrementally\", async ({ page }) => {\n    const shop = new MiniShopPage(page);\n    await shop.navigate();\n\n    // Add single item first\n    await shop.addToCart(1);\n    let total = await shop.getCartTotal();\n    await assertTotal(total, \"$10.00\", \"BTP_ASSERTION: After adding Keyboard only, total should be $10.00\");\n\n    // Add second item\n    await shop.addToCart(2);\n    total = await shop.getCartTotal();\n    await assertTotal(total, \"$30.00\", \"BTP_ASSERTION: After adding Mouse Pad, total should be $30.00\");\n  });\n});",
+    "mode": "extractive",
+    "sources": [
+      {
+        "source": "README.md",
+        "chunkId": "08d5ab6b5d3d",
+        "content": "When two products are added to MiniShop's cart, the total shows only the first item's\nprice instead of the sum of both.\n\n| Step | Expected | Actual (buggy) |\n|------|----------|----------------|\n| Add Keyboard ($10) + Mouse Pad ($20) | $30.00 | $10.00 |\n\n---\n\n## LLM Integration (optional)\n\nThree optional AI enhancements are available when an OpenAI-compatible API key is configured:\n\n1. **Bug report structuring** â€” converts plain description into structured reproduction steps\n2. **Patch summary** â€” explains what the diff changes and why\n3. **Root cause explanation** â€” paragraph explaining the probable root cause\n\nThe system works fully without a key. Set `LLM_ENABLED=true` and `LLM_API_KEY=<your-key>`\nin `.env` to enable.\n\n---\n\n## Architecture\n\n```\nReact Dashboard (5173)\n       â†“ HTTP\nNode.js API (3001)\n       â†“ JSON files        â†“ spawn\ndata/cases/*.json     Playwright Runner\n                           â†“ HTTP\n                      MiniShop (5174)\n                           â†“ artifacts\n                      artifacts/<caseId>/before|after/\n```\n\n---",
+        "score": 0.5414351022802624
+      },
+      {
+        "source": "README.md",
+        "chunkId": "0efebeb40706",
+        "content": "```bash\nnpm run dev:minishop\n```\n\n---\n\n## Running Tests\n\n```bash\n# Run the Playwright reproduction/verification test suite\nnpm run test:playwright\n```\n\n---\n\n## Project Structure\n\n```\nbug-to-proof/\nâ”œâ”€â”€ apps/\nâ”‚   â”œâ”€â”€ dashboard/          # React + Vite dashboard (Rida Zainab)\nâ”‚   â””â”€â”€ minishop/           # React + Vite demo app with seeded bug (Sikander)\nâ”œâ”€â”€ services/\nâ”‚   â””â”€â”€ api/                # Node.js + Express API (Abdullah Ijaz)\nâ”œâ”€â”€ packages/\nâ”‚   â””â”€â”€ shared-types/       # Shared TypeScript types (frozen â€” all agree before changing)\nâ”œâ”€â”€ tests/\nâ”‚   â””â”€â”€ playwright/         # Playwright reproduction & verification specs (Sikander)\nâ”œâ”€â”€ data/\nâ”‚   â””â”€â”€ cases/              # JSON case files (persisted state)\nâ”œâ”€â”€ artifacts/              # Playwright screenshots, traces, result JSON\nâ”œâ”€â”€ plans/                  # Implementation plan\nâ””â”€â”€ docs/                   # Demo script and documentation\n```\n\n---\n\n## Demo Bug\n\n**Case 001 â€” Cart total only reflects first item price**\n\nWhen two products are added to MiniShop's cart, the total shows only the first item's\nprice instead of the sum of both.",
+        "score": 0.46006272376431123
+      },
+      {
+        "source": "tests/playwright/cases/case-001-cart-total.spec.ts",
+        "chunkId": "424f1c8ea584",
+        "content": "import { test, expect } from \"@playwright/test\";\nimport { MiniShopPage } from \"./helpers/minishop\";\n\n/**\n * Case 001 — Cart total only reflects first item price\n *\n * Expected: Adding Keyboard ($10) + Mouse Pad ($20) should show total $30.00\n * Actual (buggy): Total shows $10.00 — only first item's price\n *\n * This test FAILS on the buggy MiniShop (before patch).\n * This test PASSES on the fixed MiniShop (after patch).\n *\n * Phase is controlled by PHASE env var (set by API runner):\n *   PHASE=before → test expected to fail\n *   PHASE=after  → test expected to pass\n */\n\nasync function assertTotal(actual: string, expected: string, message: string) {\n  if (actual !== expected) {\n    await test.info().attach(\"btp-assertion\", {\n      body: Buffer.from(JSON.stringify({ actual, expected })), contentType: \"application/json\",\n    });\n  }\n  expect(actual, message).toBe(expected);\n}\n\ntest.describe(\"Case 001 — Cart total calculation\", () => {\n  test(\"cart total should equal sum of all item prices\", async ({ page }) => {\n    const shop = new MiniShopPage(page);\n\n    // Navigate to MiniShop\n    await shop.navigate();\n\n    // Add Keyboard ($10.00)\n    await shop.addToCart(1);",
+        "score": 0.44372180927311694
+      },
+      {
+        "source": "tests/playwright/cases/case-001-cart-total.spec.ts",
+        "chunkId": "f3bd8a373c64",
+        "content": "// Navigate to MiniShop\n    await shop.navigate();\n\n    // Add Keyboard ($10.00)\n    await shop.addToCart(1);\n\n    // Add Mouse Pad ($20.00)\n    await shop.addToCart(2);\n\n    // Take screenshot (saved to artifacts/<caseId>/<phase>/screenshot.png)\n    await shop.takeScreenshot(\"screenshot\");\n\n    // Assert: cart total must be $30.00\n    const total = await shop.getCartTotal();\n    await assertTotal(total, \"$30.00\", \"BTP_ASSERTION: Cart total should be $30.00 after adding $10 + $20 items\");\n  });\n\n  test(\"cart total should update when items are added incrementally\", async ({ page }) => {\n    const shop = new MiniShopPage(page);\n    await shop.navigate();\n\n    // Add single item first\n    await shop.addToCart(1);\n    let total = await shop.getCartTotal();\n    await assertTotal(total, \"$10.00\", \"BTP_ASSERTION: After adding Keyboard only, total should be $10.00\");\n\n    // Add second item\n    await shop.addToCart(2);\n    total = await shop.getCartTotal();\n    await assertTotal(total, \"$30.00\", \"BTP_ASSERTION: After adding Mouse Pad, total should be $30.00\");\n  });\n});",
+        "score": 0.41864953945381944
+      }
+    ]
+  },
+  "before": {
+    "passed": false,
+    "outcome": "ASSERTION_FAILED",
+    "expected": "",
+    "actual": "Error: BTP_ASSERTION: Cart total should be $30.00 after adding $10 + $20 items\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: \"$30.00\"\nReceived: \"$10.00\"\nError: BTP_ASSERTION: After adding Mouse Pad, total should be $30.00\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: \"$30.00\"\nReceived: \"$10.00\"",
+    "durationMs": 11160,
+    "runId": "3af89515-454e-45c8-9b6e-0298c64fbce2",
+    "testFingerprint": "0881ec9542058856b644c2ef5425d4c8ae544e33a68f25fea917f02b214d0677",
+    "testIds": [
+      "case-001-cart-total.spec.ts:cart total should equal sum of all item prices:chromium",
+      "case-001-cart-total.spec.ts:cart total should update when items are added incrementally:chromium"
+    ],
+    "artifactPaths": {
+      "resultJson": "artifacts/case-001/before/3af89515-454e-45c8-9b6e-0298c64fbce2/result.json",
+      "screenshot": "artifacts/case-001/before/3af89515-454e-45c8-9b6e-0298c64fbce2/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/test-failed-1.png",
+      "trace": "artifacts/case-001/before/3af89515-454e-45c8-9b6e-0298c64fbce2/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/trace.zip"
+    },
+    "rawOutput": "{\n  \"config\": {\n    \"argv\": [\n      \"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\n      \"D:\\\\bug-to-proof\\\\node_modules\\\\@playwright\\\\test\\\\cli.js\",\n      \"test\",\n      \"--config\",\n      \"tests/playwright/playwright.config.ts\",\n      \"tests/playwright/cases/case-001-cart-total.spec.ts\",\n      \"--reporter=json\",\n      \"--output\",\n      \"D:\\\\bug-to-proof\\\\artifacts\\\\case-001\\\\before\\\\3af89515-454e-45c8-9b6e-0298c64fbce2\"\n    ],\n    \"configFile\": \"D:\\\\bug-to-proof\\\\tests\\\\playwright\\\\playwright.config.ts\",\n    \"rootDir\": \"D:/bug-to-proof/tests/playwright/cases\",\n    \"failOnFlakyTests\": false,\n    \"forbidOnly\": false,\n    \"fullyParallel\": false,\n    \"globalSetup\": null,\n    \"globalTeardown\": null,\n    \"globalTimeout\": 0,\n    \"grep\": {},\n    \"grepInvert\": null,\n    \"maxFailures\": 0,\n    \"metadata\": {\n      \"actualWorkers\": 1\n    },\n    \"preserveOutput\": \"always\",\n    \"projects\": [\n      {\n        \"outputDir\": \"D:/bug-to-proof/artifacts/case-001/before/3af89515-454e-45c8-9b6e-0298c64fbce2\",\n        \"repeatEach\": 1,\n        \"retries\": 0,\n        \"metadata\": {\n          \"actualWorkers\": 1\n        },\n        \"id\": \"chromium\",\n        \"name\": \"chromium\",\n        \"testDir\": \"D:/bug-to-proof/tests/playwright/cases\",\n        \"testIgnore\": [],\n        \"testMatch\": [\n          \"**/*.@(spec|test).?(c|m)[jt]s?(x)\"\n        ],\n        \"timeout\": 30000\n      }\n    ],\n    \"quiet\": false,\n    \"reporter\": [\n      [\n        \"json\"\n      ]\n    ],\n    \"reportSlowTests\": {\n      \"max\": 5,\n      \"threshold\": 300000\n    },\n    \"shard\": null,\n    \"tags\": [],\n    \"updateSnapshots\": \"missing\",\n    \"updateSourceMethod\": \"patch\",\n    \"version\": \"1.63.0\",\n    \"workers\": 1,\n    \"webServer\": null\n  },\n  \"suites\": [\n    {\n      \"title\": \"case-001-cart-total.spec.ts\",\n      \"file\": \"case-001-cart-total.spec.ts\",\n      \"column\": 0,\n      \"line\": 0,\n      \"specs\": [],\n      \"suites\": [\n        {\n          \"title\": \"Case 001 — Cart total calculation\",\n          \"file\": \"case-001-cart-total.spec.ts\",\n          \"line\": 27,\n          \"column\": 6,\n          \"specs\": [\n            {\n              \"title\": \"cart total should equal sum of all item prices\",\n              \"ok\": false,\n              \"tags\": [],\n              \"tests\": [\n                {\n                  \"timeout\": 30000,\n                  \"annotations\": [],\n                  \"expectedStatus\": \"passed\",\n                  \"projectId\": \"chromium\",\n                  \"projectName\": \"chromium\",\n                  \"results\": [\n                    {\n                      \"workerIndex\": 0,\n                      \"parallelIndex\": 0,\n                      \"status\": \"failed\",\n                      \"duration\": 2036,\n                      \"error\": {\n                        \"message\": \"Error: BTP_ASSERTION: Cart total should be $30.00 after adding $10 + $20 items\\n\\n\\u001b[2mexpect(\\u001b[22m\\u001b[31mreceived\\u001b[39m\\u001b[2m).\\u001b[22mtoBe\\u001b[2m(\\u001b[22m\\u001b[32mexpected\\u001b[39m\\u001b[2m) // Object.is equality\\u001b[22m\\n\\nExpected: \\u001b[32m\\\"$\\u001b[7m3\\u001b[27m0.00\\\"\\u001b[39m\\nReceived: \\u001b[31m\\\"$\\u001b[7m1\\u001b[27m0.00\\\"\\u001b[39m\",\n                        \"stack\": \"Error: BTP_ASSERTION: Cart total should be $30.00 after adding $10 + $20 items\\n\\n\\u001b[2mexpect(\\u001b[22m\\u001b[31mreceived\\u001b[39m\\u001b[2m).\\u001b[22mtoBe\\u001b[2m(\\u001b[22m\\u001b[32mexpected\\u001b[39m\\u001b[2m) // Object.is equality\\u001b[22m\\n\\nExpected: \\u001b[32m\\\"$\\u001b[7m3\\u001b[27m0.00\\\"\\u001b[39m\\nReceived: \\u001b[31m\\\"$\\u001b[7m1\\u001b[27m0.00\\\"\\u001b[39m\\n    at assertTotal (D:\\\\bug-to-proof\\\\tests\\\\playwright\\\\cases\\\\case-001-cart-total.spec.ts:24:27)\\n    at D:\\\\bug-to-proof\\\\tests\\\\playwright\\\\cases\\\\case-001-cart-total.spec.ts:45:5\",\n                        \"location\": {\n                          \"file\": \"D:\\\\bug-to-proof\\\\tests\\\\playwright\\\\cases\\\\case-001-cart-total.spec.ts\",\n                          \"column\": 27,\n                          \"line\": 24\n                        },\n                        \"snippet\": \"  22 |     });\\n  23 |   }\\n> 24 |   expect(actual, message).toBe(expected);\\n     |                           ^\\n  25 | }\\n  26 |\\n  27 | test.describe(\\\"Case 001 — Cart total calculation\\\", () => {\"\n                      },\n                      \"errors\": [\n                        {\n                          \"location\": {\n                            \"file\": \"D:\\\\bug-to-proof\\\\tests\\\\playwright\\\\cases\\\\case-001-cart-total.spec.ts\",\n                            \"column\": 27,\n                            \"line\": 24\n                          },\n                          \"message\": \"Error: BTP_ASSERTION: Cart total should be $30.00 after adding $10 + $20 items\\n\\n\\u001b[2mexpect(\\u001b[22m\\u001b[31mreceived\\u001b[39m\\u001b[2m).\\u001b[22mtoBe\\u001b[2m(\\u001b[22m\\u001b[32mexpected\\u001b[39m\\u001b[2m) // Object.is equality\\u001b[22m\\n\\nExpected: \\u001b[32m\\\"$\\u001b[7m3\\u001b[27m0.00\\\"\\u001b[39m\\nReceived: \\u001b[31m\\\"$\\u001b[7m1\\u001b[27m0.00\\\"\\u001b[39m\\n\\n  22 |     });\\n  23 |   }\\n> 24 |   expect(actual, message).toBe(expected);\\n     |                           ^\\n  25 | }\\n  26 |\\n  27 | test.describe(\\\"Case 001 — Cart total calculation\\\", () => {\\n    at assertTotal (D:\\\\bug-to-proof\\\\tests\\\\playwright\\\\cases\\\\case-001-cart-total.spec.ts:24:27)\\n    at D:\\\\bug-to-proof\\\\tests\\\\playwright\\\\cases\\\\case-001-cart-total.spec.ts:45:5\"\n                        }\n                      ],\n                      \"stdout\": [],\n                      \"stderr\": [],\n                      \"retry\": 0,\n                      \"startTime\": \"2026-10-08T18:53:04.424Z\",\n                      \"annotations\": [],\n                      \"attachments\": [\n                        {\n                          \"name\": \"btp-assertion\",\n                          \"contentType\": \"application/json\",\n                          \"body\": \"eyJhY3R1YWwiOiIkMTAuMDAiLCJleHBlY3RlZCI6IiQzMC4wMCJ9\"\n                        },\n                        {\n                          \"name\": \"screenshot\",\n                          \"contentType\": \"image/png\",\n                          \"path\": \"D:\\\\bug-to-proof\\\\artifacts\\\\case-001\\\\before\\\\3af89515-454e-45c8-9b6e-0298c64fbce2\\\\case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium\\\\test-failed-1.png\"\n                        },\n                        {\n                          \"name\": \"error-context\",\n                          \"contentType\": \"text/markdown\",\n                          \"path\": \"D:\\\\bug-to-proof\\\\artifacts\\\\case-001\\\\before\\\\3af89515-454e-45c8-9b6e-0298c64fbce2\\\\case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium\\\\error-context.md\"\n                        },\n                        {\n                          \"name\": \"trace\",\n                          \"contentType\": \"application/zip\",\n                          \"path\": \"D:\\\\bug-to-proof\\\\artifacts\\\\case-001\\\\before\\\\3af89515-454e-45c8-9b6e-0298c64fbce2\\\\case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium\\\\trace.zip\"\n                        }\n                      ],\n                      \"errorLocation\": {\n                        \"file\": \"D:\\\\bug-to-proof\\\\tests\\\\playwright\\\\cases\\\\case-001-cart-total.spec.ts\",\n                        \"column\": 27,\n                        \"line\": 24\n                      }\n                    }\n                  ],\n                  \"status\": \"unexpected\"\n                }\n              ],\n              \"id\": \"b9baa70e2169da733ccd-7e13775ecb5577495b6f\",\n              \"file\": \"case-001-cart-total.spec.ts\",\n              \"line\": 28,\n              \"column\": 7\n            },\n            {\n              \"title\": \"cart total should update when items are added incrementally\",\n              \"ok\": false,\n              \"tags\": [],\n              \"tests\": [\n                {\n                  \"timeout\": 30000,\n                  \"annotations\": [],\n                  \"expectedStatus\": \"passed\",\n                  \"projectId\": \"chromium\",\n                  \"projectName\": \"chromium\",\n                  \"results\": [\n                    {\n                      \"workerIndex\": 1,\n                      \"parallelIndex\": 0,\n                      \"status\": \"failed\",\n                      \"duration\": 2041,\n                      \"error\": {\n                        \"message\": \"Error: BTP_ASSERTION: After adding Mouse Pad, total should be $30.00\\n\\n\\u001b[2mexpect(\\u001b[22m\\u001b[31mreceived\\u001b[39m\\u001b[2m).\\u001b[22mtoBe\\u001b[2m(\\u001b[22m\\u001b[32mexpected\\u001b[39m\\u001b[2m) // Object.is equality\\u001b[22m\\n\\nExpected: \\u001b[32m\\\"$\\u001b[7m3\\u001b[27m0.00\\\"\\u001b[39m\\nReceived: \\u001b[31m\\\"$\\u001b[7m1\\u001b[27m0.00\\\"\\u001b[39m\",\n                        \"stack\": \"Error: BTP_ASSERTION: After adding Mouse Pad, total should be $30.00\\n\\n\\u001b[2mexpect(\\u001b[22m\\u001b[31mreceived\\u001b[39m\\u001b[2m).\\u001b[22mtoBe\\u001b[2m(\\u001b[22m\\u001b[32mexpected\\u001b[39m\\u001b[2m) // Object.is equality\\u001b[22m\\n\\nExpected: \\u001b[32m\\\"$\\u001b[7m3\\u001b[27m0.00\\\"\\u001b[39m\\nReceived: \\u001b[31m\\\"$\\u001b[7m1\\u001b[27m0.00\\\"\\u001b[39m\\n    at assertTotal (D:\\\\bug-to-proof\\\\tests\\\\playwright\\\\cases\\\\case-001-cart-total.spec.ts:24:27)\\n    at D:\\\\bug-to-proof\\\\tests\\\\playwright\\\\cases\\\\case-001-cart-total.spec.ts:60:5\",\n                        \"location\": {\n                          \"file\": \"D:\\\\bug-to-proof\\\\tests\\\\playwright\\\\cases\\\\case-001-cart-total.spec.ts\",\n                          \"column\": 27,\n                          \"line\": 24\n                        },\n                        \"snippet\": \"  22 |     });\\n  23 |   }\\n> 24 |   expect(actual, message).toBe(expected);\\n     |                           ^\\n  25 | }\\n  26 |\\n  27 | test.describe(\\\"Case 001 — Cart total calculation\\\", () => {\"\n                      },\n                      \"errors\": [\n                        {\n                          \"location\": {\n                            \"file\": \"D:\\\\bug-to-proof\\\\tests\\\\playwright\\\\cases\\\\case-001-cart-total.spec.ts\",\n                            \"column\": 27,\n                            \"line\": 24\n                          },\n                          \"message\": \"Error: BTP_ASSERTION: After adding Mouse Pad, total should be $30.00\\n\\n\\u001b[2mexpect(\\u001b[22m\\u001b[31mreceived\\u001b[39m\\u001b[2m).\\u001b[22mtoBe\\u001b[2m(\\u001b[22m\\u001b[32mexpected\\u001b[39m\\u001b[2m) // Object.is equality\\u001b[22m\\n\\nExpected: \\u001b[32m\\\"$\\u001b[7m3\\u001b[27m0.00\\\"\\u001b[39m\\nReceived: \\u001b[31m\\\"$\\u001b[7m1\\u001b[27m0.00\\\"\\u001b[39m\\n\\n  22 |     });\\n  23 |   }\\n> 24 |   expect(actual, message).toBe(expected);\\n     |                           ^\\n  25 | }\\n  26 |\\n  27 | test.describe(\\\"Case 001 — Cart total calculation\\\", () => {\\n    at assertTotal (D:\\\\bug-to-proof\\\\tests\\\\playwright\\\\cases\\\\case-001-cart-total.spec.ts:24:27)\\n    at D:\\\\bug-to-proof\\\\tests\\\\playwright\\\\cases\\\\case-001-cart-total.spec.ts:60:5\"\n                        }\n                      ],\n                      \"stdout\": [],\n                      \"stderr\": [],\n                      \"retry\": 0,\n                      \"startTime\": \"2026-10-08T18:53:08.710Z\",\n                      \"annotations\": [],\n                      \"attachments\": [\n                        {\n                          \"name\": \"btp-assertion\",\n                          \"contentType\": \"application/json\",\n                          \"body\": \"eyJhY3R1YWwiOiIkMTAuMDAiLCJleHBlY3RlZCI6IiQzMC4wMCJ9\"\n                        },\n                        {\n                          \"name\": \"screenshot\",\n                          \"contentType\": \"image/png\",\n                          \"path\": \"D:\\\\bug-to-proof\\\\artifacts\\\\case-001\\\\before\\\\3af89515-454e-45c8-9b6e-0298c64fbce2\\\\case-001-cart-total-Case-0-46116-ems-are-added-incrementally-chromium\\\\test-failed-1.png\"\n                        },\n                        {\n                          \"name\": \"error-context\",\n                          \"contentType\": \"text/markdown\",\n                          \"path\": \"D:\\\\bug-to-proof\\\\artifacts\\\\case-001\\\\before\\\\3af89515-454e-45c8-9b6e-0298c64fbce2\\\\case-001-cart-total-Case-0-46116-ems-are-added-incrementally-chromium\\\\error-context.md\"\n                        },\n                        {\n                          \"name\": \"trace\",\n                          \"contentType\": \"application/zip\",\n                          \"path\": \"D:\\\\bug-to-proof\\\\artifacts\\\\case-001\\\\before\\\\3af89515-454e-45c8-9b6e-0298c64fbce2\\\\case-001-cart-total-Case-0-46116-ems-are-added-incrementally-chromium\\\\trace.zip\"\n                        }\n                      ],\n                      \"errorLocation\": {\n                        \"file\": \"D:\\\\bug-to-proof\\\\tests\\\\playwright\\\\cases\\\\case-001-cart-total.spec.ts\",\n                        \"column\": 27,\n                        \"line\": 24\n                      }\n                    }\n                  ],\n                  \"status\": \"unexpected\"\n                }\n              ],\n              \"id\": \"b9baa70e2169da733ccd-a4e3994fa2a77a3559ae\",\n              \"file\": \"case-001-cart-total.spec.ts\",\n              \"line\": 48,\n              \"column\": 7\n            }\n          ]\n        }\n      ]\n    }\n  ],\n  \"errors\": [],\n  \"stats\": {\n    \"startTime\": \"2026-10-08T18:53:02.661Z\",\n    \"duration\": 9047.241,\n    \"expected\": 0,\n    \"skipped\": 0,\n    \"unexpected\": 2,\n    \"flaky\": 0\n  }\n}\n\n",
+    "exitCode": 1,
+    "reportHash": "f86b4bd18e698162d5cccf913312bda4bf4d53b04b460b7559dad76174b54e87"
+  },
+  "after": {
+    "passed": true,
+    "outcome": "PASSED",
+    "expected": "",
+    "actual": "All selected tests passed",
+    "durationMs": 8765,
+    "runId": "f8de2211-0c4d-4c82-b218-de90aaa189b1",
+    "testFingerprint": "0881ec9542058856b644c2ef5425d4c8ae544e33a68f25fea917f02b214d0677",
+    "testIds": [
+      "case-001-cart-total.spec.ts:cart total should equal sum of all item prices:chromium",
+      "case-001-cart-total.spec.ts:cart total should update when items are added incrementally:chromium"
+    ],
+    "artifactPaths": {
+      "resultJson": "artifacts/case-001/after/f8de2211-0c4d-4c82-b218-de90aaa189b1/result.json",
+      "screenshot": "artifacts/case-001/after/f8de2211-0c4d-4c82-b218-de90aaa189b1/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/test-finished-1.png",
+      "trace": "artifacts/case-001/after/f8de2211-0c4d-4c82-b218-de90aaa189b1/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/trace.zip"
+    },
+    "rawOutput": "{\n  \"config\": {\n    \"argv\": [\n      \"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\n      \"D:\\\\bug-to-proof\\\\node_modules\\\\@playwright\\\\test\\\\cli.js\",\n      \"test\",\n      \"--config\",\n      \"tests/playwright/playwright.config.ts\",\n      \"tests/playwright/cases/case-001-cart-total.spec.ts\",\n      \"--reporter=json\",\n      \"--output\",\n      \"D:\\\\bug-to-proof\\\\artifacts\\\\case-001\\\\after\\\\f8de2211-0c4d-4c82-b218-de90aaa189b1\"\n    ],\n    \"configFile\": \"D:\\\\bug-to-proof\\\\tests\\\\playwright\\\\playwright.config.ts\",\n    \"rootDir\": \"D:/bug-to-proof/tests/playwright/cases\",\n    \"failOnFlakyTests\": false,\n    \"forbidOnly\": false,\n    \"fullyParallel\": false,\n    \"globalSetup\": null,\n    \"globalTeardown\": null,\n    \"globalTimeout\": 0,\n    \"grep\": {},\n    \"grepInvert\": null,\n    \"maxFailures\": 0,\n    \"metadata\": {\n      \"actualWorkers\": 1\n    },\n    \"preserveOutput\": \"always\",\n    \"projects\": [\n      {\n        \"outputDir\": \"D:/bug-to-proof/artifacts/case-001/after/f8de2211-0c4d-4c82-b218-de90aaa189b1\",\n        \"repeatEach\": 1,\n        \"retries\": 0,\n        \"metadata\": {\n          \"actualWorkers\": 1\n        },\n        \"id\": \"chromium\",\n        \"name\": \"chromium\",\n        \"testDir\": \"D:/bug-to-proof/tests/playwright/cases\",\n        \"testIgnore\": [],\n        \"testMatch\": [\n          \"**/*.@(spec|test).?(c|m)[jt]s?(x)\"\n        ],\n        \"timeout\": 30000\n      }\n    ],\n    \"quiet\": false,\n    \"reporter\": [\n      [\n        \"json\"\n      ]\n    ],\n    \"reportSlowTests\": {\n      \"max\": 5,\n      \"threshold\": 300000\n    },\n    \"shard\": null,\n    \"tags\": [],\n    \"updateSnapshots\": \"missing\",\n    \"updateSourceMethod\": \"patch\",\n    \"version\": \"1.63.0\",\n    \"workers\": 1,\n    \"webServer\": null\n  },\n  \"suites\": [\n    {\n      \"title\": \"case-001-cart-total.spec.ts\",\n      \"file\": \"case-001-cart-total.spec.ts\",\n      \"column\": 0,\n      \"line\": 0,\n      \"specs\": [],\n      \"suites\": [\n        {\n          \"title\": \"Case 001 — Cart total calculation\",\n          \"file\": \"case-001-cart-total.spec.ts\",\n          \"line\": 27,\n          \"column\": 6,\n          \"specs\": [\n            {\n              \"title\": \"cart total should equal sum of all item prices\",\n              \"ok\": true,\n              \"tags\": [],\n              \"tests\": [\n                {\n                  \"timeout\": 30000,\n                  \"annotations\": [],\n                  \"expectedStatus\": \"passed\",\n                  \"projectId\": \"chromium\",\n                  \"projectName\": \"chromium\",\n                  \"results\": [\n                    {\n                      \"workerIndex\": 0,\n                      \"parallelIndex\": 0,\n                      \"status\": \"passed\",\n                      \"duration\": 2239,\n                      \"errors\": [],\n                      \"stdout\": [],\n                      \"stderr\": [],\n                      \"retry\": 0,\n                      \"startTime\": \"2026-10-08T18:53:15.697Z\",\n                      \"annotations\": [],\n                      \"attachments\": [\n                        {\n                          \"name\": \"screenshot\",\n                          \"contentType\": \"image/png\",\n                          \"path\": \"D:\\\\bug-to-proof\\\\artifacts\\\\case-001\\\\after\\\\f8de2211-0c4d-4c82-b218-de90aaa189b1\\\\case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium\\\\test-finished-1.png\"\n                        },\n                        {\n                          \"name\": \"trace\",\n                          \"contentType\": \"application/zip\",\n                          \"path\": \"D:\\\\bug-to-proof\\\\artifacts\\\\case-001\\\\after\\\\f8de2211-0c4d-4c82-b218-de90aaa189b1\\\\case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium\\\\trace.zip\"\n                        }\n                      ]\n                    }\n                  ],\n                  \"status\": \"expected\"\n                }\n              ],\n              \"id\": \"b9baa70e2169da733ccd-7e13775ecb5577495b6f\",\n              \"file\": \"case-001-cart-total.spec.ts\",\n              \"line\": 28,\n              \"column\": 7\n            },\n            {\n              \"title\": \"cart total should update when items are added incrementally\",\n              \"ok\": true,\n              \"tags\": [],\n              \"tests\": [\n                {\n                  \"timeout\": 30000,\n                  \"annotations\": [],\n                  \"expectedStatus\": \"passed\",\n                  \"projectId\": \"chromium\",\n                  \"projectName\": \"chromium\",\n                  \"results\": [\n                    {\n                      \"workerIndex\": 0,\n                      \"parallelIndex\": 0,\n                      \"status\": \"passed\",\n                      \"duration\": 1562,\n                      \"errors\": [],\n                      \"stdout\": [],\n                      \"stderr\": [],\n                      \"retry\": 0,\n                      \"startTime\": \"2026-10-08T18:53:18.500Z\",\n                      \"annotations\": [],\n                      \"attachments\": [\n                        {\n                          \"name\": \"screenshot\",\n                          \"contentType\": \"image/png\",\n                          \"path\": \"D:\\\\bug-to-proof\\\\artifacts\\\\case-001\\\\after\\\\f8de2211-0c4d-4c82-b218-de90aaa189b1\\\\case-001-cart-total-Case-0-46116-ems-are-added-incrementally-chromium\\\\test-finished-1.png\"\n                        },\n                        {\n                          \"name\": \"trace\",\n                          \"contentType\": \"application/zip\",\n                          \"path\": \"D:\\\\bug-to-proof\\\\artifacts\\\\case-001\\\\after\\\\f8de2211-0c4d-4c82-b218-de90aaa189b1\\\\case-001-cart-total-Case-0-46116-ems-are-added-incrementally-chromium\\\\trace.zip\"\n                        }\n                      ]\n                    }\n                  ],\n                  \"status\": \"expected\"\n                }\n              ],\n              \"id\": \"b9baa70e2169da733ccd-a4e3994fa2a77a3559ae\",\n              \"file\": \"case-001-cart-total.spec.ts\",\n              \"line\": 48,\n              \"column\": 7\n            }\n          ]\n        }\n      ]\n    }\n  ],\n  \"errors\": [],\n  \"stats\": {\n    \"startTime\": \"2026-10-08T18:53:14.002Z\",\n    \"duration\": 6619.818,\n    \"expected\": 2,\n    \"skipped\": 0,\n    \"unexpected\": 0,\n    \"flaky\": 0\n  }\n}\n\n",
+    "exitCode": 0,
+    "reportHash": "ad671289eec650e36f8d1b1cc4198a65ef8c0a8bb8d052fc79b8791f19dbf138"
+  },
+  "patchDiff": "--- a/apps/minishop/src/store/cartStore.ts\n+++ b/apps/minishop/src/store/cartStore.ts\n@@ -38,1 +38,1 @@\n-  total: () => get().items[0]?.price ?? 0,\n+  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),\n",
+  "report": "Recorded assertion failure became a pass with identical test inputs and test identities.",
+  "outcome": "VERIFIED",
+  "events": [
+    "Retrieved local source context",
+    "Baseline: ASSERTION_FAILED",
+    "Proposed the allowlisted cart repair",
+    "Applied the reviewed demo patch",
+    "Verification: PASSED"
+  ]
+}

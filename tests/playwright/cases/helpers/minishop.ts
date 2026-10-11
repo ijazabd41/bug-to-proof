@@ -1,3 +1,4 @@
+import path from "path";
 import { Page } from "@playwright/test";
 import { TEST_IDS } from "@bug-to-proof/shared-types";
 
@@ -39,9 +40,31 @@ export class MiniShopPage {
     const PHASE = process.env.PHASE ?? "before";
     const CASE_ID = process.env.CASE_ID ?? "case-001";
     await this.page.screenshot({
-      path: `artifacts/${CASE_ID}/${PHASE}/${name}.png`,
+      path: path.join(process.env.BTP_ARTIFACT_DIR ?? `artifacts/${CASE_ID}/${PHASE}`, `${name}.png`),
       fullPage: true,
     });
+  }
+
+  async removeItem(productId: number) {
+    const btn = this.page.getByTestId(`remove-from-cart-${productId}`);
+    await btn.waitFor({ state: "visible" });
+    await btn.click();
+  }
+
+  async getItemQuantity(productId: number): Promise<string> {
+    const el = this.page.getByTestId(TEST_IDS.cartItemQuantity(productId));
+    await el.waitFor({ state: "visible" });
+    return el.innerText();
+  }
+
+  async hasCartItem(productId: number): Promise<boolean> {
+    const el = this.page.getByTestId(TEST_IDS.cartItem(productId));
+    return (await el.count()) > 0;
+  }
+
+  async isCartEmpty(): Promise<boolean> {
+    const el = this.page.getByText("Your cart is empty.");
+    return (await el.count()) > 0;
   }
 
   async clickCheckout() {

@@ -1,5 +1,7 @@
 # Bug-to-Proof — Central Progress Tracker
 
+> **ARCHIVED TEAM TRACKER:** Retained for contribution history. Current engineering progress is in [dynamic repair progress](../../progress.md) and [arbitrary reproduction progress](arbitrary-bug-reproduction.md).
+
 > Last updated: see individual progress files for per-member detail.
 > Milestone 0 is **complete**. All three members can now branch and work in parallel.
 

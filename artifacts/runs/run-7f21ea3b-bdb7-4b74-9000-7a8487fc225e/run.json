@@ -1,0 +1,230 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-7f21ea3b-bdb7-4b74-9000-7a8487fc225e",
+  "caseId": "case-001-cart-total",
+  "mode": "simulated",
+  "state": "VERIFIED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [
+    {
+      "attemptNumber": 1,
+      "proposal": {
+        "schemaVersion": "1.0",
+        "proposalId": "prop-sim-case-001-cart-total",
+        "diagnosis": "The total method in cartStore only accesses the first item's price at index 0 rather than reducing over all items and multiplying price by quantity.",
+        "assumptions": [
+          "Standard MiniShop cart operations"
+        ],
+        "rationale": "Fix defective logic in src/store/cartStore.ts",
+        "edits": [
+          {
+            "relativePath": "src/store/cartStore.ts",
+            "oldContent": "  total: () => get().items[0]?.price ?? 0,",
+            "newContent": "  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),"
+          }
+        ],
+        "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -64,1 +64,1 @@\n-  total: () => get().items[0]?.price ?? 0,\n+  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),\n",
+        "proposalHash": "2ec0887b2ee7dee217278e3157af99b77a31a6ac277b7dcf5443d6b64c431140",
+        "proposedAt": "2026-10-10T16:35:52.667Z"
+      },
+      "state": "VERIFIED",
+      "startedAt": "2026-10-10T16:35:52.641Z",
+      "stageLatenciesMs": {
+        "baseline": 10,
+        "proposal": 1,
+        "postPatchReproduction": 26,
+        "regressionChecks": 0
+      },
+      "completedAt": "2026-10-10T16:35:53.744Z"
+    }
+  ],
+  "inputs": {
+    "caseSnapshot": {
+      "id": "case-001-cart-total",
+      "title": "Cart total only reflects first item price",
+      "description": "When multiple items are added to the cart, the total displays only the first item price instead of the sum of all items.",
+      "status": "READY_TO_REPRODUCE",
+      "createdAt": "2026-10-10T16:35:51.890Z",
+      "updatedAt": "2026-10-10T16:35:51.901Z",
+      "reproduction": {
+        "preconditions": [],
+        "steps": [
+          "Execute reproduction test in isolated environment"
+        ],
+        "expected": "All calculations and assertions pass",
+        "actual": "Assertion failure on defective code",
+        "testFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+        "lastRun": null
+      },
+      "patch": null,
+      "verification": null,
+      "evidence": [],
+      "rootCauseExplanation": null
+    },
+    "reproductionTest": {
+      "filePath": "tests/playwright/cases/case-001-cart-total.spec.ts",
+      "content": "import { test, expect } from \"@playwright/test\";\nimport { MiniShopPage } from \"./helpers/minishop\";\n\n/**\n * Case 001 — Cart total only reflects first item price\n *\n * Expected: Adding Keyboard ($10) + Mouse Pad ($20) should show total $30.00\n * Actual (buggy): Total shows $10.00 — only first item's price\n *\n * This test FAILS on the buggy MiniShop (before patch).\n * This test PASSES on the fixed MiniShop (after patch).\n *\n * Phase is controlled by PHASE env var (set by API runner):\n *   PHASE=before → test expected to fail\n *   PHASE=after  → test expected to pass\n */\n\nasync function assertTotal(actual: string, expected: string, message: string) {\n  if (actual !== expected) {\n    await test.info().attach(\"btp-assertion\", {\n      body: Buffer.from(JSON.stringify({ actual, expected })), contentType: \"application/json\",\n    });\n  }\n  expect(actual, message).toBe(expected);\n}\n\ntest.describe(\"Case 001 — Cart total calculation\", () => {\n  test(\"cart total should equal sum of all item prices\", async ({ page }) => {\n    const shop = new MiniShopPage(page);\n\n    // Navigate to MiniShop\n    await shop.navigate();\n\n    // Add Keyboard ($10.00)\n    await shop.addToCart(1);\n\n    // Add Mouse Pad ($20.00)\n    await shop.addToCart(2);\n\n    // Take screenshot (saved to artifacts/<caseId>/<phase>/screenshot.png)\n    await shop.takeScreenshot(\"screenshot\");\n\n    // Assert: cart total must be $30.00\n    const total = await shop.getCartTotal();\n    await assertTotal(total, \"$30.00\", \"BTP_ASSERTION: Cart total should be $30.00 after adding $10 + $20 items\");\n  });\n\n  test(\"cart total should update when items are added incrementally\", async ({ page }) => {\n    const shop = new MiniShopPage(page);\n    await shop.navigate();\n\n    // Add single item first\n    await shop.addToCart(1);\n    let total = await shop.getCartTotal();\n    await assertTotal(total, \"$10.00\", \"BTP_ASSERTION: After adding Keyboard only, total should be $10.00\");\n\n    // Add second item\n    await shop.addToCart(2);\n    total = await shop.getCartTotal();\n    await assertTotal(total, \"$30.00\", \"BTP_ASSERTION: After adding Mouse Pad, total should be $30.00\");\n  });\n});\r\n",
+      "fingerprint": "bc3ded85db78e4735c59884ee2ef9b83b445c0a22c90f5cace95b9221ed5ff6d"
+    }
+  },
+  "diagnostics": [],
+  "originalSourceFingerprint": "0248e0d27084c5fad9ab416c1db35d60dd2731e3946e1fbd25d88c1bcb273718",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-7f21ea3b-bdb7-4b74-9000-7a8487fc225e\\workspace",
+  "testFingerprint": "bc3ded85db78e4735c59884ee2ef9b83b445c0a22c90f5cace95b9221ed5ff6d",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "requiredChecks": [
+    {
+      "checkId": "check-typecheck",
+      "name": "TypeScript compilation",
+      "type": "typecheck",
+      "command": "tsc --noEmit",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 320,
+      "output": "Found 0 errors"
+    },
+    {
+      "checkId": "check-build",
+      "name": "Production Vite build",
+      "type": "build",
+      "command": "vite build",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 450,
+      "output": "built in 0.4s"
+    },
+    {
+      "checkId": "check-unit-tests",
+      "name": "MiniShop unit tests",
+      "type": "unit-tests",
+      "command": "vitest run apps/minishop",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 250,
+      "output": "3 passed"
+    }
+  ],
+  "events": [
+    {
+      "timestamp": "2026-10-10T16:35:51.946Z",
+      "stage": "initialization",
+      "message": "Repair run initialized and queued for background execution"
+    },
+    {
+      "timestamp": "2026-10-10T16:35:52.419Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "0248e0d27084c5fad9ab416c1db35d60dd2731e3946e1fbd25d88c1bcb273718",
+        "url": "http://localhost:5210"
+      }
+    },
+    {
+      "timestamp": "2026-10-10T16:35:52.597Z",
+      "stage": "baseline",
+      "message": "Valid baseline failure confirmed: Expected value matches calculation vs Defective value received"
+    },
+    {
+      "timestamp": "2026-10-10T16:35:52.636Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-10T16:35:52.710Z",
+      "stage": "proposal",
+      "message": "Generated and validated patch proposal. Awaiting exact review approval.",
+      "data": {
+        "proposalId": "prop-sim-case-001-cart-total",
+        "proposalHash": "2ec0887b2ee7dee217278e3157af99b77a31a6ac277b7dcf5443d6b64c431140",
+        "attempt": 1
+      }
+    },
+    {
+      "timestamp": "2026-10-10T16:35:53.268Z",
+      "stage": "patch_applied",
+      "message": "Exact reviewed patch applied transactionally to candidate workspace",
+      "data": {
+        "proposalId": "prop-sim-case-001-cart-total",
+        "proposalHash": "2ec0887b2ee7dee217278e3157af99b77a31a6ac277b7dcf5443d6b64c431140",
+        "modifiedFiles": [
+          "src/store/cartStore.ts"
+        ],
+        "expectedPatchedFingerprint": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289"
+      }
+    },
+    {
+      "timestamp": "2026-10-10T16:35:53.379Z",
+      "stage": "verification",
+      "message": "Post-patch reproduction outcome: PASSED (passed: true)"
+    },
+    {
+      "timestamp": "2026-10-10T16:35:53.505Z",
+      "stage": "regression",
+      "message": "All 3 candidate regression checks passed cleanly."
+    },
+    {
+      "timestamp": "2026-10-10T16:35:53.769Z",
+      "stage": "completion",
+      "message": "Run finalized with status: VERIFIED (All verification gates and regression checks passed cleanly.)"
+    }
+  ],
+  "createdAt": "2026-10-10T16:35:51.946Z",
+  "updatedAt": "2026-10-10T16:35:53.770Z",
+  "baselineRun": {
+    "outcome": "ASSERTION_FAILED",
+    "testFingerprint": "bc3ded85db78e4735c59884ee2ef9b83b445c0a22c90f5cace95b9221ed5ff6d",
+    "testIds": [
+      "case-001-cart-total.spec.ts:Cart total only reflects first item price:chromium"
+    ],
+    "runId": "sim-eval-before",
+    "reportHash": "sim-hash",
+    "runAt": "2026-10-10T16:35:52.587Z",
+    "passed": false,
+    "expected": "Expected value matches calculation",
+    "actual": "Defective value received",
+    "durationMs": 150,
+    "evidenceIds": []
+  },
+  "proposal": {
+    "schemaVersion": "1.0",
+    "proposalId": "prop-sim-case-001-cart-total",
+    "diagnosis": "The total method in cartStore only accesses the first item's price at index 0 rather than reducing over all items and multiplying price by quantity.",
+    "assumptions": [
+      "Standard MiniShop cart operations"
+    ],
+    "rationale": "Fix defective logic in src/store/cartStore.ts",
+    "edits": [
+      {
+        "relativePath": "src/store/cartStore.ts",
+        "oldContent": "  total: () => get().items[0]?.price ?? 0,",
+        "newContent": "  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),"
+      }
+    ],
+    "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -64,1 +64,1 @@\n-  total: () => get().items[0]?.price ?? 0,\n+  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),\n",
+    "proposalHash": "2ec0887b2ee7dee217278e3157af99b77a31a6ac277b7dcf5443d6b64c431140",
+    "proposedAt": "2026-10-10T16:35:52.667Z"
+  },
+  "review": {
+    "proposalId": "prop-sim-case-001-cart-total",
+    "proposalHash": "2ec0887b2ee7dee217278e3157af99b77a31a6ac277b7dcf5443d6b64c431140",
+    "decision": "APPROVED"
+  },
+  "postPatchRun": {
+    "outcome": "PASSED",
+    "testFingerprint": "bc3ded85db78e4735c59884ee2ef9b83b445c0a22c90f5cace95b9221ed5ff6d",
+    "testIds": [
+      "case-001-cart-total.spec.ts:Cart total only reflects first item price:chromium"
+    ],
+    "runId": "sim-eval-after",
+    "reportHash": "sim-hash",
+    "runAt": "2026-10-10T16:35:53.365Z",
+    "passed": true,
+    "expected": "Expected value matches calculation",
+    "actual": "Expected value matches calculation",
+    "durationMs": 150,
+    "evidenceIds": []
+  },
+  "stopReason": "All verification gates and regression checks passed cleanly.",
+  "completedAt": "2026-10-10T16:35:53.744Z"
+}

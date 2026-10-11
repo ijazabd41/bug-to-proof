@@ -4,6 +4,8 @@
 
 ---
 
+> **Archive notice (2026-10-12):** This is the original greenfield implementation plan. Use [`../docs/current-project-status.md`](../docs/current-project-status.md) for current behavior and [`arbitrary-bug-reproduction-plan.md`](arbitrary-bug-reproduction-plan.md) for the next implementation phase.
+
 ## 1. Executive Summary
 
 Bug-to-Proof is a hackathon project that turns a plain-language software bug report into

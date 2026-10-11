@@ -4,7 +4,9 @@ import { api } from "../api/client";
 import { StatusBadge } from "./StatusBadge";
 import { PatchViewer } from "./PatchViewer";
 import { BeforeAfterComparison } from "./BeforeAfterComparison";
+import { AIAssistant } from "./AIAssistant";
 import { EvidencePanel } from "./EvidencePanel";
+import { Workflow } from "./Workflow";
 
 interface CaseDetailProps {
   bugCase: BugCase;
@@ -149,6 +151,7 @@ export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
   // ── Section wrapper ───────────────────────────────────────────────────────────
   const section = (title: string, children: React.ReactNode) => (
     <section
+      className={`panel detail-section section-${title.toLowerCase().replace(/[^a-z]+/g, "-")}`}
       style={{
         border: "1px solid #e5e7eb",
         borderRadius: 8,
@@ -167,9 +170,10 @@ export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
   const isRunning = POLLING_STATUSES.has(bugCase.status);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+    <div className="detail-grid">
       {/* ── Header ── */}
       <div
+        className="case-header"
         style={{
           border: "1px solid #e5e7eb",
           borderRadius: 8,
@@ -189,7 +193,7 @@ export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
           <div style={{ flex: 1, minWidth: 0 }}>
             <h2
               style={{
-                fontSize: 20,
+                fontSize: 28,
                 fontWeight: 700,
                 marginBottom: 6,
                 wordBreak: "break-word",
@@ -208,6 +212,7 @@ export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
                 fontSize: 14,
                 color: "#374151",
                 lineHeight: 1.6,
+                whiteSpace: "pre-wrap",
               }}
             >
               {bugCase.description}
@@ -274,6 +279,16 @@ export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
           </p>
         )}
       </div>
+
+      <Workflow status={bugCase.status} />
+
+      <div className="case-layout">
+      <div className="case-content">
+      <section className="panel verification-overview" aria-labelledby="verification-heading">
+        <div className="panel-heading"><div><span className="eyebrow">THE EVIDENCE</span><h3 id="verification-heading">Before / After Comparison</h3></div></div>
+        <p className="panel-description">Recorded results from the original and patched application.</p>
+        <BeforeAfterComparison evidence={bugCase.evidence} verification={bugCase.verification} />
+      </section>
 
       {/* ── Errors ── */}
       {actionError && (
@@ -361,8 +376,7 @@ export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
             and retry reproduction.
           </p>
           <p style={{ fontSize: 12, color: "#9ca3af", marginTop: 8 }}>
-            Note: REPRODUCTION_FAILED means the runner encountered an error, not that the bug
-            doesn't exist.
+            A passing baseline or an infrastructure error cannot establish the reported bug.
           </p>
         </div>
       )}
@@ -412,7 +426,7 @@ export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
         <>
           {bugCase.reproduction ? (
             <>
-              {bugCase.reproduction.preconditions.length > 0 && (
+              {Array.isArray(bugCase.reproduction.preconditions) && bugCase.reproduction.preconditions.length > 0 && (
                 <div>
                   <p style={{ fontSize: 13, fontWeight: 500, marginBottom: 6 }}>
                     Preconditions
@@ -428,7 +442,7 @@ export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
                   </ul>
                 </div>
               )}
-              <div>
+              {Array.isArray(bugCase.reproduction.steps) && bugCase.reproduction.steps.length > 0 && (<div>
                 <p style={{ fontSize: 13, fontWeight: 500, marginBottom: 6 }}>Steps</p>
                 <ol style={{ paddingLeft: 20, fontSize: 13, color: "#374151" }}>
                   {bugCase.reproduction.steps.map((s, i) => (
@@ -437,7 +451,7 @@ export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
                     </li>
                   ))}
                 </ol>
-              </div>
+              </div>)}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                 <div>
                   <p
@@ -470,6 +484,9 @@ export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
                   </p>
                 </div>
               </div>
+              {bugCase.reproduction.lastRun?.outcome === "INFRASTRUCTURE_ERROR" && (
+                <p role="alert">Infrastructure error — no reproduced bug. {bugCase.reproduction.lastRun.actual}</p>
+              )}
               {bugCase.reproduction.lastRun != null && (
                 <div
                   style={{
@@ -485,7 +502,7 @@ export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
                   {bugCase.reproduction.lastRun.passed ? "✅ PASSED" : "❌ FAILED"} —{" "}
                   {bugCase.reproduction.lastRun.durationMs}ms at{" "}
                   {new Date(bugCase.reproduction.lastRun.runAt).toLocaleString()}
-                  {!bugCase.reproduction.lastRun.passed && (
+                  {bugCase.reproduction.lastRun.outcome === "ASSERTION_FAILED" && (
                     <p style={{ marginTop: 4, fontSize: 12, color: "#6b7280" }}>
                       Bug reproduced — baseline test failed as expected.
                     </p>
@@ -505,7 +522,7 @@ export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
               disabled={actionLoading}
               onClick={() =>
                 doAction(() =>
-                  api.updateCase(bugCase.id, { status: "READY_TO_REPRODUCE" })
+                  api.reproduce(bugCase.id)
                 )
               }
               style={btnStyle("#6b7280", actionLoading)}
@@ -552,12 +569,12 @@ export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
               disabled={actionLoading}
               onClick={() =>
                 doAction(() =>
-                  api.updateCase(bugCase.id, { status: "READY_TO_REPRODUCE" })
+                  api.reproduce(bugCase.id)
                 )
               }
               style={btnStyle("#f59e0b", actionLoading)}
             >
-              {actionLoading ? "Updating…" : "↺ Reset to Ready (retry reproduction)"}
+              {actionLoading ? "Updating…" : "↺ Retry reproduction"}
             </button>
           )}
 
@@ -724,17 +741,9 @@ export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
           )
         : null}
 
-      {/* ── Before / After Comparison ── */}
-      {(bugCase.evidence.some((e) => e.phase === "before") ||
-        bugCase.evidence.some((e) => e.phase === "after"))
-        ? section(
-            "Before / After Comparison",
-            <BeforeAfterComparison
-              evidence={bugCase.evidence}
-              verification={bugCase.verification}
-            />
-          )
-        : null}
+      </div>
+      <AIAssistant key={bugCase.id} caseId={bugCase.id} onComplete={handleRefresh} />
+      </div>
     </div>
   );
 }

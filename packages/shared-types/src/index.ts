@@ -52,6 +52,12 @@ export interface Evidence {
 // ── Test run (single Playwright execution result) ─────────────────────────────
 
 export interface TestRun {
+  /** Missing on legacy/demo records: these are not valid proof. */
+  outcome?: "PASSED" | "ASSERTION_FAILED" | "INFRASTRUCTURE_ERROR";
+  testFingerprint?: string;
+  testIds?: string[];
+  runId?: string;
+  reportHash?: string;
   /** ISO 8601 timestamp of when the run completed */
   runAt: string;
   passed: boolean;

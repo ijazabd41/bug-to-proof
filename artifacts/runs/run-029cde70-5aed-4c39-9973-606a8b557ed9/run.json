@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-029cde70-5aed-4c39-9973-606a8b557ed9",
+  "caseId": "case-test-dynamic",
+  "mode": "simulated",
+  "state": "BLOCKED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "originalSourceFingerprint": "520562cf00f42f5037f21bd2fcfef890d522891cc720c867398dd6397a0d5d26",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-029cde70-5aed-4c39-9973-606a8b557ed9\\workspace",
+  "testFingerprint": "8748d25e574eb1092731c6127deb866ab7b252d8d14cbaa99bfbe17dd773da94",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "requiredChecks": [],
+  "events": [
+    {
+      "timestamp": "2026-10-08T21:18:21.751Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot",
+      "data": {
+        "originalSourceFingerprint": "520562cf00f42f5037f21bd2fcfef890d522891cc720c867398dd6397a0d5d26"
+      }
+    },
+    {
+      "timestamp": "2026-10-08T21:18:37.568Z",
+      "stage": "recovery",
+      "message": "Recovered interrupted run after process restart. Marked as BLOCKED."
+    },
+    {
+      "timestamp": "2026-10-08T21:18:44.948Z",
+      "stage": "recovery",
+      "message": "Recovered interrupted run after process restart. Marked as BLOCKED."
+    },
+    {
+      "timestamp": "2026-10-08T21:19:14.189Z",
+      "stage": "recovery",
+      "message": "Recovered interrupted run after process restart. Marked as BLOCKED."
+    },
+    {
+      "timestamp": "2026-10-08T21:19:20.451Z",
+      "stage": "recovery",
+      "message": "Recovered interrupted run after process restart. Marked as BLOCKED."
+    },
+    {
+      "timestamp": "2026-10-08T21:22:38.067Z",
+      "stage": "recovery",
+      "message": "Recovered interrupted run after process restart. Marked as BLOCKED."
+    }
+  ],
+  "createdAt": "2026-10-08T21:18:21.745Z",
+  "updatedAt": "2026-10-08T21:22:38.067Z",
+  "stopReason": "Process was interrupted before completion",
+  "completedAt": "2026-10-08T21:22:38.063Z"
+}

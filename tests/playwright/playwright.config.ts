@@ -11,17 +11,19 @@ export default defineConfig({
   workers: 1,
 
   use: {
-    baseURL: "http://localhost:5174",
+    baseURL: process.env.MINISHOP_BASE_URL ?? "http://localhost:5174",
     screenshot: "on",
     trace: "on",
   },
 
-  outputDir: path.resolve(
-    __dirname,
-    "../../artifacts",
-    CASE_ID,
-    PHASE
-  ),
+  outputDir: process.env.BTP_ARTIFACT_DIR
+    ? path.resolve(process.env.BTP_ARTIFACT_DIR)
+    : path.resolve(
+        __dirname,
+        "../../artifacts",
+        CASE_ID,
+        PHASE
+      ),
 
   projects: [
     {

@@ -1,0 +1,61 @@
+{
+  "fingerprint": "c507aafe53f17c1a7ef23de836945f3f6da1104eb8986b5982aa21fd78068aad",
+  "files": [
+    {
+      "relativePath": "src/App.test.tsx",
+      "hash": "8ba7b3d6354d054eb4caeea2d5ae364d6df1af4640d9991cb150bb8d4a85d6e3"
+    },
+    {
+      "relativePath": "src/App.tsx",
+      "hash": "b7df226beec981ae6175eda1bf2473a3d225e4e86140af3eb29a87feebd18522"
+    },
+    {
+      "relativePath": "src/components/Cart.tsx",
+      "hash": "692978679e2751ee297e8492abefb070841b8fe8573f6b7419701bf6fffce215"
+    },
+    {
+      "relativePath": "src/components/CartItem.tsx",
+      "hash": "b51d1ccd5eec0629385572d0a41e2c0296d2c49b9797b11ff0dcad3bac234cab"
+    },
+    {
+      "relativePath": "src/components/ProductCard.tsx",
+      "hash": "880fa82dfc396602b58c1b0aeeb69416ec3cea5578f3d60ef824916c0fe77446"
+    },
+    {
+      "relativePath": "src/components/ProductList.tsx",
+      "hash": "81c7fe0060a364483a0a95a1eabf017e252144b5ce54494f2c6e7c3c06419c3b"
+    },
+    {
+      "relativePath": "src/data/products.ts",
+      "hash": "129b9cb5615fd3fbba539482e80ed99330bdd2b775825f730b10a0b6a4742aea"
+    },
+    {
+      "relativePath": "src/main.tsx",
+      "hash": "b14f4140b9945a20e6f6534599646e1594e03571e3ff55ba0063e4968ce6ba47"
+    },
+    {
+      "relativePath": "src/pages/CartPage.tsx",
+      "hash": "8a8045b8c5c64a74109cc99d50ec2951487262824142c9da753023a0382dbcf6"
+    },
+    {
+      "relativePath": "src/pages/ShopPage.tsx",
+      "hash": "1b1ffb653014cc468eea20f086b94ca4c71e16b3d11f2c7719cd5294a8f103a1"
+    },
+    {
+      "relativePath": "src/setupTests.ts",
+      "hash": "a46d66851af2c056e805fdd574bf5ec3adb1181c43c5e41f0a1c592e338afe64"
+    },
+    {
+      "relativePath": "src/store/cartStore.test.ts",
+      "hash": "780cebae7fbbaafee014809dad324cfeaaadfe5a1cbd4384c3d86f60ba743e8c"
+    },
+    {
+      "relativePath": "src/store/cartStore.ts",
+      "hash": "9aa04eb656a40c377aec61696f326eebbddd3fdf5f2d74bb17b446c0aee30d16"
+    },
+    {
+      "relativePath": "src/types/index.ts",
+      "hash": "88123411943fcb7635c6acc94e308ec0676445ab6b976017e723ad215606280d"
+    }
+  ]
+}

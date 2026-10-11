@@ -1,0 +1,180 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-73d63ff1-165e-42f4-9c94-11beb1b1a3a4",
+  "caseId": "case-001",
+  "mode": "dynamic",
+  "state": "BLOCKED",
+  "attempt": 1,
+  "maxAttempts": 1,
+  "attempts": [
+    {
+      "attemptNumber": 1,
+      "proposal": {
+        "schemaVersion": "1.0",
+        "proposalId": "prop-browser-flow-1791556779015",
+        "diagnosis": "Cart total only reads first item price instead of summing all items",
+        "assumptions": [
+          "Standard cart reduction over item price and quantity"
+        ],
+        "rationale": "Sum all item prices multiplied by quantities",
+        "edits": [
+          {
+            "relativePath": "src/store/cartStore.ts",
+            "oldContent": "  total: () => get().items[0]?.price ?? 0,",
+            "newContent": "  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),"
+          }
+        ],
+        "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -64,1 +64,1 @@\n-  total: () => get().items[0]?.price ?? 0,\n+  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),\n",
+        "proposalHash": "f90cecfee6e37e8a9d338df397b0b9c9ecd0299ad23a9ed2b9aa3690bfbb438d",
+        "proposedAt": "2026-10-09T14:39:39.015Z"
+      },
+      "state": "AWAITING_REVIEW",
+      "startedAt": "2026-10-09T14:39:51.817Z",
+      "stageLatenciesMs": {
+        "baseline": 9354,
+        "proposal": 0
+      }
+    }
+  ],
+  "diagnostics": [],
+  "originalSourceFingerprint": "0248e0d27084c5fad9ab416c1db35d60dd2731e3946e1fbd25d88c1bcb273718",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-73d63ff1-165e-42f4-9c94-11beb1b1a3a4\\workspace",
+  "testFingerprint": "bc3ded85db78e4735c59884ee2ef9b83b445c0a22c90f5cace95b9221ed5ff6d",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "requiredChecks": [],
+  "events": [
+    {
+      "timestamp": "2026-10-09T14:39:39.032Z",
+      "stage": "initialization",
+      "message": "Repair run initialized and queued for background execution"
+    },
+    {
+      "timestamp": "2026-10-09T14:39:42.317Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "0248e0d27084c5fad9ab416c1db35d60dd2731e3946e1fbd25d88c1bcb273718",
+        "url": "http://127.0.0.1:6125"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T14:39:42.406Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    },
+    {
+      "timestamp": "2026-10-09T14:39:51.779Z",
+      "stage": "baseline",
+      "message": "Valid baseline failure confirmed:  vs Error: BTP_ASSERTION: Cart total should be $30.00 after adding $10 + $20 items\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: \"$30.00\"\nReceived: \"$10.00\"\nError: BTP_ASSERTION: After adding Mouse Pad, total should be $30.00\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: \"$30.00\"\nReceived: \"$10.00\""
+    },
+    {
+      "timestamp": "2026-10-09T14:39:51.809Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T14:39:51.866Z",
+      "stage": "proposal",
+      "message": "Generated and validated patch proposal. Awaiting exact review approval.",
+      "data": {
+        "proposalId": "prop-browser-flow-1791556779015",
+        "proposalHash": "f90cecfee6e37e8a9d338df397b0b9c9ecd0299ad23a9ed2b9aa3690bfbb438d",
+        "attempt": 1
+      }
+    },
+    {
+      "timestamp": "2026-10-09T14:39:52.215Z",
+      "stage": "patch_applied",
+      "message": "Exact reviewed patch applied transactionally to candidate workspace",
+      "data": {
+        "proposalId": "prop-browser-flow-1791556779015",
+        "proposalHash": "f90cecfee6e37e8a9d338df397b0b9c9ecd0299ad23a9ed2b9aa3690bfbb438d",
+        "modifiedFiles": [
+          "src/store/cartStore.ts"
+        ],
+        "expectedPatchedFingerprint": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T14:39:52.243Z",
+      "stage": "verification",
+      "message": "Running post-patch reproduction verification (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T14:39:59.230Z",
+      "stage": "verification",
+      "message": "Post-patch reproduction outcome: PASSED (passed: true)"
+    },
+    {
+      "timestamp": "2026-10-09T14:39:59.262Z",
+      "stage": "regression",
+      "message": "Running required candidate regression checks (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T14:47:31.112Z",
+      "stage": "recovery",
+      "message": "Recovered interrupted run after process restart. Marked as BLOCKED."
+    }
+  ],
+  "createdAt": "2026-10-09T14:39:39.032Z",
+  "updatedAt": "2026-10-09T14:47:31.113Z",
+  "baselineRun": {
+    "outcome": "ASSERTION_FAILED",
+    "testFingerprint": "bc3ded85db78e4735c59884ee2ef9b83b445c0a22c90f5cace95b9221ed5ff6d",
+    "testIds": [
+      "case-001-cart-total.spec.ts:cart total should equal sum of all item prices:chromium",
+      "case-001-cart-total.spec.ts:cart total should update when items are added incrementally:chromium"
+    ],
+    "runId": "run-73d63ff1-165e-42f4-9c94-11beb1b1a3a4",
+    "reportHash": "19da57ada30c06f03c09e8ccf78a5a31c458c405320a05822d634f65af3109da",
+    "runAt": "2026-10-09T14:39:51.769Z",
+    "passed": false,
+    "expected": "",
+    "actual": "Error: BTP_ASSERTION: Cart total should be $30.00 after adding $10 + $20 items\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: \"$30.00\"\nReceived: \"$10.00\"\nError: BTP_ASSERTION: After adding Mouse Pad, total should be $30.00\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: \"$30.00\"\nReceived: \"$10.00\"",
+    "durationMs": 9327,
+    "evidenceIds": []
+  },
+  "proposal": {
+    "schemaVersion": "1.0",
+    "proposalId": "prop-browser-flow-1791556779015",
+    "diagnosis": "Cart total only reads first item price instead of summing all items",
+    "assumptions": [
+      "Standard cart reduction over item price and quantity"
+    ],
+    "rationale": "Sum all item prices multiplied by quantities",
+    "edits": [
+      {
+        "relativePath": "src/store/cartStore.ts",
+        "oldContent": "  total: () => get().items[0]?.price ?? 0,",
+        "newContent": "  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),"
+      }
+    ],
+    "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -64,1 +64,1 @@\n-  total: () => get().items[0]?.price ?? 0,\n+  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),\n",
+    "proposalHash": "f90cecfee6e37e8a9d338df397b0b9c9ecd0299ad23a9ed2b9aa3690bfbb438d",
+    "proposedAt": "2026-10-09T14:39:39.015Z"
+  },
+  "review": {
+    "proposalId": "prop-browser-flow-1791556779015",
+    "proposalHash": "f90cecfee6e37e8a9d338df397b0b9c9ecd0299ad23a9ed2b9aa3690bfbb438d",
+    "decision": "APPROVED",
+    "reviewerNotes": "Verified exact patch in browser test run"
+  },
+  "postPatchRun": {
+    "outcome": "PASSED",
+    "testFingerprint": "bc3ded85db78e4735c59884ee2ef9b83b445c0a22c90f5cace95b9221ed5ff6d",
+    "testIds": [
+      "case-001-cart-total.spec.ts:cart total should equal sum of all item prices:chromium",
+      "case-001-cart-total.spec.ts:cart total should update when items are added incrementally:chromium"
+    ],
+    "runId": "run-73d63ff1-165e-42f4-9c94-11beb1b1a3a4",
+    "reportHash": "00645f88e503e1443b81a67d6c98bc142896dda41bacc25e53e8e33fa87de51b",
+    "runAt": "2026-10-09T14:39:59.229Z",
+    "passed": true,
+    "expected": "",
+    "actual": "All selected tests passed",
+    "durationMs": 6962,
+    "evidenceIds": []
+  },
+  "stopReason": "Process was interrupted before completion",
+  "completedAt": "2026-10-09T14:47:31.104Z"
+}

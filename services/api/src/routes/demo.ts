@@ -26,6 +26,16 @@ demoRouter.post("/reset", (_req: Request, res: Response, next: NextFunction) => 
     const seedRaw = fs.readFileSync(SEED_PATH, "utf-8");
     const seed = JSON.parse(seedRaw) as BugCase;
 
+    if (["REPRODUCING", "VERIFYING"].includes(readCase("case-001")?.status ?? "")) {
+      res.status(409).json({ error: "Cannot reset while evidence is running" });
+      return;
+    }
+    seed.status = "READY_TO_REPRODUCE";
+    seed.evidence = [];
+    seed.verification = null;
+    seed.rootCauseExplanation = null;
+    if (seed.reproduction) seed.reproduction.lastRun = null;
+
     // Reset timestamps to now so the demo feels live
     const now = new Date().toISOString();
     seed.updatedAt = now;

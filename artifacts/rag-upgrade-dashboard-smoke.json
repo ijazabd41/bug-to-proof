@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "runAt": "2026-10-08T20:00:22.237Z",
+  "scope": "Offline RAG UI/API smoke; no live semantic model",
+  "mode": "extractive",
+  "telemetry": {
+    "provider": "lexical",
+    "model": "hashed-tokens-v1",
+    "strategy": "hybrid",
+    "indexFingerprint": "c0f16a4172f4666c1a9546a8d1a24216ff1fbedb9565610d2ac3e81e2fd8b0a3",
+    "cacheHit": true,
+    "corpusChunks": 87,
+    "retrievalMs": 94,
+    "topK": 4,
+    "generationProvider": "disabled",
+    "generationMs": 0,
+    "totalMs": 94
+  },
+  "sources": [
+    {
+      "source": "README.md",
+      "startLine": 120,
+      "endLine": 148,
+      "chunkId": "ce2be50563b9"
+    },
+    {
+      "source": "tests/playwright/cases/case-001-cart-total.spec.ts",
+      "startLine": 1,
+      "endLine": 25,
+      "chunkId": "a84c584cff06"
+    },
+    {
+      "source": "apps/minishop/src/components/Cart.tsx",
+      "startLine": 1,
+      "endLine": 30,
+      "chunkId": "b4cff5f5fdc0"
+    },
+    {
+      "source": "tests/playwright/cases/case-001-cart-total.spec.ts",
+      "startLine": 52,
+      "endLine": 62,
+      "chunkId": "72e0da9011a7"
+    }
+  ],
+  "screenshot": "artifacts/rag-upgrade-dashboard.png"
+}

@@ -1,0 +1,7 @@
+{
+  "scenario": "API initialization with one corrupt case record",
+  "expectedExit": 0,
+  "actualExit": 0,
+  "stdout": "",
+  "stderr": "[caseStore] Corrupt case record at D:\\bug-to-proof\\artifacts\\recheck-final\\startup-fixture\\cases\\case-corrupt.json; skipping startup reconciliation and preserving file intact\n"
+}

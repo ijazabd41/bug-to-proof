@@ -3,6 +3,7 @@ import type { Evidence, TestRun, VerificationComparison } from "@bug-to-proof/sh
 import { readCase, writeCase } from "../storage/caseStore";
 import { runTest } from "../runner/playwrightRunner";
 
+import { validBaseline, sameTests } from "../runner/integrity";
 export const verifyRouter = Router();
 
 verifyRouter.post("/:id/verify", async (req: Request, res: Response, next: NextFunction) => {
@@ -30,6 +31,11 @@ verifyRouter.post("/:id/verify", async (req: Request, res: Response, next: NextF
       return;
     }
 
+    if (!validBaseline(bugCase)) {
+      res.status(409).json({ error: "A recorded assertion failure from the unchanged test is required. Reproduce again." });
+      return;
+    }
+
     // ── Set status → VERIFYING immediately ────────────────────────────────
     bugCase.status = "VERIFYING";
     bugCase.updatedAt = new Date().toISOString();
@@ -51,7 +57,7 @@ verifyRouter.post("/:id/verify", async (req: Request, res: Response, next: NextF
 
         if (result.artifactPaths.screenshot) {
           newEvidence.push({
-            id: `ev-${id}-after-screenshot`,
+            id: `ev-${id}-${result.runId}-after-screenshot`,
             type: "screenshot",
             phase: "after",
             path: result.artifactPaths.screenshot,
@@ -62,7 +68,7 @@ verifyRouter.post("/:id/verify", async (req: Request, res: Response, next: NextF
 
         if (result.artifactPaths.trace) {
           newEvidence.push({
-            id: `ev-${id}-after-trace`,
+            id: `ev-${id}-${result.runId}-after-trace`,
             type: "trace",
             phase: "after",
             path: result.artifactPaths.trace,
@@ -73,7 +79,7 @@ verifyRouter.post("/:id/verify", async (req: Request, res: Response, next: NextF
 
         if (result.artifactPaths.resultJson) {
           newEvidence.push({
-            id: `ev-${id}-after-result`,
+            id: `ev-${id}-${result.runId}-after-result`,
             type: "result-json",
             phase: "after",
             path: result.artifactPaths.resultJson,
@@ -91,6 +97,11 @@ verifyRouter.post("/:id/verify", async (req: Request, res: Response, next: NextF
         }
 
         const testRun: TestRun = {
+          outcome: result.outcome,
+          testFingerprint: result.testFingerprint,
+          testIds: result.testIds,
+          runId: result.runId,
+          reportHash: result.reportHash,
           runAt: now,
           passed: result.passed,
           expected: fresh.reproduction?.expected ?? result.expected,
@@ -111,13 +122,13 @@ verifyRouter.post("/:id/verify", async (req: Request, res: Response, next: NextF
 
         const beforePassed = verification.beforeRun?.passed ?? null;
         const comparison: VerificationComparison = {
-          statusChanged: beforePassed !== result.passed,
+          statusChanged: result.outcome === "PASSED" && validBaseline(fresh) && sameTests(verification.beforeRun!, testRun),
           beforeStatus: beforePassed === null ? null : beforePassed ? "PASSED" : "FAILED",
-          afterStatus: result.passed ? "PASSED" : "FAILED",
+          afterStatus: result.outcome === "PASSED" ? "PASSED" : result.outcome === "ASSERTION_FAILED" ? "FAILED" : null,
         };
         verification.comparison = comparison;
 
-        if (result.passed) {
+        if (result.outcome === "PASSED" && validBaseline(fresh) && sameTests(verification.beforeRun!, testRun)) {
           fresh.status = "VERIFIED";
           verification.status = "VERIFIED";
         } else {

@@ -1,5 +1,7 @@
 # Bug-to-Proof — Demo Script (2–3 min)
 
+> **CONFIGURED-CASE DEMO:** This script demonstrates a seeded case with a predefined reproduction test. It does not demonstrate arbitrary new bug reproduction. See the [implementation plan](../plans/arbitrary-bug-reproduction-plan.md).
+
 > **Audience:** judges / technical reviewers  
 > **Goal:** show the full loop from raw bug report to machine-verified fix in one live session  
 > **Prereqs (already running):** MiniShop on `http://localhost:5174`, API on `http://localhost:3001`, Dashboard on `http://localhost:5173`

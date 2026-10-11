@@ -1,0 +1,22 @@
+{
+  "id": "case-003-item-removal",
+  "title": "Removing an item retains the item or clears entire cart",
+  "description": "Calling removeItem with a productId fails to filter out the target product correctly.",
+  "status": "READY_TO_REPRODUCE",
+  "createdAt": "2026-10-09T08:30:40.830Z",
+  "updatedAt": "2026-10-09T08:30:40.830Z",
+  "reproduction": {
+    "preconditions": [],
+    "steps": [
+      "Run reproduction test"
+    ],
+    "expected": "All assertions pass",
+    "actual": "Defect observed",
+    "testFile": "tests/playwright/cases/case-003-item-removal.spec.ts",
+    "lastRun": null
+  },
+  "patch": null,
+  "verification": null,
+  "evidence": [],
+  "rootCauseExplanation": null
+}

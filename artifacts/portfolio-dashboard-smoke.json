@@ -1,0 +1,7 @@
+{
+  "check": "Dashboard rendered the assistant and returned offline RAG excerpts",
+  "passed": true,
+  "screenshot": "artifacts/portfolio-dashboard.png",
+  "runAt": "2026-10-08T18:54:41.401Z",
+  "scope": "UI smoke check; case proof remains in evidence-runner reports"
+}

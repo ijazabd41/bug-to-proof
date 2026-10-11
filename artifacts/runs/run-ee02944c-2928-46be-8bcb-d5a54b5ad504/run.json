@@ -1,0 +1,230 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-ee02944c-2928-46be-8bcb-d5a54b5ad504",
+  "caseId": "case-004-cart-clear",
+  "mode": "simulated",
+  "state": "VERIFIED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [
+    {
+      "attemptNumber": 1,
+      "proposal": {
+        "schemaVersion": "1.0",
+        "proposalId": "prop-sim-case-004-cart-clear",
+        "diagnosis": "The clearCart method drops only the first item using slice(1) instead of setting items to an empty array.",
+        "assumptions": [
+          "Standard MiniShop cart operations"
+        ],
+        "rationale": "Fix defective logic in src/store/cartStore.ts",
+        "edits": [
+          {
+            "relativePath": "src/store/cartStore.ts",
+            "oldContent": "  clearCart: () => set((state) => ({ items: state.items.slice(1) })),",
+            "newContent": "  clearCart: () => set({ items: [] }),"
+          }
+        ],
+        "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -43,1 +43,1 @@\n-  clearCart: () => set((state) => ({ items: state.items.slice(1) })),\n+  clearCart: () => set({ items: [] }),\n",
+        "proposalHash": "9aad4c721b20ca6f052a856aea21930302749fbd9c72bfec06a94f73de35b647",
+        "proposedAt": "2026-10-10T10:29:45.966Z"
+      },
+      "state": "VERIFIED",
+      "startedAt": "2026-10-10T10:29:45.950Z",
+      "stageLatenciesMs": {
+        "baseline": 7,
+        "proposal": 0,
+        "postPatchReproduction": 8,
+        "regressionChecks": 0
+      },
+      "completedAt": "2026-10-10T10:29:46.359Z"
+    }
+  ],
+  "inputs": {
+    "caseSnapshot": {
+      "id": "case-004-cart-clear",
+      "title": "Clear cart leaves items in state",
+      "description": "Calling clearCart does not empty the items array completely.",
+      "status": "READY_TO_REPRODUCE",
+      "createdAt": "2026-10-10T10:29:45.623Z",
+      "updatedAt": "2026-10-10T10:29:45.623Z",
+      "reproduction": {
+        "preconditions": [],
+        "steps": [
+          "Execute reproduction test in isolated environment"
+        ],
+        "expected": "All calculations and assertions pass",
+        "actual": "Assertion failure on defective code",
+        "testFile": "tests/playwright/cases/case-004-cart-clear.spec.ts",
+        "lastRun": null
+      },
+      "patch": null,
+      "verification": null,
+      "evidence": [],
+      "rootCauseExplanation": null
+    },
+    "reproductionTest": {
+      "filePath": "tests/playwright/cases/case-004-cart-clear.spec.ts",
+      "content": "import { test, expect } from \"@playwright/test\";\nimport { MiniShopPage } from \"./helpers/minishop\";\n\n/**\n * Case 004 — Clear cart leaves items in state\n *\n * Expected: Adding Keyboard (id 1) and Mouse Pad (id 2), then clicking Checkout (clearCart)\n *           should completely empty the cart.\n * Actual (buggy): clearCart only drops 1 item using slice(1), leaving items in cart.\n */\n\nasync function assertEmpty(isEmpty: boolean, message: string) {\n  if (!isEmpty) {\n    await test.info().attach(\"btp-assertion\", {\n      body: Buffer.from(JSON.stringify({ actual: \"items remaining in cart\", expected: \"cart is empty\" })),\n      contentType: \"application/json\",\n    });\n  }\n  expect(isEmpty, message).toBe(true);\n}\n\ntest.describe(\"Case 004 — Cart clear on checkout\", () => {\n  test(\"checking out should empty all items from the cart\", async ({ page }) => {\n    const shop = new MiniShopPage(page);\n\n    await shop.navigate();\n\n    // Add multiple items\n    await shop.addToCart(1);\n    await shop.addToCart(2);\n\n    // Click Checkout (which invokes clearCart)\n    await shop.clickCheckout();\n\n    await shop.takeScreenshot(\"screenshot\");\n\n    const empty = await shop.isCartEmpty();\n    await assertEmpty(\n      empty,\n      \"BTP_ASSERTION: Cart should display 'Your cart is empty.' after checkout\"\n    );\n  });\n});\n",
+      "fingerprint": "6bf4d5297d251a624f4f069891282b15e8c37447f837a064d419d62619731086"
+    }
+  },
+  "diagnostics": [],
+  "originalSourceFingerprint": "c73789b59a9dd71bf09f8a8b418e95dec56296a870a5f104c3fd8292a73230c9",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-ee02944c-2928-46be-8bcb-d5a54b5ad504\\workspace",
+  "testFingerprint": "6bf4d5297d251a624f4f069891282b15e8c37447f837a064d419d62619731086",
+  "reproductionTestFile": "tests/playwright/cases/case-004-cart-clear.spec.ts",
+  "requiredChecks": [
+    {
+      "checkId": "check-typecheck",
+      "name": "TypeScript compilation",
+      "type": "typecheck",
+      "command": "tsc --noEmit",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 320,
+      "output": "Found 0 errors"
+    },
+    {
+      "checkId": "check-build",
+      "name": "Production Vite build",
+      "type": "build",
+      "command": "vite build",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 450,
+      "output": "built in 0.4s"
+    },
+    {
+      "checkId": "check-unit-tests",
+      "name": "MiniShop unit tests",
+      "type": "unit-tests",
+      "command": "vitest run apps/minishop",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 250,
+      "output": "3 passed"
+    }
+  ],
+  "events": [
+    {
+      "timestamp": "2026-10-10T10:29:45.639Z",
+      "stage": "initialization",
+      "message": "Repair run initialized and queued for background execution"
+    },
+    {
+      "timestamp": "2026-10-10T10:29:45.878Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "c73789b59a9dd71bf09f8a8b418e95dec56296a870a5f104c3fd8292a73230c9",
+        "url": "http://localhost:5210"
+      }
+    },
+    {
+      "timestamp": "2026-10-10T10:29:45.921Z",
+      "stage": "baseline",
+      "message": "Valid baseline failure confirmed: Expected value matches calculation vs Defective value received"
+    },
+    {
+      "timestamp": "2026-10-10T10:29:45.945Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-10T10:29:45.990Z",
+      "stage": "proposal",
+      "message": "Generated and validated patch proposal. Awaiting exact review approval.",
+      "data": {
+        "proposalId": "prop-sim-case-004-cart-clear",
+        "proposalHash": "9aad4c721b20ca6f052a856aea21930302749fbd9c72bfec06a94f73de35b647",
+        "attempt": 1
+      }
+    },
+    {
+      "timestamp": "2026-10-10T10:29:46.220Z",
+      "stage": "patch_applied",
+      "message": "Exact reviewed patch applied transactionally to candidate workspace",
+      "data": {
+        "proposalId": "prop-sim-case-004-cart-clear",
+        "proposalHash": "9aad4c721b20ca6f052a856aea21930302749fbd9c72bfec06a94f73de35b647",
+        "modifiedFiles": [
+          "src/store/cartStore.ts"
+        ],
+        "expectedPatchedFingerprint": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289"
+      }
+    },
+    {
+      "timestamp": "2026-10-10T10:29:46.257Z",
+      "stage": "verification",
+      "message": "Post-patch reproduction outcome: PASSED (passed: true)"
+    },
+    {
+      "timestamp": "2026-10-10T10:29:46.283Z",
+      "stage": "regression",
+      "message": "All 3 candidate regression checks passed cleanly."
+    },
+    {
+      "timestamp": "2026-10-10T10:29:46.362Z",
+      "stage": "completion",
+      "message": "Run finalized with status: VERIFIED (All verification gates and regression checks passed cleanly.)"
+    }
+  ],
+  "createdAt": "2026-10-10T10:29:45.639Z",
+  "updatedAt": "2026-10-10T10:29:46.363Z",
+  "baselineRun": {
+    "outcome": "ASSERTION_FAILED",
+    "testFingerprint": "6bf4d5297d251a624f4f069891282b15e8c37447f837a064d419d62619731086",
+    "testIds": [
+      "case-004-cart-clear.spec.ts:Clear cart leaves items in state:chromium"
+    ],
+    "runId": "sim-eval-before",
+    "reportHash": "sim-hash",
+    "runAt": "2026-10-10T10:29:45.910Z",
+    "passed": false,
+    "expected": "Expected value matches calculation",
+    "actual": "Defective value received",
+    "durationMs": 150,
+    "evidenceIds": []
+  },
+  "proposal": {
+    "schemaVersion": "1.0",
+    "proposalId": "prop-sim-case-004-cart-clear",
+    "diagnosis": "The clearCart method drops only the first item using slice(1) instead of setting items to an empty array.",
+    "assumptions": [
+      "Standard MiniShop cart operations"
+    ],
+    "rationale": "Fix defective logic in src/store/cartStore.ts",
+    "edits": [
+      {
+        "relativePath": "src/store/cartStore.ts",
+        "oldContent": "  clearCart: () => set((state) => ({ items: state.items.slice(1) })),",
+        "newContent": "  clearCart: () => set({ items: [] }),"
+      }
+    ],
+    "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -43,1 +43,1 @@\n-  clearCart: () => set((state) => ({ items: state.items.slice(1) })),\n+  clearCart: () => set({ items: [] }),\n",
+    "proposalHash": "9aad4c721b20ca6f052a856aea21930302749fbd9c72bfec06a94f73de35b647",
+    "proposedAt": "2026-10-10T10:29:45.966Z"
+  },
+  "review": {
+    "proposalId": "prop-sim-case-004-cart-clear",
+    "proposalHash": "9aad4c721b20ca6f052a856aea21930302749fbd9c72bfec06a94f73de35b647",
+    "decision": "APPROVED"
+  },
+  "postPatchRun": {
+    "outcome": "PASSED",
+    "testFingerprint": "6bf4d5297d251a624f4f069891282b15e8c37447f837a064d419d62619731086",
+    "testIds": [
+      "case-004-cart-clear.spec.ts:Clear cart leaves items in state:chromium"
+    ],
+    "runId": "sim-eval-after",
+    "reportHash": "sim-hash",
+    "runAt": "2026-10-10T10:29:46.254Z",
+    "passed": true,
+    "expected": "Expected value matches calculation",
+    "actual": "Expected value matches calculation",
+    "durationMs": 150,
+    "evidenceIds": []
+  },
+  "stopReason": "All verification gates and regression checks passed cleanly.",
+  "completedAt": "2026-10-10T10:29:46.359Z"
+}

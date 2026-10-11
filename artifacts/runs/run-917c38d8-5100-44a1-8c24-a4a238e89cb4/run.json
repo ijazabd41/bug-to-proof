@@ -1,0 +1,217 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-917c38d8-5100-44a1-8c24-a4a238e89cb4",
+  "caseId": "case-001",
+  "mode": "dynamic",
+  "state": "VERIFIED",
+  "attempt": 1,
+  "maxAttempts": 1,
+  "attempts": [
+    {
+      "attemptNumber": 1,
+      "proposal": {
+        "schemaVersion": "1.0",
+        "proposalId": "prop-browser-flow-1791540101316",
+        "diagnosis": "Cart total only reads first item price instead of summing all items",
+        "assumptions": [
+          "Standard cart reduction over item price and quantity"
+        ],
+        "rationale": "Sum all item prices multiplied by quantities",
+        "edits": [
+          {
+            "relativePath": "src/store/cartStore.ts",
+            "oldContent": "  total: () => get().items[0]?.price ?? 0,",
+            "newContent": "  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),"
+          }
+        ],
+        "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -38,1 +38,1 @@\n-  total: () => get().items[0]?.price ?? 0,\n+  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),\n",
+        "proposalHash": "f90cecfee6e37e8a9d338df397b0b9c9ecd0299ad23a9ed2b9aa3690bfbb438d",
+        "proposedAt": "2026-10-09T10:01:41.316Z"
+      },
+      "state": "VERIFIED",
+      "startedAt": "2026-10-09T10:02:02.509Z",
+      "stageLatenciesMs": {
+        "baseline": 17816,
+        "proposal": 0,
+        "postPatchReproduction": 7596,
+        "regressionChecks": 23897
+      },
+      "completedAt": "2026-10-09T10:02:35.116Z"
+    }
+  ],
+  "diagnostics": [],
+  "originalSourceFingerprint": "ea2d05db476de3bbc4d3c84d767bed9a9c6b1efe8f633d1a519c9d8fd68d9ae1",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-917c38d8-5100-44a1-8c24-a4a238e89cb4\\workspace",
+  "testFingerprint": "71ded93e74881cb66804a7ac8dbacd2264d095f1f790aa4ab743e9a8533153c9",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "requiredChecks": [
+    {
+      "checkId": "check-typecheck",
+      "name": "TypeScript compilation",
+      "type": "typecheck",
+      "command": "tsc --project artifacts/runs/run-917c38d8-5100-44a1-8c24-a4a238e89cb4/workspace/apps/minishop/tsconfig.json --noEmit",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 8425,
+      "output": "",
+      "artifactPath": "artifacts/runs/run-917c38d8-5100-44a1-8c24-a4a238e89cb4/attempt-1/checks/checks/typecheck.log"
+    },
+    {
+      "checkId": "check-build",
+      "name": "Production Vite build",
+      "type": "build",
+      "command": "vite build artifacts/runs/run-917c38d8-5100-44a1-8c24-a4a238e89cb4/workspace/apps/minishop --config artifacts/runs/run-917c38d8-5100-44a1-8c24-a4a238e89cb4/workspace/apps/minishop/vite.config.ts",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 5329,
+      "output": "\u001b[2m3:02:23 PM\u001b[22m \u001b[33m\u001b[1m[vite]\u001b[22m\u001b[39m \u001b[33mwarning: `esbuild` option was specified by \"vite:react-babel\" plugin. This option is deprecated, please use `oxc` instead.\u001b[39m\n`optimizeDeps.rollupOptions` / `ssr.optimizeDeps.rollupOptions` is deprecated. Use `optimizeDeps.rolldownOptions` instead. Note that this option may be set by a plugin. Set VITE_DEPRECATION_TRACE=1 to see where it is called.\n[vite:react-babel] We recommend switching to `@vitejs/plugin-react-oxc` for improved performance. More information at https://vite.dev/rolldown\n\u001b[36mvite v8.3.1 \u001b[32mbuilding client environment for production...\u001b[36m\u001b[39m\ntransforming...\n✓ 32 modules transformed.\nrendering chunks...\ncomputing gzip size...\nartifacts/runs/run-917c38d8-5100-44a1-8c24-a4a238e89cb4/workspace/apps/minishop/dist/index.html                  0.45 kB │ gzip:  0.32 kB\nartifacts/runs/run-917c38d8-5100-44a1-8c24-a4a238e89cb4/workspace/apps/minishop/dist/assets/index-Bhzmuuku.js  169.98 kB │ gzip: 55.68 kB\n\n\u001b[32m✓ built in 734ms\u001b[39m\n",
+      "artifactPath": "artifacts/runs/run-917c38d8-5100-44a1-8c24-a4a238e89cb4/attempt-1/checks/checks/build.log"
+    },
+    {
+      "checkId": "check-unit-tests",
+      "name": "MiniShop unit tests",
+      "type": "unit-tests",
+      "command": "vitest run --root artifacts/runs/run-917c38d8-5100-44a1-8c24-a4a238e89cb4/workspace/apps/minishop",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 10091,
+      "output": "\u001b[2m3:02:29 PM\u001b[22m \u001b[33m\u001b[1m[vite]\u001b[22m\u001b[39m \u001b[33mwarning: `esbuild` option was specified by \"vite:react-babel\" plugin. This option is deprecated, please use `oxc` instead.\u001b[39m\n`optimizeDeps.rollupOptions` / `ssr.optimizeDeps.rollupOptions` is deprecated. Use `optimizeDeps.rolldownOptions` instead. Note that this option may be set by a plugin. Set VITE_DEPRECATION_TRACE=1 to see where it is called.\n\u001b[33mBoth esbuild and oxc options were set. oxc options will be used and esbuild options will be ignored.\u001b[39m The following esbuild options were set: `{ jsx: 'automatic', jsxImportSource: undefined }`\n[vite:react-babel] We recommend switching to `@vitejs/plugin-react-oxc` for improved performance. More information at https://vite.dev/rolldown\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv5.0.2 \u001b[39m\u001b[90mD:/bug-to-proof/artifacts/runs/run-917c38d8-5100-44a1-8c24-a4a238e89cb4/workspace/apps/minishop\u001b[39m\n\n \u001b[32m✓\u001b[39m src/store/cartStore.test.ts \u001b[2m(\u001b[22m\u001b[2m3 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 14\u001b[2mms\u001b[22m\u001b[39m\n\u001b[90mstderr\u001b[2m | src/App.test.tsx\u001b[2m > \u001b[22m\u001b[2mApp\u001b[2m > \u001b[22m\u001b[2mrenders MiniShop text\n\u001b[22m\u001b[39m⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.\n⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.\n\n \u001b[32m✓\u001b[39m src/App.test.tsx \u001b[2m(\u001b[22m\u001b[2m1 test\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 314\u001b[2mms\u001b[22m\u001b[39m\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[1m\u001b[32m4 passed\u001b[39m\u001b[22m\u001b[90m (4)\u001b[39m\n\u001b[2m   Start at \u001b[22m 15:02:29\n\u001b[2m   Duration \u001b[22m 4.88s\u001b[2m (environment 72%, setup 11%, transform 7%, import 4%, tests 4%, worker 2%)\u001b[22m\n\n",
+      "artifactPath": "artifacts/runs/run-917c38d8-5100-44a1-8c24-a4a238e89cb4/attempt-1/checks/checks/unit-tests.log"
+    }
+  ],
+  "events": [
+    {
+      "timestamp": "2026-10-09T10:01:44.505Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "ea2d05db476de3bbc4d3c84d767bed9a9c6b1efe8f633d1a519c9d8fd68d9ae1",
+        "url": "http://127.0.0.1:5917"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T10:01:44.613Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    },
+    {
+      "timestamp": "2026-10-09T10:02:02.454Z",
+      "stage": "baseline",
+      "message": "Valid baseline failure confirmed:  vs Error: BTP_ASSERTION: Cart total should be $30.00 after adding $10 + $20 items\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: \"$30.00\"\nReceived: \"$10.00\"\nError: BTP_ASSERTION: After adding Mouse Pad, total should be $30.00\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: \"$30.00\"\nReceived: \"$10.00\""
+    },
+    {
+      "timestamp": "2026-10-09T10:02:02.494Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T10:02:02.570Z",
+      "stage": "proposal",
+      "message": "Generated and validated patch proposal. Awaiting exact review approval.",
+      "data": {
+        "proposalId": "prop-browser-flow-1791540101316",
+        "proposalHash": "f90cecfee6e37e8a9d338df397b0b9c9ecd0299ad23a9ed2b9aa3690bfbb438d",
+        "attempt": 1
+      }
+    },
+    {
+      "timestamp": "2026-10-09T10:02:02.864Z",
+      "stage": "patch_applied",
+      "message": "Exact reviewed patch applied transactionally to candidate workspace",
+      "data": {
+        "proposalId": "prop-browser-flow-1791540101316",
+        "proposalHash": "f90cecfee6e37e8a9d338df397b0b9c9ecd0299ad23a9ed2b9aa3690bfbb438d",
+        "modifiedFiles": [
+          "src/store/cartStore.ts"
+        ],
+        "expectedPatchedFingerprint": "934ddaa5ee8750edf73b0fc05285fabc92c99ac4462dc54db24b7392c633e4fe"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T10:02:02.894Z",
+      "stage": "verification",
+      "message": "Running post-patch reproduction verification (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T10:02:10.501Z",
+      "stage": "verification",
+      "message": "Post-patch reproduction outcome: PASSED (passed: true)"
+    },
+    {
+      "timestamp": "2026-10-09T10:02:10.533Z",
+      "stage": "regression",
+      "message": "Running required candidate regression checks (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T10:02:34.434Z",
+      "stage": "regression",
+      "message": "All 3 candidate regression checks passed cleanly."
+    },
+    {
+      "timestamp": "2026-10-09T10:02:35.117Z",
+      "stage": "completion",
+      "message": "Run finalized with status: VERIFIED (All verification gates and regression checks passed cleanly.)"
+    }
+  ],
+  "createdAt": "2026-10-09T10:01:44.490Z",
+  "updatedAt": "2026-10-09T10:02:35.123Z",
+  "baselineRun": {
+    "outcome": "ASSERTION_FAILED",
+    "testFingerprint": "71ded93e74881cb66804a7ac8dbacd2264d095f1f790aa4ab743e9a8533153c9",
+    "testIds": [
+      "case-001-cart-total.spec.ts:cart total should equal sum of all item prices:chromium",
+      "case-001-cart-total.spec.ts:cart total should update when items are added incrementally:chromium"
+    ],
+    "runId": "run-917c38d8-5100-44a1-8c24-a4a238e89cb4",
+    "reportHash": "da6ff7c9b14f8ea4b28f37a5bb9dd580263a9ada95b062e733797ea1c0a5d22a",
+    "runAt": "2026-10-09T10:02:02.444Z",
+    "passed": false,
+    "expected": "",
+    "actual": "Error: BTP_ASSERTION: Cart total should be $30.00 after adding $10 + $20 items\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: \"$30.00\"\nReceived: \"$10.00\"\nError: BTP_ASSERTION: After adding Mouse Pad, total should be $30.00\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: \"$30.00\"\nReceived: \"$10.00\"",
+    "durationMs": 17772,
+    "evidenceIds": []
+  },
+  "proposal": {
+    "schemaVersion": "1.0",
+    "proposalId": "prop-browser-flow-1791540101316",
+    "diagnosis": "Cart total only reads first item price instead of summing all items",
+    "assumptions": [
+      "Standard cart reduction over item price and quantity"
+    ],
+    "rationale": "Sum all item prices multiplied by quantities",
+    "edits": [
+      {
+        "relativePath": "src/store/cartStore.ts",
+        "oldContent": "  total: () => get().items[0]?.price ?? 0,",
+        "newContent": "  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),"
+      }
+    ],
+    "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -38,1 +38,1 @@\n-  total: () => get().items[0]?.price ?? 0,\n+  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),\n",
+    "proposalHash": "f90cecfee6e37e8a9d338df397b0b9c9ecd0299ad23a9ed2b9aa3690bfbb438d",
+    "proposedAt": "2026-10-09T10:01:41.316Z"
+  },
+  "review": {
+    "proposalId": "prop-browser-flow-1791540101316",
+    "proposalHash": "f90cecfee6e37e8a9d338df397b0b9c9ecd0299ad23a9ed2b9aa3690bfbb438d",
+    "decision": "APPROVED",
+    "reviewerNotes": "Verified exact patch in browser test run"
+  },
+  "postPatchRun": {
+    "outcome": "PASSED",
+    "testFingerprint": "71ded93e74881cb66804a7ac8dbacd2264d095f1f790aa4ab743e9a8533153c9",
+    "testIds": [
+      "case-001-cart-total.spec.ts:cart total should equal sum of all item prices:chromium",
+      "case-001-cart-total.spec.ts:cart total should update when items are added incrementally:chromium"
+    ],
+    "runId": "run-917c38d8-5100-44a1-8c24-a4a238e89cb4",
+    "reportHash": "fcc653b4c76f76ecc5eff1717d33285f7773d0ee21f3c1ad5da34337bb712ae0",
+    "runAt": "2026-10-09T10:02:10.500Z",
+    "passed": true,
+    "expected": "",
+    "actual": "All selected tests passed",
+    "durationMs": 7582,
+    "evidenceIds": []
+  },
+  "stopReason": "All verification gates and regression checks passed cleanly.",
+  "completedAt": "2026-10-09T10:02:35.116Z"
+}

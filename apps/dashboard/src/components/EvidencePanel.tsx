@@ -11,7 +11,8 @@ interface EvidencePanelProps {
 }
 
 export function EvidencePanel({ evidence, phase, title, run }: EvidencePanelProps) {
-  const filtered = phase ? evidence.filter((e) => e.phase === phase) : evidence;
+  const selected = phase ? evidence.filter((e) => e.phase === phase) : evidence;
+  const filtered = run ? selected.filter((e) => run.evidenceIds.includes(e.id)) : selected;
   const [imgError, setImgError] = useState(false);
 
   const screenshot = filtered.find((e) => e.type === "screenshot");
@@ -35,6 +36,7 @@ export function EvidencePanel({ evidence, phase, title, run }: EvidencePanelProp
       {/* Run result badge */}
       {run != null && (
         <div
+          className="evidence-run"
           style={{
             display: "flex",
             gap: 8,
@@ -53,15 +55,16 @@ export function EvidencePanel({ evidence, phase, title, run }: EvidencePanelProp
               whiteSpace: "nowrap",
             }}
           >
-            {run.passed ? "✅ PASSED" : "❌ FAILED"}
+            {run.outcome === "INFRASTRUCTURE_ERROR" ? "⚠️ INFRASTRUCTURE ERROR" : run.passed ? "✅ PASSED" : "❌ ASSERTION FAILED"}
           </span>
           <span style={{ color: "#374151" }}>
             Expected: <em>{run.expected}</em>
           </span>
           {!run.passed && (
-            <span style={{ color: "#374151" }}>
-              Actual: <em>{run.actual}</em>
-            </span>
+            <details className="failure-details">
+              <summary>Actual result · View failure details</summary>
+              <pre>{run.actual}</pre>
+            </details>
           )}
           <span style={{ color: "#9ca3af", fontSize: 12 }}>
             {run.durationMs}ms · {new Date(run.runAt).toLocaleString()}

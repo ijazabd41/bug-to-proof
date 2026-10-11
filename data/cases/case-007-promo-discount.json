@@ -1,0 +1,22 @@
+{
+  "id": "case-007-promo-discount",
+  "title": "Async promo code application race condition drops concurrent cart updates",
+  "description": "When an item is added while asynchronous promo code validation is in flight, the promo resolution overwrites cart items with a stale pre-await snapshot, dropping newly added items.",
+  "status": "READY_TO_REPRODUCE",
+  "createdAt": "2026-10-09T13:12:02.457Z",
+  "updatedAt": "2026-10-09T13:12:02.457Z",
+  "reproduction": {
+    "preconditions": [],
+    "steps": [
+      "Execute reproduction test in isolated environment"
+    ],
+    "expected": "All calculations and assertions pass",
+    "actual": "Assertion failure on defective code",
+    "testFile": "tests/playwright/cases/case-007-promo-discount.spec.ts",
+    "lastRun": null
+  },
+  "patch": null,
+  "verification": null,
+  "evidence": [],
+  "rootCauseExplanation": null
+}

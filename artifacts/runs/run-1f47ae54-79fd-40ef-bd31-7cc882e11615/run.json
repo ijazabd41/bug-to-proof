@@ -1,0 +1,216 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-1f47ae54-79fd-40ef-bd31-7cc882e11615",
+  "caseId": "case-test-dynamic-service",
+  "mode": "simulated",
+  "state": "VERIFIED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [
+    {
+      "attemptNumber": 1,
+      "proposal": {
+        "schemaVersion": "1.0",
+        "proposalId": "prop-dbf8f935-694d-4ef2-9dab-20b630206870",
+        "diagnosis": "Cart reset needs descriptive comment",
+        "assumptions": [
+          "Items array is reset"
+        ],
+        "rationale": "Add descriptive comment to clearCart",
+        "edits": [
+          {
+            "relativePath": "src/store/cartStore.ts",
+            "oldContent": "  clearCart: () => set({ items: [] }),",
+            "newContent": "  clearCart: () => set({ items: [] }), // reset items"
+          }
+        ],
+        "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -43,1 +43,1 @@\n-  clearCart: () => set({ items: [] }),\n+  clearCart: () => set({ items: [] }), // reset items\n",
+        "proposalHash": "3920d3137bbc48b7107a898814ff408859bc638e157a0caabee2817517f3f4af",
+        "proposedAt": "2026-10-09T13:31:23.478Z"
+      },
+      "state": "VERIFIED",
+      "startedAt": "2026-10-09T13:31:23.455Z",
+      "stageLatenciesMs": {
+        "baseline": 5,
+        "proposal": 9,
+        "postPatchReproduction": 5,
+        "regressionChecks": 2
+      },
+      "completedAt": "2026-10-09T13:31:23.846Z"
+    }
+  ],
+  "diagnostics": [],
+  "originalSourceFingerprint": "c507aafe53f17c1a7ef23de836945f3f6da1104eb8986b5982aa21fd78068aad",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-1f47ae54-79fd-40ef-bd31-7cc882e11615\\workspace",
+  "testFingerprint": "685844a3b7f9e73f5a0b8a7bd0de96ef82af411bcc57f5cba7caf2b0c9ae3e3d",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "requiredChecks": [
+    {
+      "checkId": "check-typecheck",
+      "name": "TypeScript compilation",
+      "type": "typecheck",
+      "command": "tsc --noEmit",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 400,
+      "output": "Found 0 errors"
+    },
+    {
+      "checkId": "check-build",
+      "name": "Production Vite build",
+      "type": "build",
+      "command": "vite build",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 600,
+      "output": "built in 0.5s"
+    },
+    {
+      "checkId": "check-unit-tests",
+      "name": "MiniShop unit tests",
+      "type": "unit-tests",
+      "command": "vitest run apps/minishop",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 300,
+      "output": "3 passed"
+    }
+  ],
+  "events": [
+    {
+      "timestamp": "2026-10-09T13:31:23.257Z",
+      "stage": "initialization",
+      "message": "Repair run initialized and queued for background execution"
+    },
+    {
+      "timestamp": "2026-10-09T13:31:23.385Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "c507aafe53f17c1a7ef23de836945f3f6da1104eb8986b5982aa21fd78068aad",
+        "url": "http://localhost:5199"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T13:31:23.403Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    },
+    {
+      "timestamp": "2026-10-09T13:31:23.420Z",
+      "stage": "baseline",
+      "message": "Valid baseline failure confirmed: Cart total displays $30.00 vs Cart total displays $10.00"
+    },
+    {
+      "timestamp": "2026-10-09T13:31:23.446Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T13:31:23.500Z",
+      "stage": "proposal",
+      "message": "Generated and validated patch proposal. Awaiting exact review approval.",
+      "data": {
+        "proposalId": "prop-dbf8f935-694d-4ef2-9dab-20b630206870",
+        "proposalHash": "3920d3137bbc48b7107a898814ff408859bc638e157a0caabee2817517f3f4af",
+        "attempt": 1
+      }
+    },
+    {
+      "timestamp": "2026-10-09T13:31:23.715Z",
+      "stage": "patch_applied",
+      "message": "Exact reviewed patch applied transactionally to candidate workspace",
+      "data": {
+        "proposalId": "prop-dbf8f935-694d-4ef2-9dab-20b630206870",
+        "proposalHash": "3920d3137bbc48b7107a898814ff408859bc638e157a0caabee2817517f3f4af",
+        "modifiedFiles": [
+          "src/store/cartStore.ts"
+        ],
+        "expectedPatchedFingerprint": "cc4d5638ec34b2549c9ced651b1a21d68534c3617fb0ccc41a048fdd5d7a7015"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T13:31:23.740Z",
+      "stage": "verification",
+      "message": "Running post-patch reproduction verification (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T13:31:23.755Z",
+      "stage": "verification",
+      "message": "Post-patch reproduction outcome: PASSED (passed: true)"
+    },
+    {
+      "timestamp": "2026-10-09T13:31:23.782Z",
+      "stage": "regression",
+      "message": "Running required candidate regression checks (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T13:31:23.789Z",
+      "stage": "regression",
+      "message": "All 3 candidate regression checks passed cleanly."
+    },
+    {
+      "timestamp": "2026-10-09T13:31:23.847Z",
+      "stage": "completion",
+      "message": "Run finalized with status: VERIFIED (All verification gates and regression checks passed cleanly.)"
+    }
+  ],
+  "createdAt": "2026-10-09T13:31:23.257Z",
+  "updatedAt": "2026-10-09T13:31:23.852Z",
+  "baselineRun": {
+    "outcome": "ASSERTION_FAILED",
+    "testFingerprint": "685844a3b7f9e73f5a0b8a7bd0de96ef82af411bcc57f5cba7caf2b0c9ae3e3d",
+    "testIds": [
+      "tests/playwright/cases/case-001-cart-total.spec.ts:cart total displays $30.00:chromium"
+    ],
+    "runId": "mock-run-id",
+    "reportHash": "mock-report-hash-12345",
+    "runAt": "2026-10-09T13:31:23.413Z",
+    "passed": false,
+    "expected": "Cart total displays $30.00",
+    "actual": "Cart total displays $10.00",
+    "durationMs": 120,
+    "evidenceIds": []
+  },
+  "proposal": {
+    "schemaVersion": "1.0",
+    "proposalId": "prop-dbf8f935-694d-4ef2-9dab-20b630206870",
+    "diagnosis": "Cart reset needs descriptive comment",
+    "assumptions": [
+      "Items array is reset"
+    ],
+    "rationale": "Add descriptive comment to clearCart",
+    "edits": [
+      {
+        "relativePath": "src/store/cartStore.ts",
+        "oldContent": "  clearCart: () => set({ items: [] }),",
+        "newContent": "  clearCart: () => set({ items: [] }), // reset items"
+      }
+    ],
+    "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -43,1 +43,1 @@\n-  clearCart: () => set({ items: [] }),\n+  clearCart: () => set({ items: [] }), // reset items\n",
+    "proposalHash": "3920d3137bbc48b7107a898814ff408859bc638e157a0caabee2817517f3f4af",
+    "proposedAt": "2026-10-09T13:31:23.478Z"
+  },
+  "review": {
+    "proposalId": "prop-dbf8f935-694d-4ef2-9dab-20b630206870",
+    "proposalHash": "3920d3137bbc48b7107a898814ff408859bc638e157a0caabee2817517f3f4af",
+    "decision": "APPROVED"
+  },
+  "postPatchRun": {
+    "outcome": "PASSED",
+    "testFingerprint": "685844a3b7f9e73f5a0b8a7bd0de96ef82af411bcc57f5cba7caf2b0c9ae3e3d",
+    "testIds": [
+      "tests/playwright/cases/case-001-cart-total.spec.ts:cart total displays $30.00:chromium"
+    ],
+    "runId": "mock-run-id",
+    "reportHash": "mock-report-hash-12345",
+    "runAt": "2026-10-09T13:31:23.753Z",
+    "passed": true,
+    "expected": "Cart total displays $30.00",
+    "actual": "Cart total displays $30.00",
+    "durationMs": 120,
+    "evidenceIds": []
+  },
+  "stopReason": "All verification gates and regression checks passed cleanly.",
+  "completedAt": "2026-10-09T13:31:23.846Z"
+}

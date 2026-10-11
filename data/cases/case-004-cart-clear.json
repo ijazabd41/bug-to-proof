@@ -1,0 +1,22 @@
+{
+  "id": "case-004-cart-clear",
+  "title": "Clear cart leaves items in state",
+  "description": "Calling clearCart does not empty the items array completely.",
+  "status": "READY_TO_REPRODUCE",
+  "createdAt": "2026-10-09T13:11:24.867Z",
+  "updatedAt": "2026-10-09T13:11:24.867Z",
+  "reproduction": {
+    "preconditions": [],
+    "steps": [
+      "Execute reproduction test in isolated environment"
+    ],
+    "expected": "All calculations and assertions pass",
+    "actual": "Assertion failure on defective code",
+    "testFile": "tests/playwright/cases/case-004-cart-clear.spec.ts",
+    "lastRun": null
+  },
+  "patch": null,
+  "verification": null,
+  "evidence": [],
+  "rootCauseExplanation": null
+}

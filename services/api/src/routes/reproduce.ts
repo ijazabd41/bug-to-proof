@@ -53,7 +53,7 @@ reproduceRouter.post("/:id/reproduce", async (req: Request, res: Response, next:
 
         if (result.artifactPaths.screenshot) {
           newEvidence.push({
-            id: `ev-${id}-before-screenshot`,
+            id: `ev-${id}-${result.runId}-before-screenshot`,
             type: "screenshot",
             phase: "before",
             path: result.artifactPaths.screenshot,
@@ -64,7 +64,7 @@ reproduceRouter.post("/:id/reproduce", async (req: Request, res: Response, next:
 
         if (result.artifactPaths.trace) {
           newEvidence.push({
-            id: `ev-${id}-before-trace`,
+            id: `ev-${id}-${result.runId}-before-trace`,
             type: "trace",
             phase: "before",
             path: result.artifactPaths.trace,
@@ -75,7 +75,7 @@ reproduceRouter.post("/:id/reproduce", async (req: Request, res: Response, next:
 
         if (result.artifactPaths.resultJson) {
           newEvidence.push({
-            id: `ev-${id}-before-result`,
+            id: `ev-${id}-${result.runId}-before-result`,
             type: "result-json",
             phase: "before",
             path: result.artifactPaths.resultJson,
@@ -93,6 +93,11 @@ reproduceRouter.post("/:id/reproduce", async (req: Request, res: Response, next:
         }
 
         const testRun: TestRun = {
+          outcome: result.outcome,
+          testFingerprint: result.testFingerprint,
+          testIds: result.testIds,
+          runId: result.runId,
+          reportHash: result.reportHash,
           runAt: now,
           passed: result.passed,
           expected: fresh.reproduction?.expected ?? result.expected,
@@ -112,10 +117,10 @@ reproduceRouter.post("/:id/reproduce", async (req: Request, res: Response, next:
           afterRun: null,
           comparison: null,
         };
-        fresh.verification.beforeRun = testRun;
+        fresh.verification.beforeRun = testRun; fresh.verification.afterRun = null; fresh.verification.comparison = null; fresh.verification.status = "PENDING";
 
         // Status transition
-        if (!result.passed) {
+        if (result.outcome === "ASSERTION_FAILED") {
           fresh.status = "REPRODUCED";
         } else {
           fresh.status = "REPRODUCTION_FAILED";

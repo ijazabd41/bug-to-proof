@@ -1,24 +1,32 @@
 import { Router, Request, Response, NextFunction } from "express";
-import type { BugCase, Reproduction } from "@bug-to-proof/shared-types";
+import type { BugCase, Reproduction, Patch } from "@bug-to-proof/shared-types";
 import {
   readAllCases,
   readCase,
   writeCase,
   deleteCase,
+  CorruptCaseRecordError,
 } from "../storage/caseStore";
+import { listRunRecords } from "../ai/repair/runStore";
+import { isActiveRepairState } from "../ai/repair/contracts";
 import { callLLM } from "../llm/client";
 import { rimrafDir } from "../utils/rimraf";
 import { ARTIFACTS_DIR } from "../utils/paths";
 import path from "path";
+import { validBaseline } from "../runner/integrity";
+import {
+  validateCaseId,
+  validateCreateCase,
+  validatePatchCase,
+  generateCollisionResistantCaseId,
+  sanitizeLLMReproduction,
+} from "../validation/caseValidation";
 
 export const casesRouter = Router();
 
-// ── Validation ───────────────────────────────────────────────────────────────
-
-const VALID_ID = /^[a-zA-Z0-9-]{1,50}$/;
-
-function validateId(id: string): boolean {
-  return VALID_ID.test(id);
+function hasActiveDynamicRepairRun(caseId: string): boolean {
+  const runs = listRunRecords(caseId);
+  return runs.some((r) => isActiveRepairState(r.state) && !r.completedAt);
 }
 
 /** Valid external status transitions (set via PATCH by dashboard/Bob). */
@@ -32,36 +40,40 @@ const ALLOWED_EXTERNAL_TRANSITIONS: Record<string, string[]> = {
 
 // ── GET /api/cases ────────────────────────────────────────────────────────────
 
-casesRouter.get("/", (_req: Request, res: Response) => {
-  const cases = readAllCases();
-  res.json(cases);
+casesRouter.get("/", (_req: Request, res: Response, next: NextFunction) => {
+  try {
+    const cases = readAllCases();
+    res.json(cases);
+  } catch (err) {
+    if (err instanceof CorruptCaseRecordError) {
+      res.status(500).json({ error: "Corrupt case record on disk", details: err.message, retryable: false });
+      return;
+    }
+    next(err);
+  }
 });
 
 // ── POST /api/cases ───────────────────────────────────────────────────────────
 
 casesRouter.post("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { title, description } = req.body as {
-      title?: string;
-      description?: string;
-    };
-
-    if (!title || typeof title !== "string" || title.trim() === "") {
-      res.status(400).json({ error: "title is required" });
-      return;
-    }
-    if (!description || typeof description !== "string" || description.trim() === "") {
-      res.status(400).json({ error: "description is required" });
+    const validation = validateCreateCase(req.body);
+    if (!validation.valid || !validation.data) {
+      res.status(400).json({
+        error: validation.error || "Invalid request body",
+        details: validation.details,
+      });
       return;
     }
 
-    const id = `case-${Date.now()}`;
+    const { title, description } = validation.data;
+    const id = generateCollisionResistantCaseId();
     const now = new Date().toISOString();
 
     // Default reproduction — will be enriched by LLM Call 1 async
     const reproduction: Reproduction = {
       preconditions: [],
-      steps: [description.trim()],
+      steps: [description],
       expected: "",
       actual: "",
       testFile: "",
@@ -70,8 +82,8 @@ casesRouter.post("/", async (req: Request, res: Response, next: NextFunction) =>
 
     const bugCase: BugCase = {
       id,
-      title: title.trim(),
-      description: description.trim(),
+      title,
+      description,
       status: "REPORTED",
       createdAt: now,
       updatedAt: now,
@@ -86,6 +98,7 @@ casesRouter.post("/", async (req: Request, res: Response, next: NextFunction) =>
     res.status(201).json(bugCase);
 
     // ── LLM Call 1 — Bug Report Structuring (async, non-blocking) ──────────
+    const initialUpdatedAt = now;
     callLLM(
       `You are a software QA engineer. Given the following bug description, extract:
 - preconditions (array of strings)
@@ -95,31 +108,27 @@ casesRouter.post("/", async (req: Request, res: Response, next: NextFunction) =>
 
 Return JSON only, no prose.
 
-Bug description: "${description.trim()}"`
+Bug description: "${description}"`
     )
       .then((llmResponse) => {
         if (!llmResponse) return;
         try {
-          const parsed = JSON.parse(llmResponse) as Partial<Reproduction>;
-          const updated = readCase(id);
-          if (!updated) return;
-          updated.reproduction = {
-            ...updated.reproduction!,
-            preconditions: Array.isArray(parsed.preconditions)
-              ? parsed.preconditions
-              : updated.reproduction!.preconditions,
-            steps: Array.isArray(parsed.steps)
-              ? parsed.steps
-              : updated.reproduction!.steps,
-            expected: typeof parsed.expected === "string"
-              ? parsed.expected
-              : updated.reproduction!.expected,
-            actual: typeof parsed.actual === "string"
-              ? parsed.actual
-              : updated.reproduction!.actual,
+          const parsed = JSON.parse(llmResponse);
+          const current = readCase(id);
+          if (!current || !current.reproduction) return;
+          // Guard against overwriting newer user edits
+          if (current.updatedAt !== initialUpdatedAt || current.status !== "REPORTED") {
+            console.log(`[llm] Case ${id} was modified concurrently; discarding LLM Call 1 structuring`);
+            return;
+          }
+
+          const sanitized = sanitizeLLMReproduction(parsed, current.reproduction);
+          current.reproduction = {
+            ...current.reproduction,
+            ...sanitized,
           };
-          updated.updatedAt = new Date().toISOString();
-          writeCase(updated);
+          current.updatedAt = new Date().toISOString();
+          writeCase(current);
           console.log(`[llm] LLM Call 1 updated reproduction for ${id}`);
         } catch {
           console.warn("[llm] LLM Call 1 parse failed — keeping defaults");
@@ -135,18 +144,26 @@ Bug description: "${description.trim()}"`
 
 // ── GET /api/cases/:id ────────────────────────────────────────────────────────
 
-casesRouter.get("/:id", (req: Request, res: Response) => {
+casesRouter.get("/:id", (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
-  if (!validateId(id)) {
+  if (!validateCaseId(id)) {
     res.status(400).json({ error: "Invalid case ID format" });
     return;
   }
-  const bugCase = readCase(id);
-  if (!bugCase) {
-    res.status(404).json({ error: "Case not found" });
-    return;
+  try {
+    const bugCase = readCase(id);
+    if (!bugCase) {
+      res.status(404).json({ error: "Case not found" });
+      return;
+    }
+    res.json(bugCase);
+  } catch (err) {
+    if (err instanceof CorruptCaseRecordError) {
+      res.status(500).json({ error: "Corrupt case record on disk", details: err.message });
+      return;
+    }
+    next(err);
   }
-  res.json(bugCase);
 });
 
 // ── PATCH /api/cases/:id ──────────────────────────────────────────────────────
@@ -154,18 +171,42 @@ casesRouter.get("/:id", (req: Request, res: Response) => {
 casesRouter.patch("/:id", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    if (!validateId(id)) {
+    if (!validateCaseId(id)) {
       res.status(400).json({ error: "Invalid case ID format" });
       return;
     }
 
-    const bugCase = readCase(id);
+    let bugCase: BugCase | null;
+    try {
+      bugCase = readCase(id);
+    } catch (err) {
+      if (err instanceof CorruptCaseRecordError) {
+        res.status(500).json({ error: "Corrupt case record on disk", details: err.message });
+        return;
+      }
+      throw err;
+    }
+
     if (!bugCase) {
       res.status(404).json({ error: "Case not found" });
       return;
     }
 
-    const body = req.body as Partial<BugCase>;
+    const validation = validatePatchCase(req.body);
+    if (!validation.valid || !validation.data) {
+      res.status(400).json({
+        error: validation.error || "Invalid request body",
+        details: validation.details,
+      });
+      return;
+    }
+
+    if (["REPRODUCING", "VERIFYING"].includes(bugCase.status) || hasActiveDynamicRepairRun(id)) {
+      res.status(409).json({ error: "Cannot edit a case while an active dynamic repair run or evidence run is in progress" });
+      return;
+    }
+
+    const body = validation.data;
 
     // ── Status transition validation ──────────────────────────────────────
     if (body.status && body.status !== bugCase.status) {
@@ -179,17 +220,52 @@ casesRouter.patch("/:id", async (req: Request, res: Response, next: NextFunction
       }
     }
 
+    if ((body.status === "PATCH_PROPOSED" || body.status === "PATCH_APPLIED") && !validBaseline(bugCase)) {
+      res.status(409).json({ error: "Reproduce a recorded assertion failure before proposing or applying a patch" });
+      return;
+    }
+
+    if (
+      body.reproduction &&
+      ["testFile", "expected", "steps", "preconditions"].some(
+        (key) =>
+          key in body.reproduction! &&
+          JSON.stringify((body.reproduction as any)[key]) !== JSON.stringify((bugCase.reproduction as any)?.[key])
+      )
+    ) {
+      bugCase.verification = null;
+      if (bugCase.reproduction) bugCase.reproduction.lastRun = null;
+      bugCase.status = "READY_TO_REPRODUCE";
+      delete body.status;
+    }
+
     const hasPatchDiff = body.patch?.diff && !bugCase.patch?.diff;
 
-    // ── Merge allowed fields ──────────────────────────────────────────────
+    // ── Merge allowed validated fields ────────────────────────────────────
+    if (body.title) bugCase.title = body.title;
+    if (body.description) bugCase.description = body.description;
     if (body.status) bugCase.status = body.status;
-    if (body.reproduction) bugCase.reproduction = { ...bugCase.reproduction, ...body.reproduction } as Reproduction;
+    if (body.reproduction) {
+      bugCase.reproduction = {
+        ...(bugCase.reproduction || {
+          preconditions: [],
+          steps: [],
+          expected: "",
+          actual: "",
+          testFile: "",
+          lastRun: null,
+        }),
+        ...body.reproduction,
+      };
+    }
     if (body.patch) {
       bugCase.patch = bugCase.patch
         ? { ...bugCase.patch, ...body.patch }
-        : body.patch;
+        : (body.patch as Patch);
     }
-    bugCase.updatedAt = new Date().toISOString();
+
+    const patchUpdatedAt = new Date().toISOString();
+    bugCase.updatedAt = patchUpdatedAt;
     writeCase(bugCase);
     res.json(bugCase);
 
@@ -213,16 +289,22 @@ ${patchDiff}`
           if (!llmResponse) return;
           try {
             const parsed = JSON.parse(llmResponse) as {
-              summary?: string;
-              reasoning?: string;
+              summary?: unknown;
+              reasoning?: unknown;
             };
             const updated = readCase(id);
             if (!updated?.patch) return;
-            if (typeof parsed.summary === "string") {
-              updated.patch.summary = parsed.summary;
+            // Guard against overwriting newer edits
+            if (updated.updatedAt !== patchUpdatedAt) {
+              console.log(`[llm] Case ${id} was modified concurrently; discarding LLM Call 2 summary`);
+              return;
             }
-            if (typeof parsed.reasoning === "string") {
-              updated.patch.reasoning = parsed.reasoning;
+
+            if (typeof parsed.summary === "string" && parsed.summary.trim() !== "") {
+              updated.patch.summary = parsed.summary.trim().slice(0, 500);
+            }
+            if (typeof parsed.reasoning === "string" && parsed.reasoning.trim() !== "") {
+              updated.patch.reasoning = parsed.reasoning.trim().slice(0, 2000);
             }
             updated.updatedAt = new Date().toISOString();
             writeCase(updated);
@@ -242,16 +324,38 @@ ${patchDiff}`
 
 // ── DELETE /api/cases/:id ─────────────────────────────────────────────────────
 
-casesRouter.delete("/:id", (req: Request, res: Response) => {
+casesRouter.delete("/:id", (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
-  if (!validateId(id)) {
+  if (!validateCaseId(id)) {
     res.status(400).json({ error: "Invalid case ID format" });
+    return;
+  }
+
+  let bugCase: BugCase | null;
+  try {
+    bugCase = readCase(id);
+  } catch (err) {
+    if (err instanceof CorruptCaseRecordError) {
+      res.status(500).json({ error: "Corrupt case record on disk", details: err.message });
+      return;
+    }
+    next(err);
+    return;
+  }
+
+  if (!bugCase) {
+    res.status(404).json({ error: "Case not found", reason: "initial_read" });
+    return;
+  }
+
+  if (["REPRODUCING", "VERIFYING"].includes(bugCase.status) || hasActiveDynamicRepairRun(id)) {
+    res.status(409).json({ error: "Cannot delete a case while an active dynamic repair run or evidence run is in progress" });
     return;
   }
 
   const deleted = deleteCase(id);
   if (!deleted) {
-    res.status(404).json({ error: "Case not found" });
+    res.status(404).json({ error: "Case not found", reason: "delete_failed" });
     return;
   }
 
@@ -263,50 +367,74 @@ casesRouter.delete("/:id", (req: Request, res: Response) => {
 
 // ── GET /api/cases/:id/reproduction ──────────────────────────────────────────
 
-casesRouter.get("/:id/reproduction", (req: Request, res: Response) => {
+casesRouter.get("/:id/reproduction", (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
-  if (!validateId(id)) {
+  if (!validateCaseId(id)) {
     res.status(400).json({ error: "Invalid case ID format" });
     return;
   }
-  const bugCase = readCase(id);
-  if (!bugCase) {
-    res.status(404).json({ error: "Case not found" });
-    return;
+  try {
+    const bugCase = readCase(id);
+    if (!bugCase) {
+      res.status(404).json({ error: "Case not found" });
+      return;
+    }
+    const beforeEvidence = bugCase.evidence.filter((e) => e.phase === "before");
+    res.json({ reproduction: bugCase.reproduction, evidence: beforeEvidence });
+  } catch (err) {
+    if (err instanceof CorruptCaseRecordError) {
+      res.status(500).json({ error: "Corrupt case record on disk", details: err.message });
+      return;
+    }
+    next(err);
   }
-  const beforeEvidence = bugCase.evidence.filter((e) => e.phase === "before");
-  res.json({ reproduction: bugCase.reproduction, evidence: beforeEvidence });
 });
 
 // ── GET /api/cases/:id/evidence ───────────────────────────────────────────────
 
-casesRouter.get("/:id/evidence", (req: Request, res: Response) => {
+casesRouter.get("/:id/evidence", (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
-  if (!validateId(id)) {
+  if (!validateCaseId(id)) {
     res.status(400).json({ error: "Invalid case ID format" });
     return;
   }
-  const bugCase = readCase(id);
-  if (!bugCase) {
-    res.status(404).json({ error: "Case not found" });
-    return;
+  try {
+    const bugCase = readCase(id);
+    if (!bugCase) {
+      res.status(404).json({ error: "Case not found" });
+      return;
+    }
+    res.json(bugCase.evidence);
+  } catch (err) {
+    if (err instanceof CorruptCaseRecordError) {
+      res.status(500).json({ error: "Corrupt case record on disk", details: err.message });
+      return;
+    }
+    next(err);
   }
-  res.json(bugCase.evidence);
 });
 
 // ── GET /api/cases/:id/verification ──────────────────────────────────────────
 
-casesRouter.get("/:id/verification", (req: Request, res: Response) => {
+casesRouter.get("/:id/verification", (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
-  if (!validateId(id)) {
+  if (!validateCaseId(id)) {
     res.status(400).json({ error: "Invalid case ID format" });
     return;
   }
-  const bugCase = readCase(id);
-  if (!bugCase) {
-    res.status(404).json({ error: "Case not found" });
-    return;
+  try {
+    const bugCase = readCase(id);
+    if (!bugCase) {
+      res.status(404).json({ error: "Case not found" });
+      return;
+    }
+    const afterEvidence = bugCase.evidence.filter((e) => e.phase === "after");
+    res.json({ verification: bugCase.verification, evidence: afterEvidence });
+  } catch (err) {
+    if (err instanceof CorruptCaseRecordError) {
+      res.status(500).json({ error: "Corrupt case record on disk", details: err.message });
+      return;
+    }
+    next(err);
   }
-  const afterEvidence = bugCase.evidence.filter((e) => e.phase === "after");
-  res.json({ verification: bugCase.verification, evidence: afterEvidence });
 });

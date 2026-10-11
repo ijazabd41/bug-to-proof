@@ -1,0 +1,150 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "graph-run-verify-1791551712521",
+  "caseId": "test-graph-case-001",
+  "mode": "simulated",
+  "state": "BLOCKED",
+  "attempt": 3,
+  "maxAttempts": 3,
+  "attempts": [
+    {
+      "attemptNumber": 1,
+      "proposal": {
+        "schemaVersion": "1.0",
+        "proposalId": "prop-graph-test-1",
+        "diagnosis": "Total only reads first item price",
+        "assumptions": [
+          "Standard cart logic"
+        ],
+        "rationale": "Use array reduce to calculate total",
+        "edits": [
+          {
+            "relativePath": "src/store/cartStore.ts",
+            "oldContent": "  total: () => get().items[0]?.price ?? 0,",
+            "newContent": "  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),"
+          }
+        ],
+        "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@\n-total: () => get().items[0]?.price ?? 0,\n+total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),\n",
+        "proposalHash": "8106cc64f6709eebf1300df92da94b93c7c3d33666a9f2cfd6d21b6a4958b1d8",
+        "proposedAt": "2026-10-09T13:15:11.065Z"
+      },
+      "state": "VERIFICATION_FAILED",
+      "startedAt": "2026-10-09T13:15:12.810Z",
+      "completedAt": "2026-10-09T13:15:12.901Z",
+      "failureReason": "Proposal validation failed: oldContent not found in src/store/cartStore.ts. Proposal may be stale or mismatched.",
+      "stageLatenciesMs": {
+        "baseline": 1,
+        "proposal": 0
+      }
+    },
+    {
+      "attemptNumber": 2,
+      "proposal": {
+        "schemaVersion": "1.0",
+        "proposalId": "prop-graph-test-1",
+        "diagnosis": "Total only reads first item price",
+        "assumptions": [
+          "Standard cart logic"
+        ],
+        "rationale": "Use array reduce to calculate total",
+        "edits": [
+          {
+            "relativePath": "src/store/cartStore.ts",
+            "oldContent": "  total: () => get().items[0]?.price ?? 0,",
+            "newContent": "  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),"
+          }
+        ],
+        "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@\n-total: () => get().items[0]?.price ?? 0,\n+total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),\n",
+        "proposalHash": "8106cc64f6709eebf1300df92da94b93c7c3d33666a9f2cfd6d21b6a4958b1d8",
+        "proposedAt": "2026-10-09T13:15:11.065Z"
+      },
+      "state": "VERIFICATION_FAILED",
+      "startedAt": "2026-10-09T13:15:12.933Z",
+      "completedAt": "2026-10-09T13:15:13.162Z",
+      "failureReason": "Verification gates incomplete: Missing post-patch reproduction run record; Missing required regression check: 'typecheck'; Missing required regression check: 'build'; Missing required regression check: 'unit-tests'",
+      "stageLatenciesMs": {
+        "baseline": 1,
+        "proposal": 0
+      }
+    }
+  ],
+  "diagnostics": [
+    "Proposal validation failed: oldContent not found in src/store/cartStore.ts. Proposal may be stale or mismatched.",
+    "Proposal validation failed: oldContent not found in src/store/cartStore.ts. Proposal may be stale or mismatched."
+  ],
+  "originalSourceFingerprint": "e02b815f08cb77b6344ae52311e6dac524c3eb6632c43622c7a1e10d184558fa",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\graph-run-verify-1791551712521\\workspace",
+  "testFingerprint": "685844a3b7f9e73f5a0b8a7bd0de96ef82af411bcc57f5cba7caf2b0c9ae3e3d",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "requiredChecks": [],
+  "events": [
+    {
+      "timestamp": "2026-10-09T13:15:12.733Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "e02b815f08cb77b6344ae52311e6dac524c3eb6632c43622c7a1e10d184558fa",
+        "url": "http://localhost:5312"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T13:15:12.752Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    },
+    {
+      "timestamp": "2026-10-09T13:15:12.768Z",
+      "stage": "baseline",
+      "message": "Valid baseline failure confirmed: Total is $30.00 vs Total is $10.00"
+    },
+    {
+      "timestamp": "2026-10-09T13:15:12.797Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T13:15:12.850Z",
+      "stage": "retry",
+      "message": "Attempt 1 failed: Proposal validation failed: oldContent not found in src/store/cartStore.ts. Proposal may be stale or mismatched.. Restoring pristine workspace."
+    },
+    {
+      "timestamp": "2026-10-09T13:15:12.925Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 2)"
+    },
+    {
+      "timestamp": "2026-10-09T13:15:12.973Z",
+      "stage": "retry",
+      "message": "Attempt 2 failed: Proposal validation failed: oldContent not found in src/store/cartStore.ts. Proposal may be stale or mismatched.. Restoring pristine workspace."
+    },
+    {
+      "timestamp": "2026-10-09T13:15:13.053Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 3)"
+    },
+    {
+      "timestamp": "2026-10-09T13:15:13.164Z",
+      "stage": "completion",
+      "message": "Run finalized with status: BLOCKED (Verification gates incomplete: Missing post-patch reproduction run record; Missing required regression check: 'typecheck'; Missing required regression check: 'build'; Missing required regression check: 'unit-tests')"
+    }
+  ],
+  "createdAt": "2026-10-09T13:15:12.729Z",
+  "updatedAt": "2026-10-09T13:15:13.172Z",
+  "baselineRun": {
+    "outcome": "ASSERTION_FAILED",
+    "testFingerprint": "685844a3b7f9e73f5a0b8a7bd0de96ef82af411bcc57f5cba7caf2b0c9ae3e3d",
+    "testIds": [
+      "tests/playwright/cases/case-001-cart-total.spec.ts:cart total should equal sum:chromium"
+    ],
+    "runId": "run-before",
+    "reportHash": "report-hash",
+    "runAt": "2026-10-09T13:15:12.759Z",
+    "passed": false,
+    "expected": "Total is $30.00",
+    "actual": "Total is $10.00",
+    "durationMs": 110,
+    "evidenceIds": []
+  },
+  "stopReason": "Verification gates incomplete: Missing post-patch reproduction run record; Missing required regression check: 'typecheck'; Missing required regression check: 'build'; Missing required regression check: 'unit-tests'",
+  "completedAt": "2026-10-09T13:15:13.162Z"
+}

@@ -1,0 +1,49 @@
+{
+  "id": "case-001-cart-total",
+  "title": "Cart total only reflects first item price",
+  "description": "When multiple items are added to the cart, the total displays only the first item price instead of the sum of all items.",
+  "status": "REPRODUCTION_FAILED",
+  "createdAt": "2026-10-09T08:29:30.148Z",
+  "updatedAt": "2026-10-11T20:25:15.895Z",
+  "reproduction": {
+    "preconditions": [],
+    "steps": [
+      "Run reproduction test"
+    ],
+    "expected": "All assertions pass",
+    "actual": "Defect observed",
+    "testFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+    "lastRun": {
+      "outcome": "INFRASTRUCTURE_ERROR",
+      "testFingerprint": "bc3ded85db78e4735c59884ee2ef9b83b445c0a22c90f5cace95b9221ed5ff6d",
+      "testIds": [],
+      "runId": "287a6ca6-3b9f-49d3-a101-a01f4db72449",
+      "runAt": "2026-10-11T20:25:15.895Z",
+      "passed": false,
+      "expected": "All assertions pass",
+      "actual": "MiniShop is not reachable at http://localhost:5174",
+      "durationMs": 22,
+      "evidenceIds": []
+    }
+  },
+  "patch": null,
+  "verification": {
+    "status": "PENDING",
+    "beforeRun": {
+      "outcome": "INFRASTRUCTURE_ERROR",
+      "testFingerprint": "bc3ded85db78e4735c59884ee2ef9b83b445c0a22c90f5cace95b9221ed5ff6d",
+      "testIds": [],
+      "runId": "287a6ca6-3b9f-49d3-a101-a01f4db72449",
+      "runAt": "2026-10-11T20:25:15.895Z",
+      "passed": false,
+      "expected": "All assertions pass",
+      "actual": "MiniShop is not reachable at http://localhost:5174",
+      "durationMs": 22,
+      "evidenceIds": []
+    },
+    "afterRun": null,
+    "comparison": null
+  },
+  "evidence": [],
+  "rootCauseExplanation": null
+}

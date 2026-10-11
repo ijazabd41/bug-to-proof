@@ -1,0 +1,217 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-39dd1c82-c53d-4003-99b3-6738cd876328",
+  "caseId": "case-test-dynamic-service",
+  "mode": "simulated",
+  "state": "VERIFICATION_FAILED",
+  "attempt": 1,
+  "maxAttempts": 1,
+  "attempts": [
+    {
+      "attemptNumber": 1,
+      "proposal": {
+        "schemaVersion": "1.0",
+        "proposalId": "prop-15360d1c-ff6a-474c-a2b9-2e2dc0bf8fe4",
+        "diagnosis": "Cart reset needs descriptive comment",
+        "assumptions": [
+          "Items array is reset"
+        ],
+        "rationale": "Add descriptive comment to clearCart",
+        "edits": [
+          {
+            "relativePath": "src/store/cartStore.ts",
+            "oldContent": "  clearCart: () => set({ items: [] }),",
+            "newContent": "  clearCart: () => set({ items: [] }), // reset items"
+          }
+        ],
+        "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -43,1 +43,1 @@\n-  clearCart: () => set({ items: [] }),\n+  clearCart: () => set({ items: [] }), // reset items\n",
+        "proposalHash": "3920d3137bbc48b7107a898814ff408859bc638e157a0caabee2817517f3f4af",
+        "proposedAt": "2026-10-09T13:31:24.130Z"
+      },
+      "state": "VERIFICATION_FAILED",
+      "startedAt": "2026-10-09T13:31:24.108Z",
+      "stageLatenciesMs": {
+        "baseline": 5,
+        "proposal": 7,
+        "postPatchReproduction": 7,
+        "regressionChecks": 0
+      },
+      "failureReason": "Required regression checks failed: TypeScript compilation, Production Vite build, MiniShop unit tests",
+      "completedAt": "2026-10-09T13:31:24.525Z"
+    }
+  ],
+  "diagnostics": [],
+  "originalSourceFingerprint": "c507aafe53f17c1a7ef23de836945f3f6da1104eb8986b5982aa21fd78068aad",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-39dd1c82-c53d-4003-99b3-6738cd876328\\workspace",
+  "testFingerprint": "685844a3b7f9e73f5a0b8a7bd0de96ef82af411bcc57f5cba7caf2b0c9ae3e3d",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "requiredChecks": [
+    {
+      "checkId": "check-typecheck",
+      "name": "TypeScript compilation",
+      "type": "typecheck",
+      "command": "tsc --noEmit",
+      "passed": false,
+      "exitCode": 1,
+      "durationMs": 400,
+      "output": "Type error"
+    },
+    {
+      "checkId": "check-build",
+      "name": "Production Vite build",
+      "type": "build",
+      "command": "vite build",
+      "passed": false,
+      "exitCode": 1,
+      "durationMs": 600,
+      "output": "Build error"
+    },
+    {
+      "checkId": "check-unit-tests",
+      "name": "MiniShop unit tests",
+      "type": "unit-tests",
+      "command": "vitest run apps/minishop",
+      "passed": false,
+      "exitCode": 1,
+      "durationMs": 300,
+      "output": "1 failed"
+    }
+  ],
+  "events": [
+    {
+      "timestamp": "2026-10-09T13:31:23.883Z",
+      "stage": "initialization",
+      "message": "Repair run initialized and queued for background execution"
+    },
+    {
+      "timestamp": "2026-10-09T13:31:24.029Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "c507aafe53f17c1a7ef23de836945f3f6da1104eb8986b5982aa21fd78068aad",
+        "url": "http://localhost:5199"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T13:31:24.051Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    },
+    {
+      "timestamp": "2026-10-09T13:31:24.070Z",
+      "stage": "baseline",
+      "message": "Valid baseline failure confirmed: Cart total displays $30.00 vs Cart total displays $10.00"
+    },
+    {
+      "timestamp": "2026-10-09T13:31:24.098Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T13:31:24.163Z",
+      "stage": "proposal",
+      "message": "Generated and validated patch proposal. Awaiting exact review approval.",
+      "data": {
+        "proposalId": "prop-15360d1c-ff6a-474c-a2b9-2e2dc0bf8fe4",
+        "proposalHash": "3920d3137bbc48b7107a898814ff408859bc638e157a0caabee2817517f3f4af",
+        "attempt": 1
+      }
+    },
+    {
+      "timestamp": "2026-10-09T13:31:24.358Z",
+      "stage": "patch_applied",
+      "message": "Exact reviewed patch applied transactionally to candidate workspace",
+      "data": {
+        "proposalId": "prop-15360d1c-ff6a-474c-a2b9-2e2dc0bf8fe4",
+        "proposalHash": "3920d3137bbc48b7107a898814ff408859bc638e157a0caabee2817517f3f4af",
+        "modifiedFiles": [
+          "src/store/cartStore.ts"
+        ],
+        "expectedPatchedFingerprint": "cc4d5638ec34b2549c9ced651b1a21d68534c3617fb0ccc41a048fdd5d7a7015"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T13:31:24.387Z",
+      "stage": "verification",
+      "message": "Running post-patch reproduction verification (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T13:31:24.408Z",
+      "stage": "verification",
+      "message": "Post-patch reproduction outcome: PASSED (passed: true)"
+    },
+    {
+      "timestamp": "2026-10-09T13:31:24.437Z",
+      "stage": "regression",
+      "message": "Running required candidate regression checks (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T13:31:24.446Z",
+      "stage": "regression",
+      "message": "Candidate regression checks failed (3 failure(s))."
+    },
+    {
+      "timestamp": "2026-10-09T13:31:24.529Z",
+      "stage": "completion",
+      "message": "Run finalized with status: VERIFICATION_FAILED (Required regression checks failed: TypeScript compilation, Production Vite build, MiniShop unit tests)"
+    }
+  ],
+  "createdAt": "2026-10-09T13:31:23.883Z",
+  "updatedAt": "2026-10-09T13:31:24.537Z",
+  "baselineRun": {
+    "outcome": "ASSERTION_FAILED",
+    "testFingerprint": "685844a3b7f9e73f5a0b8a7bd0de96ef82af411bcc57f5cba7caf2b0c9ae3e3d",
+    "testIds": [
+      "tests/playwright/cases/case-001-cart-total.spec.ts:cart total displays $30.00:chromium"
+    ],
+    "runId": "mock-run-id",
+    "reportHash": "mock-report-hash-12345",
+    "runAt": "2026-10-09T13:31:24.063Z",
+    "passed": false,
+    "expected": "Cart total displays $30.00",
+    "actual": "Cart total displays $10.00",
+    "durationMs": 120,
+    "evidenceIds": []
+  },
+  "proposal": {
+    "schemaVersion": "1.0",
+    "proposalId": "prop-15360d1c-ff6a-474c-a2b9-2e2dc0bf8fe4",
+    "diagnosis": "Cart reset needs descriptive comment",
+    "assumptions": [
+      "Items array is reset"
+    ],
+    "rationale": "Add descriptive comment to clearCart",
+    "edits": [
+      {
+        "relativePath": "src/store/cartStore.ts",
+        "oldContent": "  clearCart: () => set({ items: [] }),",
+        "newContent": "  clearCart: () => set({ items: [] }), // reset items"
+      }
+    ],
+    "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -43,1 +43,1 @@\n-  clearCart: () => set({ items: [] }),\n+  clearCart: () => set({ items: [] }), // reset items\n",
+    "proposalHash": "3920d3137bbc48b7107a898814ff408859bc638e157a0caabee2817517f3f4af",
+    "proposedAt": "2026-10-09T13:31:24.130Z"
+  },
+  "review": {
+    "proposalId": "prop-15360d1c-ff6a-474c-a2b9-2e2dc0bf8fe4",
+    "proposalHash": "3920d3137bbc48b7107a898814ff408859bc638e157a0caabee2817517f3f4af",
+    "decision": "APPROVED"
+  },
+  "postPatchRun": {
+    "outcome": "PASSED",
+    "testFingerprint": "685844a3b7f9e73f5a0b8a7bd0de96ef82af411bcc57f5cba7caf2b0c9ae3e3d",
+    "testIds": [
+      "tests/playwright/cases/case-001-cart-total.spec.ts:cart total displays $30.00:chromium"
+    ],
+    "runId": "mock-run-id",
+    "reportHash": "mock-report-hash-12345",
+    "runAt": "2026-10-09T13:31:24.405Z",
+    "passed": true,
+    "expected": "Cart total displays $30.00",
+    "actual": "Cart total displays $30.00",
+    "durationMs": 120,
+    "evidenceIds": []
+  },
+  "stopReason": "Required regression checks failed: TypeScript compilation, Production Vite build, MiniShop unit tests",
+  "completedAt": "2026-10-09T13:31:24.525Z"
+}

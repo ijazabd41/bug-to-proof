@@ -1,0 +1,230 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-b7f176bc-17d8-49fe-b07b-830cdf4783a7",
+  "caseId": "case-002-repeated-item-qty",
+  "mode": "simulated",
+  "state": "VERIFIED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [
+    {
+      "attemptNumber": 1,
+      "proposal": {
+        "schemaVersion": "1.0",
+        "proposalId": "prop-sim-case-002-repeated-item-qty",
+        "diagnosis": "The addItem method resets quantity to 1 when a matching existing item is found instead of incrementing quantity by 1.",
+        "assumptions": [
+          "Standard MiniShop cart operations"
+        ],
+        "rationale": "Fix defective logic in src/store/cartStore.ts",
+        "edits": [
+          {
+            "relativePath": "src/store/cartStore.ts",
+            "oldContent": "            i.id === product.id ? { ...i, quantity: 1 } : i",
+            "newContent": "            i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i"
+          }
+        ],
+        "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -31,1 +31,1 @@\n-            i.id === product.id ? { ...i, quantity: 1 } : i\n+            i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i\n",
+        "proposalHash": "88c94349f78a58786f151a94a9bf8db22ef3eeece7f1d7cb2074ac9ba604059a",
+        "proposedAt": "2026-10-10T16:35:54.442Z"
+      },
+      "state": "VERIFIED",
+      "startedAt": "2026-10-10T16:35:54.412Z",
+      "stageLatenciesMs": {
+        "baseline": 8,
+        "proposal": 0,
+        "postPatchReproduction": 13,
+        "regressionChecks": 0
+      },
+      "completedAt": "2026-10-10T16:35:55.108Z"
+    }
+  ],
+  "inputs": {
+    "caseSnapshot": {
+      "id": "case-002-repeated-item-qty",
+      "title": "Adding an existing item does not increment its quantity",
+      "description": "Adding the same product multiple times leaves the quantity at 1 instead of incrementing it.",
+      "status": "READY_TO_REPRODUCE",
+      "createdAt": "2026-10-10T16:35:53.875Z",
+      "updatedAt": "2026-10-10T16:35:53.875Z",
+      "reproduction": {
+        "preconditions": [],
+        "steps": [
+          "Execute reproduction test in isolated environment"
+        ],
+        "expected": "All calculations and assertions pass",
+        "actual": "Assertion failure on defective code",
+        "testFile": "tests/playwright/cases/case-002-repeated-item-qty.spec.ts",
+        "lastRun": null
+      },
+      "patch": null,
+      "verification": null,
+      "evidence": [],
+      "rootCauseExplanation": null
+    },
+    "reproductionTest": {
+      "filePath": "tests/playwright/cases/case-002-repeated-item-qty.spec.ts",
+      "content": "import { test, expect } from \"@playwright/test\";\nimport { MiniShopPage } from \"./helpers/minishop\";\n\n/**\n * Case 002 — Adding an existing item does not increment its quantity\n *\n * Expected: Adding Keyboard ($10) twice should show quantity \"×2\" in the cart.\n * Actual (buggy): Quantity resets to / remains \"×1\".\n */\n\nasync function assertQuantity(actual: string, expected: string, message: string) {\n  if (actual !== expected) {\n    await test.info().attach(\"btp-assertion\", {\n      body: Buffer.from(JSON.stringify({ actual, expected })),\n      contentType: \"application/json\",\n    });\n  }\n  expect(actual, message).toBe(expected);\n}\n\ntest.describe(\"Case 002 — Repeated item quantity increment\", () => {\n  test(\"adding an item twice should increment its quantity to 2\", async ({ page }) => {\n    const shop = new MiniShopPage(page);\n\n    await shop.navigate();\n\n    // Add Keyboard first time\n    await shop.addToCart(1);\n\n    // Add Keyboard second time\n    await shop.addToCart(1);\n\n    await shop.takeScreenshot(\"screenshot\");\n\n    const qty = await shop.getItemQuantity(1);\n    await assertQuantity(\n      qty,\n      \"×2\",\n      \"BTP_ASSERTION: Item quantity should be ×2 after adding Keyboard twice\"\n    );\n  });\n});\n",
+      "fingerprint": "31f035df068b8a85d332b00e905c852f89f7be3ceba1915cec1b5502ce66882c"
+    }
+  },
+  "diagnostics": [],
+  "originalSourceFingerprint": "da57cb3642528a13b429edc2ce1dd442b9885cae788a75e8b242c53a58f4ca3b",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-b7f176bc-17d8-49fe-b07b-830cdf4783a7\\workspace",
+  "testFingerprint": "31f035df068b8a85d332b00e905c852f89f7be3ceba1915cec1b5502ce66882c",
+  "reproductionTestFile": "tests/playwright/cases/case-002-repeated-item-qty.spec.ts",
+  "requiredChecks": [
+    {
+      "checkId": "check-typecheck",
+      "name": "TypeScript compilation",
+      "type": "typecheck",
+      "command": "tsc --noEmit",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 320,
+      "output": "Found 0 errors"
+    },
+    {
+      "checkId": "check-build",
+      "name": "Production Vite build",
+      "type": "build",
+      "command": "vite build",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 450,
+      "output": "built in 0.4s"
+    },
+    {
+      "checkId": "check-unit-tests",
+      "name": "MiniShop unit tests",
+      "type": "unit-tests",
+      "command": "vitest run apps/minishop",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 250,
+      "output": "3 passed"
+    }
+  ],
+  "events": [
+    {
+      "timestamp": "2026-10-10T16:35:53.898Z",
+      "stage": "initialization",
+      "message": "Repair run initialized and queued for background execution"
+    },
+    {
+      "timestamp": "2026-10-10T16:35:54.256Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "da57cb3642528a13b429edc2ce1dd442b9885cae788a75e8b242c53a58f4ca3b",
+        "url": "http://localhost:5210"
+      }
+    },
+    {
+      "timestamp": "2026-10-10T16:35:54.366Z",
+      "stage": "baseline",
+      "message": "Valid baseline failure confirmed: Expected value matches calculation vs Defective value received"
+    },
+    {
+      "timestamp": "2026-10-10T16:35:54.404Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-10T16:35:54.484Z",
+      "stage": "proposal",
+      "message": "Generated and validated patch proposal. Awaiting exact review approval.",
+      "data": {
+        "proposalId": "prop-sim-case-002-repeated-item-qty",
+        "proposalHash": "88c94349f78a58786f151a94a9bf8db22ef3eeece7f1d7cb2074ac9ba604059a",
+        "attempt": 1
+      }
+    },
+    {
+      "timestamp": "2026-10-10T16:35:54.887Z",
+      "stage": "patch_applied",
+      "message": "Exact reviewed patch applied transactionally to candidate workspace",
+      "data": {
+        "proposalId": "prop-sim-case-002-repeated-item-qty",
+        "proposalHash": "88c94349f78a58786f151a94a9bf8db22ef3eeece7f1d7cb2074ac9ba604059a",
+        "modifiedFiles": [
+          "src/store/cartStore.ts"
+        ],
+        "expectedPatchedFingerprint": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289"
+      }
+    },
+    {
+      "timestamp": "2026-10-10T16:35:54.941Z",
+      "stage": "verification",
+      "message": "Post-patch reproduction outcome: PASSED (passed: true)"
+    },
+    {
+      "timestamp": "2026-10-10T16:35:54.989Z",
+      "stage": "regression",
+      "message": "All 3 candidate regression checks passed cleanly."
+    },
+    {
+      "timestamp": "2026-10-10T16:35:55.111Z",
+      "stage": "completion",
+      "message": "Run finalized with status: VERIFIED (All verification gates and regression checks passed cleanly.)"
+    }
+  ],
+  "createdAt": "2026-10-10T16:35:53.898Z",
+  "updatedAt": "2026-10-10T16:35:55.112Z",
+  "baselineRun": {
+    "outcome": "ASSERTION_FAILED",
+    "testFingerprint": "31f035df068b8a85d332b00e905c852f89f7be3ceba1915cec1b5502ce66882c",
+    "testIds": [
+      "case-002-repeated-item-qty.spec.ts:Adding an existing item does not increment its quantity:chromium"
+    ],
+    "runId": "sim-eval-before",
+    "reportHash": "sim-hash",
+    "runAt": "2026-10-10T16:35:54.352Z",
+    "passed": false,
+    "expected": "Expected value matches calculation",
+    "actual": "Defective value received",
+    "durationMs": 150,
+    "evidenceIds": []
+  },
+  "proposal": {
+    "schemaVersion": "1.0",
+    "proposalId": "prop-sim-case-002-repeated-item-qty",
+    "diagnosis": "The addItem method resets quantity to 1 when a matching existing item is found instead of incrementing quantity by 1.",
+    "assumptions": [
+      "Standard MiniShop cart operations"
+    ],
+    "rationale": "Fix defective logic in src/store/cartStore.ts",
+    "edits": [
+      {
+        "relativePath": "src/store/cartStore.ts",
+        "oldContent": "            i.id === product.id ? { ...i, quantity: 1 } : i",
+        "newContent": "            i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i"
+      }
+    ],
+    "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -31,1 +31,1 @@\n-            i.id === product.id ? { ...i, quantity: 1 } : i\n+            i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i\n",
+    "proposalHash": "88c94349f78a58786f151a94a9bf8db22ef3eeece7f1d7cb2074ac9ba604059a",
+    "proposedAt": "2026-10-10T16:35:54.442Z"
+  },
+  "review": {
+    "proposalId": "prop-sim-case-002-repeated-item-qty",
+    "proposalHash": "88c94349f78a58786f151a94a9bf8db22ef3eeece7f1d7cb2074ac9ba604059a",
+    "decision": "APPROVED"
+  },
+  "postPatchRun": {
+    "outcome": "PASSED",
+    "testFingerprint": "31f035df068b8a85d332b00e905c852f89f7be3ceba1915cec1b5502ce66882c",
+    "testIds": [
+      "case-002-repeated-item-qty.spec.ts:Adding an existing item does not increment its quantity:chromium"
+    ],
+    "runId": "sim-eval-after",
+    "reportHash": "sim-hash",
+    "runAt": "2026-10-10T16:35:54.937Z",
+    "passed": true,
+    "expected": "Expected value matches calculation",
+    "actual": "Expected value matches calculation",
+    "durationMs": 150,
+    "evidenceIds": []
+  },
+  "stopReason": "All verification gates and regression checks passed cleanly.",
+  "completedAt": "2026-10-10T16:35:55.108Z"
+}

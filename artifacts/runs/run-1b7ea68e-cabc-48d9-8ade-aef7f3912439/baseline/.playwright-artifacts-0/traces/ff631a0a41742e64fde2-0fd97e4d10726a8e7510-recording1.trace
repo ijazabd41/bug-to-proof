@@ -1,0 +1,1 @@
+{"version":9,"type":"context-options","origin":"library","browserName":"","playwrightVersion":"1.63.0","options":{},"platform":"win32","wallTime":1791534495409,"monotonicTime":3389.626,"sdkLanguage":"javascript","title":"case-003-item-removal.spec.ts:23 › Case 003 — Item removal from cart › removing an item should remove that item and retain remaining items"}

@@ -1,0 +1,218 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\bug-to-proof\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "tests/playwright/playwright.config.ts",
+      "tests/playwright/cases/ui-smoke-3ee8fa62-482b-4bf8-aac0-696dfd2129ed.spec.ts",
+      "--reporter=json",
+      "--output",
+      "D:\\bug-to-proof\\artifacts\\ui-redesign\\3ee8fa62-482b-4bf8-aac0-696dfd2129ed"
+    ],
+    "configFile": "D:\\bug-to-proof\\tests\\playwright\\playwright.config.ts",
+    "rootDir": "D:/bug-to-proof/tests/playwright/cases",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/bug-to-proof/artifacts/ui-redesign/3ee8fa62-482b-4bf8-aac0-696dfd2129ed",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "D:/bug-to-proof/tests/playwright/cases",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "ui-smoke-3ee8fa62-482b-4bf8-aac0-696dfd2129ed.spec.ts",
+      "file": "ui-smoke-3ee8fa62-482b-4bf8-aac0-696dfd2129ed.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "desktop case workspace and report submission",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2244,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T19:12:24.366Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "desktop-overview",
+                      "contentType": "image/png",
+                      "path": "D:\\bug-to-proof\\artifacts\\ui-redesign\\3ee8fa62-482b-4bf8-aac0-696dfd2129ed\\ui-smoke-3ee8fa62-482b-4bf-4f340-space-and-report-submission-chromium\\attachments\\desktop-overview-25ab27e1b1ae219dbcadd5a36ccb9138902e9e86.png"
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\bug-to-proof\\artifacts\\ui-redesign\\3ee8fa62-482b-4bf8-aac0-696dfd2129ed\\ui-smoke-3ee8fa62-482b-4bf-4f340-space-and-report-submission-chromium\\test-finished-1.png"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\bug-to-proof\\artifacts\\ui-redesign\\3ee8fa62-482b-4bf8-aac0-696dfd2129ed\\ui-smoke-3ee8fa62-482b-4bf-4f340-space-and-report-submission-chromium\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e423903596865a874cea-4f036b48e12f81869ede",
+          "file": "ui-smoke-3ee8fa62-482b-4bf8-aac0-696dfd2129ed.spec.ts",
+          "line": 12,
+          "column": 5
+        },
+        {
+          "title": "real case evidence on desktop and mobile",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 3606,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: <= \u001b[32m390\u001b[39m\nReceived:    \u001b[31m494\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: <= \u001b[32m390\u001b[39m\nReceived:    \u001b[31m494\u001b[39m\n    at D:\\bug-to-proof\\tests\\playwright\\cases\\ui-smoke-3ee8fa62-482b-4bf8-aac0-696dfd2129ed.spec.ts:85:75",
+                    "location": {
+                      "file": "D:\\bug-to-proof\\tests\\playwright\\cases\\ui-smoke-3ee8fa62-482b-4bf8-aac0-696dfd2129ed.spec.ts",
+                      "column": 75,
+                      "line": 85
+                    },
+                    "snippet": "  83 |   await page.goto(\"/\");\n  84 |   await expect(page.getByRole(\"table\")).toBeVisible();\n> 85 |   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);\n     |                                                                           ^\n  86 |   await capture(page, testInfo, \"mobile-overview\");\n  87 | });\n  88 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\bug-to-proof\\tests\\playwright\\cases\\ui-smoke-3ee8fa62-482b-4bf8-aac0-696dfd2129ed.spec.ts",
+                        "column": 75,
+                        "line": 85
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: <= \u001b[32m390\u001b[39m\nReceived:    \u001b[31m494\u001b[39m\n\n  83 |   await page.goto(\"/\");\n  84 |   await expect(page.getByRole(\"table\")).toBeVisible();\n> 85 |   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);\n     |                                                                           ^\n  86 |   await capture(page, testInfo, \"mobile-overview\");\n  87 | });\n  88 |\n    at D:\\bug-to-proof\\tests\\playwright\\cases\\ui-smoke-3ee8fa62-482b-4bf8-aac0-696dfd2129ed.spec.ts:85:75"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T19:12:27.101Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "desktop-detail",
+                      "contentType": "image/png",
+                      "path": "D:\\bug-to-proof\\artifacts\\ui-redesign\\3ee8fa62-482b-4bf8-aac0-696dfd2129ed\\ui-smoke-3ee8fa62-482b-4bf-17521-dence-on-desktop-and-mobile-chromium\\attachments\\desktop-detail-088c944f0864ea5197468b803b46f367d0e2f461.png"
+                    },
+                    {
+                      "name": "mobile-detail",
+                      "contentType": "image/png",
+                      "path": "D:\\bug-to-proof\\artifacts\\ui-redesign\\3ee8fa62-482b-4bf8-aac0-696dfd2129ed\\ui-smoke-3ee8fa62-482b-4bf-17521-dence-on-desktop-and-mobile-chromium\\attachments\\mobile-detail-cc84620f5ed3791761a25db85e6135d0818b886b.png"
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\bug-to-proof\\artifacts\\ui-redesign\\3ee8fa62-482b-4bf8-aac0-696dfd2129ed\\ui-smoke-3ee8fa62-482b-4bf-17521-dence-on-desktop-and-mobile-chromium\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\bug-to-proof\\artifacts\\ui-redesign\\3ee8fa62-482b-4bf8-aac0-696dfd2129ed\\ui-smoke-3ee8fa62-482b-4bf-17521-dence-on-desktop-and-mobile-chromium\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\bug-to-proof\\artifacts\\ui-redesign\\3ee8fa62-482b-4bf8-aac0-696dfd2129ed\\ui-smoke-3ee8fa62-482b-4bf-17521-dence-on-desktop-and-mobile-chromium\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\bug-to-proof\\tests\\playwright\\cases\\ui-smoke-3ee8fa62-482b-4bf8-aac0-696dfd2129ed.spec.ts",
+                    "column": 75,
+                    "line": 85
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "e423903596865a874cea-26459395249636445ff0",
+          "file": "ui-smoke-3ee8fa62-482b-4bf8-aac0-696dfd2129ed.spec.ts",
+          "line": 60,
+          "column": 5
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-11T19:12:23.293Z",
+    "duration": 7927.104,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

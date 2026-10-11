@@ -1,0 +1,251 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\bug-to-proof\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "tests/playwright/playwright.config.ts",
+      "tests/playwright/cases/case-001-cart-total.spec.ts",
+      "--reporter=json",
+      "--output",
+      "D:\\bug-to-proof\\artifacts\\runs\\run-ec816b58-2dd8-4dae-aac6-a9a13efbe3ec\\baseline"
+    ],
+    "configFile": "D:\\bug-to-proof\\tests\\playwright\\playwright.config.ts",
+    "rootDir": "D:/bug-to-proof/tests/playwright/cases",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/bug-to-proof/artifacts/runs/run-ec816b58-2dd8-4dae-aac6-a9a13efbe3ec/baseline",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "D:/bug-to-proof/tests/playwright/cases",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "case-001-cart-total.spec.ts",
+      "file": "case-001-cart-total.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Case 001 — Cart total calculation",
+          "file": "case-001-cart-total.spec.ts",
+          "line": 27,
+          "column": 6,
+          "specs": [
+            {
+              "title": "cart total should equal sum of all item prices",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 4683,
+                      "error": {
+                        "message": "Error: BTP_ASSERTION: Cart total should be $30.00 after adding $10 + $20 items\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"$\u001b[7m3\u001b[27m0.00\"\u001b[39m\nReceived: \u001b[31m\"$\u001b[7m1\u001b[27m0.00\"\u001b[39m",
+                        "stack": "Error: BTP_ASSERTION: Cart total should be $30.00 after adding $10 + $20 items\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"$\u001b[7m3\u001b[27m0.00\"\u001b[39m\nReceived: \u001b[31m\"$\u001b[7m1\u001b[27m0.00\"\u001b[39m\n    at assertTotal (D:\\bug-to-proof\\tests\\playwright\\cases\\case-001-cart-total.spec.ts:24:27)\n    at D:\\bug-to-proof\\tests\\playwright\\cases\\case-001-cart-total.spec.ts:45:5",
+                        "location": {
+                          "file": "D:\\bug-to-proof\\tests\\playwright\\cases\\case-001-cart-total.spec.ts",
+                          "column": 27,
+                          "line": 24
+                        },
+                        "snippet": "  22 |     });\n  23 |   }\n> 24 |   expect(actual, message).toBe(expected);\n     |                           ^\n  25 | }\n  26 |\n  27 | test.describe(\"Case 001 — Cart total calculation\", () => {"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\bug-to-proof\\tests\\playwright\\cases\\case-001-cart-total.spec.ts",
+                            "column": 27,
+                            "line": 24
+                          },
+                          "message": "Error: BTP_ASSERTION: Cart total should be $30.00 after adding $10 + $20 items\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"$\u001b[7m3\u001b[27m0.00\"\u001b[39m\nReceived: \u001b[31m\"$\u001b[7m1\u001b[27m0.00\"\u001b[39m\n\n  22 |     });\n  23 |   }\n> 24 |   expect(actual, message).toBe(expected);\n     |                           ^\n  25 | }\n  26 |\n  27 | test.describe(\"Case 001 — Cart total calculation\", () => {\n    at assertTotal (D:\\bug-to-proof\\tests\\playwright\\cases\\case-001-cart-total.spec.ts:24:27)\n    at D:\\bug-to-proof\\tests\\playwright\\cases\\case-001-cart-total.spec.ts:45:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-09T10:55:33.533Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "btp-assertion",
+                          "contentType": "application/json",
+                          "body": "eyJhY3R1YWwiOiIkMTAuMDAiLCJleHBlY3RlZCI6IiQzMC4wMCJ9"
+                        },
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\bug-to-proof\\artifacts\\runs\\run-ec816b58-2dd8-4dae-aac6-a9a13efbe3ec\\baseline\\case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\bug-to-proof\\artifacts\\runs\\run-ec816b58-2dd8-4dae-aac6-a9a13efbe3ec\\baseline\\case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\bug-to-proof\\artifacts\\runs\\run-ec816b58-2dd8-4dae-aac6-a9a13efbe3ec\\baseline\\case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\bug-to-proof\\tests\\playwright\\cases\\case-001-cart-total.spec.ts",
+                        "column": 27,
+                        "line": 24
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "b9baa70e2169da733ccd-7e13775ecb5577495b6f",
+              "file": "case-001-cart-total.spec.ts",
+              "line": 28,
+              "column": 7
+            },
+            {
+              "title": "cart total should update when items are added incrementally",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 3535,
+                      "error": {
+                        "message": "Error: BTP_ASSERTION: After adding Mouse Pad, total should be $30.00\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"$\u001b[7m3\u001b[27m0.00\"\u001b[39m\nReceived: \u001b[31m\"$\u001b[7m1\u001b[27m0.00\"\u001b[39m",
+                        "stack": "Error: BTP_ASSERTION: After adding Mouse Pad, total should be $30.00\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"$\u001b[7m3\u001b[27m0.00\"\u001b[39m\nReceived: \u001b[31m\"$\u001b[7m1\u001b[27m0.00\"\u001b[39m\n    at assertTotal (D:\\bug-to-proof\\tests\\playwright\\cases\\case-001-cart-total.spec.ts:24:27)\n    at D:\\bug-to-proof\\tests\\playwright\\cases\\case-001-cart-total.spec.ts:60:5",
+                        "location": {
+                          "file": "D:\\bug-to-proof\\tests\\playwright\\cases\\case-001-cart-total.spec.ts",
+                          "column": 27,
+                          "line": 24
+                        },
+                        "snippet": "  22 |     });\n  23 |   }\n> 24 |   expect(actual, message).toBe(expected);\n     |                           ^\n  25 | }\n  26 |\n  27 | test.describe(\"Case 001 — Cart total calculation\", () => {"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\bug-to-proof\\tests\\playwright\\cases\\case-001-cart-total.spec.ts",
+                            "column": 27,
+                            "line": 24
+                          },
+                          "message": "Error: BTP_ASSERTION: After adding Mouse Pad, total should be $30.00\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"$\u001b[7m3\u001b[27m0.00\"\u001b[39m\nReceived: \u001b[31m\"$\u001b[7m1\u001b[27m0.00\"\u001b[39m\n\n  22 |     });\n  23 |   }\n> 24 |   expect(actual, message).toBe(expected);\n     |                           ^\n  25 | }\n  26 |\n  27 | test.describe(\"Case 001 — Cart total calculation\", () => {\n    at assertTotal (D:\\bug-to-proof\\tests\\playwright\\cases\\case-001-cart-total.spec.ts:24:27)\n    at D:\\bug-to-proof\\tests\\playwright\\cases\\case-001-cart-total.spec.ts:60:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-09T10:55:44.014Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "btp-assertion",
+                          "contentType": "application/json",
+                          "body": "eyJhY3R1YWwiOiIkMTAuMDAiLCJleHBlY3RlZCI6IiQzMC4wMCJ9"
+                        },
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\bug-to-proof\\artifacts\\runs\\run-ec816b58-2dd8-4dae-aac6-a9a13efbe3ec\\baseline\\case-001-cart-total-Case-0-46116-ems-are-added-incrementally-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\bug-to-proof\\artifacts\\runs\\run-ec816b58-2dd8-4dae-aac6-a9a13efbe3ec\\baseline\\case-001-cart-total-Case-0-46116-ems-are-added-incrementally-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\bug-to-proof\\artifacts\\runs\\run-ec816b58-2dd8-4dae-aac6-a9a13efbe3ec\\baseline\\case-001-cart-total-Case-0-46116-ems-are-added-incrementally-chromium\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\bug-to-proof\\tests\\playwright\\cases\\case-001-cart-total.spec.ts",
+                        "column": 27,
+                        "line": 24
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "b9baa70e2169da733ccd-a4e3994fa2a77a3559ae",
+              "file": "case-001-cart-total.spec.ts",
+              "line": 48,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-09T10:55:30.567Z",
+    "duration": 19010.419,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

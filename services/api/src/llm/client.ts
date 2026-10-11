@@ -3,40 +3,52 @@
  *
  * All calls are:
  * - Gated by LLM_ENABLED env var
- * - Wrapped in a 10-second timeout
+ * - Wrapped in a timeout (default 10s)
+ * - Cancellable via AbortSignal
  * - Non-throwing: always returns a string (empty on failure)
  */
 
-const LLM_ENABLED = process.env.LLM_ENABLED === "true";
-const LLM_API_URL = process.env.LLM_API_URL ?? "https://api.openai.com/v1";
-const LLM_API_KEY = process.env.LLM_API_KEY ?? "";
-const LLM_MODEL = process.env.LLM_MODEL ?? "gpt-4o-mini";
-
 /**
  * Call the configured LLM with a prompt string.
- * Returns empty string if LLM is disabled, key is missing, or call fails.
+ * Returns empty string if LLM is disabled, key is missing, call fails, or is aborted.
  */
 export async function callLLM(
   prompt: string,
-  timeoutMs = 10_000
+  timeoutMs = 10_000,
+  abortSignal?: AbortSignal
 ): Promise<string> {
-  if (!LLM_ENABLED || !LLM_API_KEY) {
+  const enabled = process.env.LLM_ENABLED === "true";
+  const apiUrl = process.env.LLM_API_URL ?? "https://api.openai.com/v1";
+  const apiKey = process.env.LLM_API_KEY ?? "";
+  const model = process.env.LLM_MODEL ?? "gpt-4o-mini";
+
+  if (!enabled || !apiKey) {
     console.warn("[llm] LLM disabled or API key not set — skipping call.");
+    return "";
+  }
+
+  if (abortSignal?.aborted) {
     return "";
   }
 
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
 
+  let abortListener: (() => void) | undefined;
+  if (abortSignal) {
+    abortListener = () => controller.abort();
+    abortSignal.addEventListener("abort", abortListener, { once: true });
+  }
+
   try {
-    const response = await fetch(`${LLM_API_URL}/chat/completions`, {
+    const response = await fetch(`${apiUrl}/chat/completions`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${LLM_API_KEY}`,
+        Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: LLM_MODEL,
+        model,
         messages: [{ role: "user", content: prompt }],
         temperature: 0.3,
       }),
@@ -54,12 +66,15 @@ export async function callLLM(
     return data.choices?.[0]?.message?.content?.trim() ?? "";
   } catch (err: unknown) {
     if (err instanceof Error && err.name === "AbortError") {
-      console.warn("[llm] Request timed out.");
+      console.warn("[llm] Request timed out or cancelled.");
     } else {
       console.warn("[llm] Request failed:", err);
     }
     return "";
   } finally {
     clearTimeout(timer);
+    if (abortSignal && abortListener) {
+      abortSignal.removeEventListener("abort", abortListener);
+    }
   }
 }

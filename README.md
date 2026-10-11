@@ -1,34 +1,18 @@
-﻿# Bug-to-Proof
+# Bug-to-Proof
 
 > Turn a bug report into reproducible, evidence-backed proof.
 
-**Reported â†’ Reproduced â†’ Failed â†’ Patched â†’ Verified â†’ Proved**
+**Reported → Reproduced → Failed → Patched → Verified → Proved**
 
 ---
 
 ## What is this?
 
-Bug-to-Proof is a hackathon project that converts a plain-language software bug report into
-a fully verifiable debugging workflow. The same Playwright test fails before the patch and
-passes after it, with screenshots and traces preserved as proof.
+Bug-to-Proof is an evidence-backed repair and verification prototype for the configured local MiniShop application. For cases with a configured Playwright reproduction test, the exact same test fails before the patch with an `ASSERTION_FAILED` behavior diff and passes after applying the approved patch, with screenshots, regression logs, and SHA-256 digests preserved as a downloadable Proof Bundle.
 
----
+New reports can be captured today, but arbitrary reports do not yet receive an automatically generated reproduction test. That work is specified in the [arbitrary bug reproduction plan](plans/arbitrary-bug-reproduction-plan.md). Do not describe the current release as supporting any website or any bug report.
 
-## Team
-
-| Name | Track | Branch |
-|------|-------|--------|
-| **Rida Zainab** | React Dashboard | `feature/dashboard` |
-| **Abdullah Ijaz** | Node.js API + LLM | `feature/api` |
-| **Sikander** | MiniShop + Playwright | `feature/playwright-minishop` |
-
----
-
-## Prerequisites
-
-- Node.js â‰¥ 18
-- npm â‰¥ 9
-- (For live Playwright runs) Chromium â€” installed automatically by `npx playwright install`
+Start with the [documentation index](docs/README.md). For current implementation details, verification matrix, and system status, see [Current Project Status](docs/current-project-status.md).
 
 ---
 
@@ -42,58 +26,144 @@ cd bug-to-proof
 # 2. Install all dependencies (single command for the whole monorepo)
 npm install
 
-# 3. Copy environment file
+# 3. Copy environment file (optional LLM keys)
 cp .env.example .env
-# Edit .env if you want to enable LLM features (optional)
 
-# 4. Start all services
+# 4. Start all services concurrently
 npm run dev
 ```
 
 This starts:
-- **Dashboard** at http://localhost:5173
-- **API** at http://localhost:3001
-- **MiniShop** at http://localhost:5174
+- **Dashboard**: http://localhost:5173
+- **API**: http://localhost:3001
+- **MiniShop (Demo App)**: http://localhost:5174
 
 ---
 
-## Services
+## Core Capabilities & Implemented Improvements
 
-### React Dashboard (`apps/dashboard`)
+### 1. Robust Persistence & Resilient Startup
+- **Atomic File Replacement**: All run and case records are written to unique temporary files and replaced atomically (`fs.renameSync`) without unsafe copy-overwrite fallback or blocking busy-waits. On failure, temporary files are unlinked and the existing record is preserved byte-for-byte.
+- **Structured Error Diagnostics**: Distinguishes missing records (`404 Not Found`), invalid ID formats (`400 Bad Request`), storage contention (`503 Service Unavailable`), and corrupted files (`500 Internal Server Error`).
+- **Resilient Startup Recovery**: Startup reconciliation (`recoverInterruptedRuns`) scans records individually, logs corrupt records while preserving their bytes intact for audit, and safely reconciles valid interrupted runs to `BLOCKED` while preserving `AWAITING_REVIEW` runs.
 
-The main Bug-to-Proof UI. Shows cases, reproduction results, proposed patches, and
-before/after evidence comparisons.
+### 2. Broader Repair Benchmark (8 Diverse Cases)
+The benchmark in `data/evals/repair-cases.json` includes 8 distinct cases covering:
+1. `case-001-cart-total`: Calculation defect in cart item summation.
+2. `case-002-repeated-item-qty`: State defect in quantity incrementing.
+3. `case-003-item-removal`: State defect in item deletion.
+4. `case-004-cart-clear`: State defect in checkout cart clearance.
+5. `case-005-cart-total-quantities`: Calculation defect with multi-quantity items.
+6. `case-006-nav-cart-count`: **UI Rendering Defect** in `App.tsx` badge rendering.
+7. `case-007-promo-discount`: **Asynchronous State Defect** with promo code validation and discount calculation in `cartStore.ts`.
+8. `case-008-tiered-shipping`: **Multi-File Coordinated Defect** requiring coordinated modifications across `cartStore.ts` and `Cart.tsx`.
 
+Run the benchmark evaluation:
 ```bash
-npm run dev:dashboard
+# Run the simulated evaluation harness across all 8 cases (100% verified)
+npm run repair:evaluate -- --simulated
+
+# Run the live browser reproduction & evaluation benchmark
+npm run repair:evaluate
 ```
 
-### Node.js API (`services/api`)
+### 3. Cryptographic Proof Bundle Export (.zip)
+Every repair run can be exported as a self-contained, tamper-evident Proof Bundle (.zip):
+- **Versioned Manifest (`manifest.json`)**: Contains run metadata, timestamps, and SHA-256 digests for all files.
+- **Bug Case Snapshot (`case-snapshot.json`)**: Immutable snapshot of the original bug report.
+- **Reproduction Spec (`reproduction/{spec}.spec.ts`)**: Exact Playwright test with verified fingerprint.
+- **Baseline Evidence (`baseline/`)**: Test result, screenshots, and failure diagnostic.
+- **Proposal & Review (`proposal/`)**: Diagnosis, rationale, unified diff (`patch.diff`), and approval record.
+- **Verification Evidence (`verification/`)**: Post-patch test result and verification screenshots.
+- **Regression Checks (`checks/`)**: Results and logs for `tsc`, `vite build`, and `vitest`.
+- **Proof Report (`proof-report.md`)**: Complete human-readable verification report in GitHub Flavored Markdown.
 
-REST API for case management, reproduction triggers, and verification.
-Serves artifact files (screenshots, traces) as static files.
+Download via API or Dashboard:
+- **API**: `GET /api/ai/repair-runs/:runId/bundle.zip`
+- **Dashboard**: Click **"Download Proof Bundle (.zip)"** in the AI Repair Assistant pane.
+
+### 4. Cross-Platform CI (Windows & Ubuntu)
+GitHub Actions workflow (`.github/workflows/ci.yml`) validates the monorepo across both `windows-latest` and `ubuntu-latest`:
+- Monorepo typechecking (`npm run typecheck`)
+- Full unit test suite (`npm run test:unit`)
+- Production Vite builds (`npm run build`)
+- Benchmark simulated evaluation (`npm run repair:evaluate -- --simulated`)
+- Real browser failure-to-pass workflow (`npx tsx scripts/verify-real-browser-workflow.ts`)
+- Automated upload of proof and verification artifacts.
+
+### 5. Artifact Hygiene & Safe Storage Cleanup
+- **Separation of Concerns**: Curated historical evidence (`artifacts/evaluation/`, `artifacts/system-testing/`, `artifacts/portfolio-cart/`) is preserved permanently.
+- **Safe Cleanup Tool**:
+  ```bash
+  # Dry-run inspection (default, removes nothing)
+  npm run artifacts:clean
+
+  # Execute cleanup of disposable workspace caches
+  npm run artifacts:clean -- --force
+  ```
+  The cleanup tool automatically protects active runs, `AWAITING_REVIEW` runs, pinned runs, corrupt audit records, and curated directories.
+
+---
+
+## Running Verification & Tests
 
 ```bash
-npm run dev:api
-```
+# 1. Run all unit and integration test suites (198 tests)
+npm run test:unit
 
-### MiniShop (`apps/minishop`)
+# 2. Run TypeScript typechecking across monorepo
+npm run typecheck
 
-A deliberately small React shopping app used as the demo target.
-Contains a seeded cart total bug for demonstration.
+# 3. Run production builds for Dashboard and MiniShop
+npm run build
 
-```bash
-npm run dev:minishop
+# 4. Run real browser failure-to-pass workflow through evidence runner
+npx tsx scripts/verify-real-browser-workflow.ts
+
+# 5. Run full simulated repair evaluation benchmark
+npm run repair:evaluate -- --simulated
 ```
 
 ---
 
-## Running Tests
+## Architecture & Lifecycle
 
-```bash
-# Run the Playwright reproduction/verification test suite
-npm run test:playwright
+The dynamic repair workflow is orchestrated by **LangGraph StateGraph** (`services/api/src/ai/repair/repairGraph.ts`), coupled with durable filesystem checkpointing and exact human-in-the-loop review interruption:
+
+```mermaid
+flowchart TD
+    Start([START]) --> prepareWorkspace["1. prepareWorkspace\n(isolate snapshot, start MiniShop)"]
+    prepareWorkspace --> reproduceBaseline["2. reproduceBaseline\n(Playwright before-run)"]
+    reproduceBaseline -->|ASSERTION_FAILED| investigateSource["3. investigateSource\n(bounded source exploration)"]
+    reproduceBaseline -->|Passed / Error| finalizeRun["11. finalizeRun\n(BLOCKED / Stop app)"]
+    investigateSource --> proposePatch["4. proposePatch\n(LLM candidate patch)"]
+    proposePatch --> validateProposal["5. validateProposal\n(validate edits & SHA-256 hash)"]
+    validateProposal -->|Valid| pauseForReview["6. pauseForReview\n(interrupt: AWAITING_REVIEW)"]
+    validateProposal -->|Invalid & Retries Left| recordFailedAttemptAndRestore["10. recordFailedAttemptAndRestore\n(restore pristine workspace)"]
+    validateProposal -->|Invalid & Max Attempts| finalizeRun
+    pauseForReview -->|Approved & Hash Verified| applyApprovedPatch["7. applyApprovedPatch\n(transactional application)"]
+    pauseForReview -->|Rejected| finalizeRun
+    applyApprovedPatch --> verifyReproduction["8. verifyReproduction\n(Playwright after-run)"]
+    verifyReproduction -->|PASSED| runRegressionChecks["9. runRegressionChecks\n(tsc, vite build, vitest)"]
+    verifyReproduction -->|Failed & Retries Left| recordFailedAttemptAndRestore
+    verifyReproduction -->|Failed & Max Attempts| finalizeRun
+    runRegressionChecks -->|All Passed| finalizeRun
+    runRegressionChecks -->|Failed & Retries Left| recordFailedAttemptAndRestore
+    runRegressionChecks -->|Failed & Max Attempts| finalizeRun
+    recordFailedAttemptAndRestore -->|Attempt <= Max| investigateSource
+    recordFailedAttemptAndRestore -->|Attempt > Max| finalizeRun
+    finalizeRun --> EndNode([END: VERIFIED / FAILED / REJECTED / BLOCKED])
 ```
+
+---
+
+## Evidence Integrity Gates
+
+The verification engine enforces strict, fail-closed evidence integrity:
+- **Valid Baseline Gate**: Only a recorded behavior assertion failure (`ASSERTION_FAILED` with `Expected` vs `Received` diff) qualifies as a reproduced bug. Infrastructure or syntax errors are not counted as reproductions.
+- **Fingerprint Stability & Identity Binding**: Reproduction tests, reporter-format test IDs (`${specFile}:${title}:${project}`), and candidate source manifests are hashed before and after execution to prevent tampering or mutations during checks.
+- **Exact Approval Binding**: Proposal approvals must supply the canonical SHA-256 hash (`proposalHash`) and `proposalId`. If source or proposal differs, application is rejected.
+- **Transactional Rollback**: Patches are applied transactionally with rollback on error, preserving pristine workspace state.
 
 ---
 
@@ -101,65 +171,19 @@ npm run test:playwright
 
 ```
 bug-to-proof/
-â”œâ”€â”€ apps/
-â”‚   â”œâ”€â”€ dashboard/          # React + Vite dashboard (Rida Zainab)
-â”‚   â””â”€â”€ minishop/           # React + Vite demo app with seeded bug (Sikander)
-â”œâ”€â”€ services/
-â”‚   â””â”€â”€ api/                # Node.js + Express API (Abdullah Ijaz)
-â”œâ”€â”€ packages/
-â”‚   â””â”€â”€ shared-types/       # Shared TypeScript types (frozen â€” all agree before changing)
-â”œâ”€â”€ tests/
-â”‚   â””â”€â”€ playwright/         # Playwright reproduction & verification specs (Sikander)
-â”œâ”€â”€ data/
-â”‚   â””â”€â”€ cases/              # JSON case files (persisted state)
-â”œâ”€â”€ artifacts/              # Playwright screenshots, traces, result JSON
-â”œâ”€â”€ plans/                  # Implementation plan
-â””â”€â”€ docs/                   # Demo script and documentation
+├── apps/
+│   ├── dashboard/          # React + Vite dashboard UI with Proof Bundle export
+│   └── minishop/           # React + Vite demo app with seeded benchmark defects
+├── services/
+│   └── api/                # Node.js + Express API, LangGraph engine, and Proof Exporter
+├── packages/
+│   └── shared-types/       # Shared TypeScript contracts and interfaces
+├── tests/
+│   └── playwright/         # Playwright reproduction & verification specs (8 cases)
+├── data/
+│   ├── cases/              # Persisted JSON case files
+│   └── evals/              # Repair benchmark datasets (repair-cases.json)
+├── scripts/                # Evaluation, cleanup, real-browser verification scripts
+├── artifacts/              # Curated evidence, proof bundles, logs, and run records
+└── docs/                   # Current status page and historical audits
 ```
-
----
-
-## Demo Bug
-
-**Case 001 â€” Cart total only reflects first item price**
-
-When two products are added to MiniShop's cart, the total shows only the first item's
-price instead of the sum of both.
-
-| Step | Expected | Actual (buggy) |
-|------|----------|----------------|
-| Add Keyboard ($10) + Mouse Pad ($20) | $30.00 | $10.00 |
-
----
-
-## LLM Integration (optional)
-
-Three optional AI enhancements are available when an OpenAI-compatible API key is configured:
-
-1. **Bug report structuring** â€” converts plain description into structured reproduction steps
-2. **Patch summary** â€” explains what the diff changes and why
-3. **Root cause explanation** â€” paragraph explaining the probable root cause
-
-The system works fully without a key. Set `LLM_ENABLED=true` and `LLM_API_KEY=<your-key>`
-in `.env` to enable.
-
----
-
-## Architecture
-
-```
-React Dashboard (5173)
-       â†“ HTTP
-Node.js API (3001)
-       â†“ JSON files        â†“ spawn
-data/cases/*.json     Playwright Runner
-                           â†“ HTTP
-                      MiniShop (5174)
-                           â†“ artifacts
-                      artifacts/<caseId>/before|after/
-```
-
----
-
-<!-- Each team member: add your section notes to docs/section-<name>.md -->
-<!-- Final README assembly happens during integration (Day 3) -->

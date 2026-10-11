@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "graph-run-unreproduced-1791551887043",
+  "caseId": "test-graph-case-001",
+  "mode": "dynamic",
+  "state": "BLOCKED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [],
+  "diagnostics": [],
+  "originalSourceFingerprint": "c507aafe53f17c1a7ef23de836945f3f6da1104eb8986b5982aa21fd78068aad",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\graph-run-unreproduced-1791551887043\\workspace",
+  "testFingerprint": "fp-test",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "requiredChecks": [],
+  "events": [
+    {
+      "timestamp": "2026-10-09T13:18:07.169Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "c507aafe53f17c1a7ef23de836945f3f6da1104eb8986b5982aa21fd78068aad",
+        "url": "http://localhost:5311"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T13:18:07.191Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    },
+    {
+      "timestamp": "2026-10-09T13:18:07.198Z",
+      "stage": "baseline",
+      "message": "Baseline verification stopped: The reported failure was not reproduced on original source."
+    },
+    {
+      "timestamp": "2026-10-09T13:18:07.250Z",
+      "stage": "completion",
+      "message": "Run finalized with status: BLOCKED (The reported failure was not reproduced on original source.)"
+    }
+  ],
+  "createdAt": "2026-10-09T13:18:07.160Z",
+  "updatedAt": "2026-10-09T13:18:07.255Z",
+  "baselineRun": {
+    "outcome": "PASSED",
+    "testFingerprint": "fp-test",
+    "testIds": [
+      "tests/playwright/cases/case-001-cart-total.spec.ts:cart total should equal sum:chromium"
+    ],
+    "runId": "run-passed",
+    "runAt": "2026-10-09T13:18:07.196Z",
+    "passed": true,
+    "expected": "Total is $30.00",
+    "actual": "Total is $30.00",
+    "durationMs": 100,
+    "evidenceIds": []
+  },
+  "stopReason": "The reported failure was not reproduced on original source.",
+  "completedAt": "2026-10-09T13:18:07.248Z"
+}

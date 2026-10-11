@@ -1,23 +1,28 @@
-﻿# Dependencies
+# Dependencies
 node_modules/
 
 # Build outputs
 dist/
 build/
 .vite/
+*.ts.timestamp-*
+vite.config.ts.timestamp-*
 
 # Environment — never commit real keys
 .env
 .env.local
 .env.*.local
 
-# Test artifacts — runtime-generated, not source
-artifacts/case-*/before/
-artifacts/case-*/after/
+# Test artifacts — runtime-generated sandboxes and scratch
+artifacts/runs/**/workspace/
+artifacts/runs/**/pristine/
+artifacts/runs/**/dist/
+artifacts/runs/**/node_modules/
 test-results/
 playwright-report/
+tests/playwright/artifacts/
 
-# Keep the gitkeep placeholders
+# Keep the gitkeep placeholders and curated evidence
 !artifacts/.gitkeep
 !data/cases/.gitkeep
 
@@ -38,4 +43,5 @@ Thumbs.db
 *.log
 npm-debug.log*
 
-tests/playwright/artifacts/
+# Local RAG embeddings and index cache
+data/rag-index/

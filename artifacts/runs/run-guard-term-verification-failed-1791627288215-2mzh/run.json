@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-guard-term-verification-failed-1791627288215-2mzh",
+  "caseId": "case-guard-term-verification-failed-1791627288215-2mzh",
+  "mode": "dynamic",
+  "state": "VERIFICATION_FAILED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [],
+  "originalSourceFingerprint": "fp-1",
+  "targetSnapshotDir": "",
+  "testFingerprint": "fp-test-1",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "requiredChecks": [],
+  "events": [],
+  "createdAt": "2026-10-10T10:14:48.224Z",
+  "updatedAt": "2026-10-10T10:14:48.225Z",
+  "completedAt": "2026-10-10T10:14:48.224Z"
+}

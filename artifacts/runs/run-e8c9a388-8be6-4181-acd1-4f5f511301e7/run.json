@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-e8c9a388-8be6-4181-acd1-4f5f511301e7",
+  "caseId": "case-test-dynamic-service",
+  "mode": "simulated",
+  "state": "BLOCKED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [],
+  "diagnostics": [],
+  "originalSourceFingerprint": "520562cf00f42f5037f21bd2fcfef890d522891cc720c867398dd6397a0d5d26",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-e8c9a388-8be6-4181-acd1-4f5f511301e7\\workspace",
+  "testFingerprint": "71ded93e74881cb66804a7ac8dbacd2264d095f1f790aa4ab743e9a8533153c9",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "requiredChecks": [],
+  "events": [
+    {
+      "timestamp": "2026-10-09T00:19:25.511Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "520562cf00f42f5037f21bd2fcfef890d522891cc720c867398dd6397a0d5d26",
+        "url": "http://localhost:5199"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T00:19:25.784Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    },
+    {
+      "timestamp": "2026-10-09T00:19:25.867Z",
+      "stage": "baseline",
+      "message": "Baseline verification stopped: The reported failure was not reproduced on original source."
+    },
+    {
+      "timestamp": "2026-10-09T00:19:26.247Z",
+      "stage": "completion",
+      "message": "Run finalized with status: BLOCKED (The reported failure was not reproduced on original source.)"
+    }
+  ],
+  "createdAt": "2026-10-09T00:19:25.462Z",
+  "updatedAt": "2026-10-09T00:19:26.424Z",
+  "baselineRun": {
+    "outcome": "PASSED",
+    "testFingerprint": "71ded93e74881cb66804a7ac8dbacd2264d095f1f790aa4ab743e9a8533153c9",
+    "testIds": [
+      "case-test-dynamic-service"
+    ],
+    "runId": "mock-run-id",
+    "reportHash": "mock-report-hash-12345",
+    "runAt": "2026-10-09T00:19:25.849Z",
+    "passed": true,
+    "expected": "Cart total displays $30.00",
+    "actual": "Cart total displays $30.00",
+    "durationMs": 120,
+    "evidenceIds": []
+  },
+  "stopReason": "The reported failure was not reproduced on original source.",
+  "completedAt": "2026-10-09T00:19:26.225Z"
+}

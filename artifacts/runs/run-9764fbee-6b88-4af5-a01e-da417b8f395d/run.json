@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-9764fbee-6b88-4af5-a01e-da417b8f395d",
+  "caseId": "case-001-cart-total",
+  "mode": "dynamic",
+  "state": "BLOCKED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [],
+  "diagnostics": [],
+  "originalSourceFingerprint": "ea2d05db476de3bbc4d3c84d767bed9a9c6b1efe8f633d1a519c9d8fd68d9ae1",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-9764fbee-6b88-4af5-a01e-da417b8f395d\\workspace",
+  "testFingerprint": "71ded93e74881cb66804a7ac8dbacd2264d095f1f790aa4ab743e9a8533153c9",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "requiredChecks": [],
+  "events": [
+    {
+      "timestamp": "2026-10-08T22:37:34.345Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot",
+      "data": {
+        "originalSourceFingerprint": "ea2d05db476de3bbc4d3c84d767bed9a9c6b1efe8f633d1a519c9d8fd68d9ae1"
+      }
+    },
+    {
+      "timestamp": "2026-10-08T22:37:35.642Z",
+      "stage": "initialization",
+      "message": "Started isolated MiniShop server on port 5180",
+      "data": {
+        "url": "http://127.0.0.1:5180"
+      }
+    },
+    {
+      "timestamp": "2026-10-08T22:37:35.653Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    },
+    {
+      "timestamp": "2026-10-08T22:38:46.728Z",
+      "stage": "baseline",
+      "message": "Baseline verification stopped: Baseline reproduction failed with infrastructure error: No complete, unambiguous test execution"
+    }
+  ],
+  "createdAt": "2026-10-08T22:37:34.343Z",
+  "updatedAt": "2026-10-08T22:38:46.728Z",
+  "targetPort": 5180,
+  "targetUrl": "http://127.0.0.1:5180",
+  "baselineRun": {
+    "outcome": "INFRASTRUCTURE_ERROR",
+    "testFingerprint": "71ded93e74881cb66804a7ac8dbacd2264d095f1f790aa4ab743e9a8533153c9",
+    "testIds": [
+      "case-001-cart-total.spec.ts:cart total should equal sum of all item prices:chromium",
+      "case-001-cart-total.spec.ts:cart total should update when items are added incrementally:chromium"
+    ],
+    "runId": "cedb344c-85b6-4ce7-94c0-2459e418a867",
+    "reportHash": "19214f157b3dbfe1b0100762a51c210a5160293b8278ac10f881febef77d78e1",
+    "runAt": "2026-10-08T22:38:46.721Z",
+    "passed": false,
+    "expected": "",
+    "actual": "No complete, unambiguous test execution",
+    "durationMs": 71052,
+    "evidenceIds": []
+  },
+  "stopReason": "Baseline reproduction failed with infrastructure error: No complete, unambiguous test execution",
+  "completedAt": "2026-10-08T22:38:46.723Z"
+}

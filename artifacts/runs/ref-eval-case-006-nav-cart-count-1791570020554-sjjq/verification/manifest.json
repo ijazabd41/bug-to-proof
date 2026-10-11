@@ -1,0 +1,12 @@
+{
+  "passed": false,
+  "outcome": "INFRASTRUCTURE_ERROR",
+  "expected": "",
+  "actual": "MiniShop is not reachable at http://127.0.0.1:5748",
+  "durationMs": 3007,
+  "runId": "ref-eval-case-006-nav-cart-count-1791570020554-sjjq",
+  "testFingerprint": "ab94d3fb8b850bb40e68b678fdb5b3d22dbdc6ced00ebaf09a4d21443a7f2416",
+  "testIds": [],
+  "artifactPaths": {},
+  "rawOutput": "AbortError: This operation was aborted"
+}

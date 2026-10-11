@@ -14,15 +14,32 @@
     "dev:api": "npx tsx services/api/src/index.ts",
     "dev:dashboard": "npm run dev --workspace=apps/dashboard",
     "dev:minishop": "npm run dev --workspace=apps/minishop",
+    "test": "npm run test:unit && npm run test:playwright",
+    "test:unit": "vitest run",
+    "test:unit:watch": "vitest",
     "test:playwright": "npm run test --workspace=tests/playwright",
     "build": "npm run build --workspace=apps/dashboard && npm run build --workspace=apps/minishop",
-    "demo": "npm run dev"
+    "demo": "npm run dev",
+    "evidence:before": "tsx scripts/record-demo.ts before",
+    "evidence:after": "tsx scripts/record-demo.ts after",
+    "agent:demo": "tsx scripts/debug-demo.ts",
+    "demo:seed": "tsx scripts/seed-demo.ts",
+    "typecheck": "npm run typecheck --workspace=services/api && npm run typecheck --workspace=apps/dashboard && npm run typecheck --workspace=apps/minishop",
+    "rag:evaluate": "tsx scripts/evaluate-rag.ts",
+    "repair:evaluate": "tsx scripts/evaluate-repair.ts",
+    "artifacts:clean": "tsx scripts/clean-artifacts.ts"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@types/supertest": "^7.2.1",
+    "concurrently": "^8.2.2",
+    "jsdom": "^30.1.1",
+    "supertest": "^7.3.0",
+    "vitest": "^5.0.2"
   },
   "engines": {
-    "node": ">=18.0.0",
+    "node": ">=22.0.0",
     "npm": ">=9.0.0"
   }
 }

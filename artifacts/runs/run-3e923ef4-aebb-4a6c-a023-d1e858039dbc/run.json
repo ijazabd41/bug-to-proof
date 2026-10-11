@@ -1,0 +1,65 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-3e923ef4-aebb-4a6c-a023-d1e858039dbc",
+  "caseId": "case-003-item-removal",
+  "mode": "dynamic",
+  "state": "BLOCKED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [],
+  "diagnostics": [],
+  "originalSourceFingerprint": "82bda4eb468077e1e6183a7776eb0c9a7f040d1b25612cfda5f3a77579ca303f",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-3e923ef4-aebb-4a6c-a023-d1e858039dbc\\workspace",
+  "testFingerprint": "b6526dc799cdd281e73df70ff4590ade4e34ebccbb3ae71e25a96e6a3e1a0b53",
+  "reproductionTestFile": "tests/playwright/cases/case-003-item-removal.spec.ts",
+  "requiredChecks": [],
+  "events": [
+    {
+      "timestamp": "2026-10-08T22:47:50.024Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot",
+      "data": {
+        "originalSourceFingerprint": "82bda4eb468077e1e6183a7776eb0c9a7f040d1b25612cfda5f3a77579ca303f"
+      }
+    },
+    {
+      "timestamp": "2026-10-08T22:47:51.769Z",
+      "stage": "initialization",
+      "message": "Started isolated MiniShop server on port 5871",
+      "data": {
+        "url": "http://127.0.0.1:5871"
+      }
+    },
+    {
+      "timestamp": "2026-10-08T22:47:51.780Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    },
+    {
+      "timestamp": "2026-10-08T22:48:24.896Z",
+      "stage": "baseline",
+      "message": "Baseline verification stopped: Baseline reproduction failed with infrastructure error: No complete, unambiguous test execution"
+    }
+  ],
+  "createdAt": "2026-10-08T22:47:50.021Z",
+  "updatedAt": "2026-10-08T22:48:24.896Z",
+  "targetPort": 5871,
+  "targetUrl": "http://127.0.0.1:5871",
+  "baselineRun": {
+    "outcome": "INFRASTRUCTURE_ERROR",
+    "testFingerprint": "b6526dc799cdd281e73df70ff4590ade4e34ebccbb3ae71e25a96e6a3e1a0b53",
+    "testIds": [
+      "case-003-item-removal.spec.ts:removing an item should remove that item and retain remaining items:chromium"
+    ],
+    "runId": "2b548044-3806-4ad5-916d-72dc35c08e74",
+    "reportHash": "694164d88a7d8d30392a7b4375049e5786bac6f50b299428aeca8dbe007c777d",
+    "runAt": "2026-10-08T22:48:24.888Z",
+    "passed": false,
+    "expected": "",
+    "actual": "No complete, unambiguous test execution",
+    "durationMs": 33094,
+    "evidenceIds": []
+  },
+  "stopReason": "Baseline reproduction failed with infrastructure error: No complete, unambiguous test execution",
+  "completedAt": "2026-10-08T22:48:24.890Z"
+}

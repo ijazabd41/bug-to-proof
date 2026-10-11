@@ -1,0 +1,17 @@
+import fs from "fs";
+import path from "path";
+import { WORKSPACE_ROOT } from "../services/api/src/utils/paths";
+import { writeCase } from "../services/api/src/storage/caseStore";
+import type { BugCase } from "@bug-to-proof/shared-types";
+const target = path.join(WORKSPACE_ROOT, "apps/minishop/src/store/cartStore.ts");
+const fixed = "total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),";
+const buggy = "total: () => get().items[0]?.price ?? 0,";
+const source = fs.readFileSync(target, "utf8");
+if (!source.includes(fixed) && !source.includes(buggy)) throw new Error("Unknown cart implementation; seed manually");
+fs.writeFileSync(target, source.replace(fixed, buggy));
+const seed: BugCase = JSON.parse(fs.readFileSync(path.join(WORKSPACE_ROOT, "data/cases/case-001.seed.json"), "utf8"));
+seed.status = "READY_TO_REPRODUCE"; seed.verification = null; seed.evidence = [];
+if (seed.reproduction) seed.reproduction.lastRun = null;
+seed.updatedAt = new Date().toISOString();
+writeCase(seed);
+console.log("Seeded the known cart bug and cleared case claims. Run reproduction before applying a patch.");

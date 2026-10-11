@@ -1,0 +1,18 @@
+{
+  "scope": "Minimal LangGraph interrupt with a fresh FileCheckpointSaver; no application/browser/model execution",
+  "thread": "probe-1791503140338",
+  "paused": {
+    "value": "pending",
+    "__interrupt__": [
+      {
+        "id": "b718dcbfeabedfe38317a16d53875468",
+        "value": "approve"
+      }
+    ]
+  },
+  "memoryPendingWrites": 1,
+  "reloadedPendingWrites": 0,
+  "resumed": {
+    "value": "approved"
+  }
+}

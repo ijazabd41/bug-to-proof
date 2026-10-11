@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-92c8715c-118e-437b-96af-f599bbf08ce4",
+  "caseId": "case-004-cart-clear",
+  "mode": "dynamic",
+  "state": "BLOCKED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [],
+  "diagnostics": [],
+  "originalSourceFingerprint": "7043632c87950456cf2bfc4b1a4a43f36d8a2ac71c8e3f58c59bf27eb6bb80a6",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-92c8715c-118e-437b-96af-f599bbf08ce4\\workspace",
+  "testFingerprint": "5b810831c91bf57bc509f17ba6672a18a55d4e46c3b4a34d6353218e34a0fa2c",
+  "reproductionTestFile": "tests/playwright/cases/case-004-cart-clear.spec.ts",
+  "requiredChecks": [],
+  "events": [
+    {
+      "timestamp": "2026-10-08T22:54:45.856Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot",
+      "data": {
+        "originalSourceFingerprint": "7043632c87950456cf2bfc4b1a4a43f36d8a2ac71c8e3f58c59bf27eb6bb80a6"
+      }
+    },
+    {
+      "timestamp": "2026-10-08T22:54:47.222Z",
+      "stage": "initialization",
+      "message": "Started isolated MiniShop server on port 5225",
+      "data": {
+        "url": "http://127.0.0.1:5225"
+      }
+    },
+    {
+      "timestamp": "2026-10-08T22:54:47.238Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    },
+    {
+      "timestamp": "2026-10-08T22:54:54.816Z",
+      "stage": "baseline",
+      "message": "Valid baseline failure confirmed:  vs Error: BTP_ASSERTION: Cart should display 'Your cart is empty.' after checkout\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: true\nReceived: false"
+    },
+    {
+      "timestamp": "2026-10-08T22:54:54.832Z",
+      "stage": "investigation",
+      "message": "Investigating source files and generating minimal patch proposal"
+    },
+    {
+      "timestamp": "2026-10-08T22:54:54.865Z",
+      "stage": "error",
+      "message": "Run blocked by error: Model returned an empty response. Verify LLM configuration and credentials."
+    }
+  ],
+  "createdAt": "2026-10-08T22:54:45.851Z",
+  "updatedAt": "2026-10-08T22:54:54.865Z",
+  "targetPort": 5225,
+  "targetUrl": "http://127.0.0.1:5225",
+  "baselineRun": {
+    "outcome": "ASSERTION_FAILED",
+    "testFingerprint": "5b810831c91bf57bc509f17ba6672a18a55d4e46c3b4a34d6353218e34a0fa2c",
+    "testIds": [
+      "case-004-cart-clear.spec.ts:checking out should empty all items from the cart:chromium"
+    ],
+    "runId": "00aae5b0-19b7-4cd6-ba30-10c1cecfd3d1",
+    "reportHash": "bef2120c78c25f21d3848fdc33d08361a88775d9492c79276d799dbcb12f6dea",
+    "runAt": "2026-10-08T22:54:54.810Z",
+    "passed": false,
+    "expected": "",
+    "actual": "Error: BTP_ASSERTION: Cart should display 'Your cart is empty.' after checkout\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: true\nReceived: false",
+    "durationMs": 7550,
+    "evidenceIds": []
+  },
+  "error": "Model returned an empty response. Verify LLM configuration and credentials.",
+  "stopReason": "Model returned an empty response. Verify LLM configuration and credentials.",
+  "completedAt": "2026-10-08T22:54:54.852Z"
+}

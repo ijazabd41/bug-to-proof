@@ -1,0 +1,113 @@
+[
+  {
+    "id": "case-001-cart-total",
+    "title": "Cart total only reflects first item price",
+    "description": "When multiple items are added to the cart, the total displays only the first item price instead of the sum of all items.",
+    "reproductionTest": "tests/playwright/cases/case-001-cart-total.spec.ts",
+    "split": "dev",
+    "defect": {
+      "relativePath": "src/store/cartStore.ts",
+      "buggyContent": "  total: () => get().items[0]?.price ?? 0,",
+      "fixedContent": "  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),"
+    },
+    "diagnosis": "The total method in cartStore only accesses the first item's price at index 0 rather than reducing over all items and multiplying price by quantity."
+  },
+  {
+    "id": "case-002-repeated-item-qty",
+    "title": "Adding an existing item does not increment its quantity",
+    "description": "Adding the same product multiple times leaves the quantity at 1 instead of incrementing it.",
+    "reproductionTest": "tests/playwright/cases/case-002-repeated-item-qty.spec.ts",
+    "split": "held-out",
+    "defect": {
+      "relativePath": "src/store/cartStore.ts",
+      "buggyContent": "            i.id === product.id ? { ...i, quantity: 1 } : i",
+      "fixedContent": "            i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i"
+    },
+    "diagnosis": "The addItem method resets quantity to 1 when a matching existing item is found instead of incrementing quantity by 1."
+  },
+  {
+    "id": "case-003-item-removal",
+    "title": "Removing an item retains the item or clears entire cart",
+    "description": "Calling removeItem with a productId fails to filter out the target product correctly.",
+    "reproductionTest": "tests/playwright/cases/case-003-item-removal.spec.ts",
+    "split": "held-out",
+    "defect": {
+      "relativePath": "src/store/cartStore.ts",
+      "buggyContent": "  removeItem: (productId) =>\n    set((state) => ({\n      items: state.items.filter((i) => i.id === productId),\n    })),",
+      "fixedContent": "  removeItem: (productId) =>\n    set((state) => ({\n      items: state.items.filter((i) => i.id !== productId),\n    })),"
+    },
+    "diagnosis": "The removeItem filter predicate checks i.id === productId instead of i.id !== productId, retaining only the removed product."
+  },
+  {
+    "id": "case-004-cart-clear",
+    "title": "Clear cart leaves items in state",
+    "description": "Calling clearCart does not empty the items array completely.",
+    "reproductionTest": "tests/playwright/cases/case-004-cart-clear.spec.ts",
+    "split": "held-out",
+    "defect": {
+      "relativePath": "src/store/cartStore.ts",
+      "buggyContent": "  clearCart: () => set((state) => ({ items: state.items.slice(1) })),",
+      "fixedContent": "  clearCart: () => set({ items: [] }),"
+    },
+    "diagnosis": "The clearCart method drops only the first item using slice(1) instead of setting items to an empty array."
+  },
+  {
+    "id": "case-005-cart-total-quantities",
+    "title": "Cart total calculation ignores item quantities",
+    "description": "When items have quantity > 1, the total sums item prices without multiplying by quantity.",
+    "reproductionTest": "tests/playwright/cases/case-005-cart-total-quantities.spec.ts",
+    "split": "held-out",
+    "defect": {
+      "relativePath": "src/store/cartStore.ts",
+      "buggyContent": "  total: () => get().items.reduce((sum, item) => sum + item.price, 0),",
+      "fixedContent": "  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),"
+    },
+    "diagnosis": "The total method sums item.price instead of item.price * item.quantity in the reduce accumulator."
+  },
+  {
+    "id": "case-006-nav-cart-count",
+    "title": "Navbar cart counter shows number of unique items instead of total quantity",
+    "description": "Adding multiple quantities of items shows the unique item count in the navbar header instead of the total unit count.",
+    "reproductionTest": "tests/playwright/cases/case-006-nav-cart-count.spec.ts",
+    "split": "dev",
+    "defect": {
+      "relativePath": "src/App.tsx",
+      "buggyContent": "  const itemCount = items.length;",
+      "fixedContent": "  const itemCount = items.reduce((n, i) => n + i.quantity, 0);"
+    },
+    "diagnosis": "The NavBar component uses items.length (unique line items) instead of summing the item quantities."
+  },
+  {
+    "id": "case-007-promo-discount",
+    "title": "Async promo code application race condition drops concurrent cart updates",
+    "description": "When an item is added while asynchronous promo code validation is in flight, the promo resolution overwrites cart items with a stale pre-await snapshot, dropping newly added items.",
+    "reproductionTest": "tests/playwright/cases/case-007-promo-discount.spec.ts",
+    "split": "held-out",
+    "defect": {
+      "relativePath": "src/store/cartStore.ts",
+      "buggyContent": "  applyPromoCode: async (code: string) => {\n    const staleItems = get().items;\n    // Simulate async promo validation\n    await new Promise((resolve) => setTimeout(resolve, 400));\n    const normalized = code.trim().toUpperCase();\n    if (normalized === \"SAVE20\") {\n      set({\n        promoCode: \"SAVE20\",\n        discountPercent: 20,\n        items: staleItems.map((i) => ({ ...i, price: Number((i.price * 0.8).toFixed(2)) })),\n      });\n      return true;\n    }\n    return false;\n  },",
+      "fixedContent": "  applyPromoCode: async (code: string) => {\n    // Simulate async promo validation\n    await new Promise((resolve) => setTimeout(resolve, 400));\n    const normalized = code.trim().toUpperCase();\n    if (normalized === \"SAVE20\") {\n      set((state) => ({\n        promoCode: \"SAVE20\",\n        discountPercent: 20,\n        items: state.items.map((i) => ({ ...i, price: Number((i.price * 0.8).toFixed(2)) })),\n      }));\n      return true;\n    }\n    return false;\n  },"
+    },
+    "diagnosis": "The applyPromoCode method captures a stale snapshot of get().items prior to the async validation delay, overwriting state.items upon resolution and losing concurrent items added during the network delay."
+  },
+  {
+    "id": "case-008-tiered-shipping",
+    "title": "Free shipping threshold defect coordinated across store calculation and Cart component display",
+    "description": "Free shipping threshold for orders >= $50 is not applied due to strict inequality in cartStore and hardcoded fee display in Cart component.",
+    "reproductionTest": "tests/playwright/cases/case-008-tiered-shipping.spec.ts",
+    "split": "held-out",
+    "defects": [
+      {
+        "relativePath": "src/store/cartStore.ts",
+        "buggyContent": "  shipping: () => (get().total() > 50 || get().items.length === 0 ? 0 : 5),",
+        "fixedContent": "  shipping: () => (get().total() >= 50 || get().items.length === 0 ? 0 : 5),"
+      },
+      {
+        "relativePath": "src/components/Cart.tsx",
+        "buggyContent": "            <span data-testid=\"shipping-fee\">$5.00</span>",
+        "fixedContent": "            <span data-testid=\"shipping-fee\">${shippingFee.toFixed(2)}</span>"
+      }
+    ],
+    "diagnosis": "cartStore checks total > 50 strictly instead of >= 50 for free shipping, and Cart.tsx hardcodes $5.00 display instead of referencing shippingFee."
+  }
+]

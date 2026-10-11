@@ -1,0 +1,65 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-4b52e3d9-595c-4eed-8bd7-d86b2a741c55",
+  "caseId": "case-002-repeated-item-qty",
+  "mode": "dynamic",
+  "state": "BLOCKED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [],
+  "diagnostics": [],
+  "originalSourceFingerprint": "6b9e4e065a5e9f314f0b33b00ef95c0f0be55005feb108fbd9b3976fa9d662cf",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-4b52e3d9-595c-4eed-8bd7-d86b2a741c55\\workspace",
+  "testFingerprint": "a25a0a4295708656ad116f7978d27683d96c595e5093b1ca9066afa629e9f425",
+  "reproductionTestFile": "tests/playwright/cases/case-002-repeated-item-qty.spec.ts",
+  "requiredChecks": [],
+  "events": [
+    {
+      "timestamp": "2026-10-08T22:41:31.281Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot",
+      "data": {
+        "originalSourceFingerprint": "6b9e4e065a5e9f314f0b33b00ef95c0f0be55005feb108fbd9b3976fa9d662cf"
+      }
+    },
+    {
+      "timestamp": "2026-10-08T22:41:32.307Z",
+      "stage": "initialization",
+      "message": "Started isolated MiniShop server on port 5181",
+      "data": {
+        "url": "http://127.0.0.1:5181"
+      }
+    },
+    {
+      "timestamp": "2026-10-08T22:41:32.319Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    },
+    {
+      "timestamp": "2026-10-08T22:42:06.020Z",
+      "stage": "baseline",
+      "message": "Baseline verification stopped: Baseline reproduction failed with infrastructure error: No complete, unambiguous test execution"
+    }
+  ],
+  "createdAt": "2026-10-08T22:41:31.276Z",
+  "updatedAt": "2026-10-08T22:42:06.021Z",
+  "targetPort": 5181,
+  "targetUrl": "http://127.0.0.1:5181",
+  "baselineRun": {
+    "outcome": "INFRASTRUCTURE_ERROR",
+    "testFingerprint": "a25a0a4295708656ad116f7978d27683d96c595e5093b1ca9066afa629e9f425",
+    "testIds": [
+      "case-002-repeated-item-qty.spec.ts:adding an item twice should increment its quantity to 2:chromium"
+    ],
+    "runId": "afbfbf07-e523-4a6f-b28a-eada3fb8f01a",
+    "reportHash": "1c22aa1960574b08c629a985a104360ac0d127059e19f109a17d4a44b34e10b3",
+    "runAt": "2026-10-08T22:42:06.012Z",
+    "passed": false,
+    "expected": "",
+    "actual": "No complete, unambiguous test execution",
+    "durationMs": 33679,
+    "evidenceIds": []
+  },
+  "stopReason": "Baseline reproduction failed with infrastructure error: No complete, unambiguous test execution",
+  "completedAt": "2026-10-08T22:42:06.015Z"
+}

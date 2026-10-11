@@ -1,0 +1,159 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\bug-to-proof\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "tests/playwright/playwright.config.ts",
+      "tests/playwright/cases/case-003-item-removal.spec.ts",
+      "--reporter=json",
+      "--output",
+      "D:\\bug-to-proof\\artifacts\\runs\\run-c2a4ca38-0ae9-4178-969c-88b43d95890d\\baseline"
+    ],
+    "configFile": "D:\\bug-to-proof\\tests\\playwright\\playwright.config.ts",
+    "rootDir": "D:/bug-to-proof/tests/playwright/cases",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/bug-to-proof/artifacts/runs/run-c2a4ca38-0ae9-4178-969c-88b43d95890d/baseline",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "D:/bug-to-proof/tests/playwright/cases",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "case-003-item-removal.spec.ts",
+      "file": "case-003-item-removal.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Case 003 — Item removal from cart",
+          "file": "case-003-item-removal.spec.ts",
+          "line": 22,
+          "column": 6,
+          "specs": [
+            {
+              "title": "removing an item should remove that item and retain remaining items",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 30174,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "D:\\bug-to-proof\\tests\\playwright\\cases\\helpers\\minishop.ts",
+                            "column": 8,
+                            "line": 13
+                          },
+                          "message": "Error: locator.waitFor: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('add-to-cart-1') to be visible\u001b[22m\n\n\n   at helpers\\minishop.ts:13\n\n  11 |     await this.page\n  12 |       .getByTestId(TEST_IDS.addToCart(1))\n> 13 |       .waitFor({ state: \"visible\" });\n     |        ^\n  14 |   }\n  15 |\n  16 |   async addToCart(productId: number) {\n    at MiniShopPage.navigate (D:\\bug-to-proof\\tests\\playwright\\cases\\helpers\\minishop.ts:13:8)\n    at D:\\bug-to-proof\\tests\\playwright\\cases\\case-003-item-removal.spec.ts:26:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-08T22:40:41.927Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\bug-to-proof\\artifacts\\runs\\run-c2a4ca38-0ae9-4178-969c-88b43d95890d\\baseline\\case-003-item-removal-Case-3f1f6--and-retain-remaining-items-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\bug-to-proof\\artifacts\\runs\\run-c2a4ca38-0ae9-4178-969c-88b43d95890d\\baseline\\case-003-item-removal-Case-3f1f6--and-retain-remaining-items-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\bug-to-proof\\artifacts\\runs\\run-c2a4ca38-0ae9-4178-969c-88b43d95890d\\baseline\\case-003-item-removal-Case-3f1f6--and-retain-remaining-items-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ff631a0a41742e64fde2-0fd97e4d10726a8e7510",
+              "file": "case-003-item-removal.spec.ts",
+              "line": 23,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-08T22:40:40.972Z",
+    "duration": 31577.967999999997,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

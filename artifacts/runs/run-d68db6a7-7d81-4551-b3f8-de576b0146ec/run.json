@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-d68db6a7-7d81-4551-b3f8-de576b0146ec",
+  "caseId": "case-001-cart-total",
+  "mode": "dynamic",
+  "state": "BLOCKED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [],
+  "diagnostics": [],
+  "originalSourceFingerprint": "ea2d05db476de3bbc4d3c84d767bed9a9c6b1efe8f633d1a519c9d8fd68d9ae1",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-d68db6a7-7d81-4551-b3f8-de576b0146ec\\workspace",
+  "testFingerprint": "71ded93e74881cb66804a7ac8dbacd2264d095f1f790aa4ab743e9a8533153c9",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "requiredChecks": [],
+  "events": [
+    {
+      "timestamp": "2026-10-08T22:35:00.980Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot",
+      "data": {
+        "originalSourceFingerprint": "ea2d05db476de3bbc4d3c84d767bed9a9c6b1efe8f633d1a519c9d8fd68d9ae1"
+      }
+    },
+    {
+      "timestamp": "2026-10-08T22:35:01.973Z",
+      "stage": "initialization",
+      "message": "Started isolated MiniShop server on port 5180",
+      "data": {
+        "url": "http://127.0.0.1:5180"
+      }
+    },
+    {
+      "timestamp": "2026-10-08T22:35:01.988Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    },
+    {
+      "timestamp": "2026-10-08T22:35:05.025Z",
+      "stage": "baseline",
+      "message": "Baseline verification stopped: Baseline reproduction failed with infrastructure error: MiniShop is not reachable at http://127.0.0.1:5180"
+    }
+  ],
+  "createdAt": "2026-10-08T22:35:00.977Z",
+  "updatedAt": "2026-10-08T22:35:05.025Z",
+  "targetPort": 5180,
+  "targetUrl": "http://127.0.0.1:5180",
+  "baselineRun": {
+    "outcome": "INFRASTRUCTURE_ERROR",
+    "testFingerprint": "71ded93e74881cb66804a7ac8dbacd2264d095f1f790aa4ab743e9a8533153c9",
+    "testIds": [],
+    "runId": "819fc15c-8ba3-4d10-bbd7-9ef805904d6b",
+    "runAt": "2026-10-08T22:35:05.017Z",
+    "passed": false,
+    "expected": "",
+    "actual": "MiniShop is not reachable at http://127.0.0.1:5180",
+    "durationMs": 3014,
+    "evidenceIds": []
+  },
+  "stopReason": "Baseline reproduction failed with infrastructure error: MiniShop is not reachable at http://127.0.0.1:5180",
+  "completedAt": "2026-10-08T22:35:05.019Z"
+}

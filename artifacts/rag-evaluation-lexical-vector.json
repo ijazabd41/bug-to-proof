@@ -1,0 +1,387 @@
+{
+  "runAt": "2026-10-10T10:30:12.088Z",
+  "summary": {
+    "provider": "lexical",
+    "model": "hashed-tokens-v1",
+    "strategy": "vector",
+    "topK": 4,
+    "cases": 12,
+    "answerableCases": 10,
+    "offTopicCases": 2,
+    "hitAtK": 0.8,
+    "recallAtK": 0.8,
+    "mrrAtK": 0.5583333333333333,
+    "offTopicAbstentionRate": 1,
+    "latencyP95Ms": 116,
+    "embeddingKind": "lexical baseline",
+    "limitations": "Small source-level smoke benchmark. Does not measure generation accuracy, factual entailment or universal abstention."
+  },
+  "rows": [
+    {
+      "id": "cart-total",
+      "question": "How is the cart total computed from price and quantity?",
+      "relevantSources": [
+        "apps/minishop/src/store/cartStore.ts"
+      ],
+      "rankedSources": [
+        "docs/ai-workflow.md",
+        "tests/playwright/cases/case-001-cart-total.spec.ts",
+        "services/api/src/ai/debugAgent.ts",
+        "apps/minishop/src/store/cartStore.ts"
+      ],
+      "retrievedChunkIds": [
+        "6c4864d5706a",
+        "72e0da9011a7",
+        "3fe69743d227",
+        "95dc6664f5c9"
+      ],
+      "hit": true,
+      "reciprocalRank": 0.25,
+      "recall": 1,
+      "correctAbstention": null,
+      "telemetry": {
+        "provider": "lexical",
+        "model": "hashed-tokens-v1",
+        "strategy": "vector",
+        "indexFingerprint": "31633601950fd281461d2aad76d06627aa72b51f34ad602e77c66a3a6574e953",
+        "cacheHit": true,
+        "corpusChunks": 100,
+        "retrievalMs": 61,
+        "topK": 4
+      }
+    },
+    {
+      "id": "repeat-product",
+      "question": "What happens when the same product is added again?",
+      "relevantSources": [
+        "apps/minishop/src/store/cartStore.ts"
+      ],
+      "rankedSources": [
+        "docs/ai-workflow.md",
+        "apps/minishop/src/data/products.ts",
+        "apps/minishop/src/store/cartStore.ts",
+        "docs/rag-interview-guide.md"
+      ],
+      "retrievedChunkIds": [
+        "6c4864d5706a",
+        "3ef1fbfb68e5",
+        "f50d38753f35",
+        "32e533b9dfc0"
+      ],
+      "hit": true,
+      "reciprocalRank": 0.3333333333333333,
+      "recall": 1,
+      "correctAbstention": null,
+      "telemetry": {
+        "provider": "lexical",
+        "model": "hashed-tokens-v1",
+        "strategy": "vector",
+        "indexFingerprint": "31633601950fd281461d2aad76d06627aa72b51f34ad602e77c66a3a6574e953",
+        "cacheHit": true,
+        "corpusChunks": 100,
+        "retrievalMs": 47,
+        "topK": 4
+      }
+    },
+    {
+      "id": "remove-product",
+      "question": "How does removeItem remove a productId from items?",
+      "relevantSources": [
+        "apps/minishop/src/store/cartStore.ts"
+      ],
+      "rankedSources": [
+        "apps/minishop/src/store/cartStore.ts",
+        "apps/minishop/src/store/cartStore.ts",
+        "apps/minishop/src/components/Cart.tsx",
+        "apps/minishop/src/data/products.ts"
+      ],
+      "retrievedChunkIds": [
+        "f50d38753f35",
+        "95dc6664f5c9",
+        "3dc15ee2df2e",
+        "3ef1fbfb68e5"
+      ],
+      "hit": true,
+      "reciprocalRank": 1,
+      "recall": 1,
+      "correctAbstention": null,
+      "telemetry": {
+        "provider": "lexical",
+        "model": "hashed-tokens-v1",
+        "strategy": "vector",
+        "indexFingerprint": "31633601950fd281461d2aad76d06627aa72b51f34ad602e77c66a3a6574e953",
+        "cacheHit": true,
+        "corpusChunks": 100,
+        "retrievalMs": 46,
+        "topK": 4
+      }
+    },
+    {
+      "id": "empty-cart",
+      "question": "How does clearCart reset the cart items?",
+      "relevantSources": [
+        "apps/minishop/src/store/cartStore.ts"
+      ],
+      "rankedSources": [
+        "apps/minishop/src/store/cartStore.ts",
+        "README.md",
+        "apps/minishop/src/components/Cart.tsx",
+        "docs/ai-workflow.md"
+      ],
+      "retrievedChunkIds": [
+        "95dc6664f5c9",
+        "5001f02d6ebb",
+        "0f29ed9d3674",
+        "6c4864d5706a"
+      ],
+      "hit": true,
+      "reciprocalRank": 1,
+      "recall": 1,
+      "correctAbstention": null,
+      "telemetry": {
+        "provider": "lexical",
+        "model": "hashed-tokens-v1",
+        "strategy": "vector",
+        "indexFingerprint": "31633601950fd281461d2aad76d06627aa72b51f34ad602e77c66a3a6574e953",
+        "cacheHit": true,
+        "corpusChunks": 100,
+        "retrievalMs": 67,
+        "topK": 4
+      }
+    },
+    {
+      "id": "products",
+      "question": "Where are the Keyboard and Mouse Pad product prices defined?",
+      "relevantSources": [
+        "apps/minishop/src/data/products.ts"
+      ],
+      "rankedSources": [
+        "apps/minishop/src/data/products.ts"
+      ],
+      "retrievedChunkIds": [
+        "3ef1fbfb68e5"
+      ],
+      "hit": true,
+      "reciprocalRank": 1,
+      "recall": 1,
+      "correctAbstention": null,
+      "telemetry": {
+        "provider": "lexical",
+        "model": "hashed-tokens-v1",
+        "strategy": "vector",
+        "indexFingerprint": "31633601950fd281461d2aad76d06627aa72b51f34ad602e77c66a3a6574e953",
+        "cacheHit": true,
+        "corpusChunks": 100,
+        "retrievalMs": 103,
+        "topK": 4
+      }
+    },
+    {
+      "id": "browser-spec",
+      "question": "Which browser assertions compare the displayed cart total with $30.00?",
+      "relevantSources": [
+        "tests/playwright/cases/case-001-cart-total.spec.ts"
+      ],
+      "rankedSources": [
+        "tests/playwright/cases/case-001-cart-total.spec.ts",
+        "README.md",
+        "tests/playwright/cases/case-001-cart-total.spec.ts",
+        "docs/ai-workflow.md"
+      ],
+      "retrievedChunkIds": [
+        "72e0da9011a7",
+        "a5111e21a186",
+        "e2276a2ddc65",
+        "6c4864d5706a"
+      ],
+      "hit": true,
+      "reciprocalRank": 1,
+      "recall": 1,
+      "correctAbstention": null,
+      "telemetry": {
+        "provider": "lexical",
+        "model": "hashed-tokens-v1",
+        "strategy": "vector",
+        "indexFingerprint": "31633601950fd281461d2aad76d06627aa72b51f34ad602e77c66a3a6574e953",
+        "cacheHit": true,
+        "corpusChunks": 100,
+        "retrievalMs": 116,
+        "topK": 4
+      }
+    },
+    {
+      "id": "infra-errors",
+      "question": "How are timedOut, skipped and interrupted test results classified?",
+      "relevantSources": [
+        "services/api/src/runner/classification.ts"
+      ],
+      "rankedSources": [
+        "README.md",
+        "README.md",
+        "services/api/src/runner/integrity.ts",
+        "docs/rag-interview-guide.md"
+      ],
+      "retrievedChunkIds": [
+        "3783e7dce7f9",
+        "4175f863cdee",
+        "8337c6af6179",
+        "9c48fa70e91a"
+      ],
+      "hit": false,
+      "reciprocalRank": 0,
+      "recall": 0,
+      "correctAbstention": null,
+      "telemetry": {
+        "provider": "lexical",
+        "model": "hashed-tokens-v1",
+        "strategy": "vector",
+        "indexFingerprint": "31633601950fd281461d2aad76d06627aa72b51f34ad602e77c66a3a6574e953",
+        "cacheHit": true,
+        "corpusChunks": 100,
+        "retrievalMs": 90,
+        "topK": 4
+      }
+    },
+    {
+      "id": "baseline-gate",
+      "question": "How does validBaseline check the reportHash and testFingerprint?",
+      "relevantSources": [
+        "services/api/src/runner/integrity.ts"
+      ],
+      "rankedSources": [
+        "AGENTS.md",
+        "services/api/src/runner/integrity.ts",
+        "docs/ai-workflow.md",
+        "README.md"
+      ],
+      "retrievedChunkIds": [
+        "696230c5fc79",
+        "8337c6af6179",
+        "320a4780234d",
+        "3783e7dce7f9"
+      ],
+      "hit": true,
+      "reciprocalRank": 0.5,
+      "recall": 1,
+      "correctAbstention": null,
+      "telemetry": {
+        "provider": "lexical",
+        "model": "hashed-tokens-v1",
+        "strategy": "vector",
+        "indexFingerprint": "31633601950fd281461d2aad76d06627aa72b51f34ad602e77c66a3a6574e953",
+        "cacheHit": true,
+        "corpusChunks": 100,
+        "retrievalMs": 97,
+        "topK": 4
+      }
+    },
+    {
+      "id": "reachability",
+      "question": "How does the runner check that MiniShop is reachable before spawning Playwright?",
+      "relevantSources": [
+        "services/api/src/runner/playwrightRunner.ts"
+      ],
+      "rankedSources": [
+        "tests/playwright/cases/case-001-cart-total.spec.ts",
+        "docs/ai-workflow.md",
+        "docs/ai-workflow.md",
+        "tests/playwright/cases/case-001-cart-total.spec.ts"
+      ],
+      "retrievedChunkIds": [
+        "a84c584cff06",
+        "44fd878f97d6",
+        "8bf938783718",
+        "e2276a2ddc65"
+      ],
+      "hit": false,
+      "reciprocalRank": 0,
+      "recall": 0,
+      "correctAbstention": null,
+      "telemetry": {
+        "provider": "lexical",
+        "model": "hashed-tokens-v1",
+        "strategy": "vector",
+        "indexFingerprint": "31633601950fd281461d2aad76d06627aa72b51f34ad602e77c66a3a6574e953",
+        "cacheHit": true,
+        "corpusChunks": 100,
+        "retrievalMs": 111,
+        "topK": 4
+      }
+    },
+    {
+      "id": "evidence-record",
+      "question": "How does attachRun assign evidenceIds and outcome to a TestRun?",
+      "relevantSources": [
+        "services/api/src/runner/record.ts"
+      ],
+      "rankedSources": [
+        "services/api/src/runner/integrity.ts",
+        "services/api/src/runner/record.ts",
+        "services/api/src/runner/integrity.ts",
+        "README.md"
+      ],
+      "retrievedChunkIds": [
+        "633fb7ab865f",
+        "3148dfe3adcc",
+        "8337c6af6179",
+        "80e25aa159e2"
+      ],
+      "hit": true,
+      "reciprocalRank": 0.5,
+      "recall": 1,
+      "correctAbstention": null,
+      "telemetry": {
+        "provider": "lexical",
+        "model": "hashed-tokens-v1",
+        "strategy": "vector",
+        "indexFingerprint": "31633601950fd281461d2aad76d06627aa72b51f34ad602e77c66a3a6574e953",
+        "cacheHit": true,
+        "corpusChunks": 100,
+        "retrievalMs": 64,
+        "topK": 4
+      }
+    },
+    {
+      "id": "offtopic-astronomy",
+      "question": "What is Saturn's orbital eccentricity?",
+      "relevantSources": [],
+      "rankedSources": [],
+      "retrievedChunkIds": [],
+      "hit": false,
+      "reciprocalRank": 0,
+      "recall": null,
+      "correctAbstention": true,
+      "telemetry": {
+        "provider": "lexical",
+        "model": "hashed-tokens-v1",
+        "strategy": "vector",
+        "indexFingerprint": "31633601950fd281461d2aad76d06627aa72b51f34ad602e77c66a3a6574e953",
+        "cacheHit": true,
+        "corpusChunks": 100,
+        "retrievalMs": 47,
+        "topK": 4
+      }
+    },
+    {
+      "id": "offtopic-food",
+      "question": "Which spices belong in authentic biryani?",
+      "relevantSources": [],
+      "rankedSources": [],
+      "retrievedChunkIds": [],
+      "hit": false,
+      "reciprocalRank": 0,
+      "recall": null,
+      "correctAbstention": true,
+      "telemetry": {
+        "provider": "lexical",
+        "model": "hashed-tokens-v1",
+        "strategy": "vector",
+        "indexFingerprint": "31633601950fd281461d2aad76d06627aa72b51f34ad602e77c66a3a6574e953",
+        "cacheHit": true,
+        "corpusChunks": 100,
+        "retrievalMs": 52,
+        "topK": 4
+      }
+    }
+  ]
+}

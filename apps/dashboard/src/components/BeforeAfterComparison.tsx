@@ -27,7 +27,12 @@ export function BeforeAfterComparison({ evidence, verification }: BeforeAfterCom
   let beforeLabel: React.ReactNode;
   let beforeBorder = "#e5e7eb";
   if (beforeRun != null) {
-    if (!beforeRun.passed) {
+    if (beforeRun.outcome === "INFRASTRUCTURE_ERROR") {
+      beforeLabel = <span style={{ color: "#c2410c" }}>Infrastructure error — no reproduced bug</span>;
+      beforeBorder = "#fed7aa";
+    } else if (!beforeRun.outcome) {
+      beforeLabel = <span style={{ color: "#6b7280" }}>Legacy run — proof unavailable</span>;
+    } else if (beforeRun.outcome === "ASSERTION_FAILED") {
       // Test failed = bug was reproduced successfully
       beforeLabel = (
         <>
@@ -52,7 +57,7 @@ export function BeforeAfterComparison({ evidence, verification }: BeforeAfterCom
       afterLabel = (
         <>
           <span style={{ color: "#15803d" }}>✅ PASSED</span>
-          <span style={{ color: "#6b7280", fontWeight: 400, fontSize: 12 }}> — Bug fixed</span>
+          <span style={{ color: "#6b7280", fontWeight: 400, fontSize: 12 }}> — {verification?.status === "VERIFIED" ? "Bug fixed" : "Pass recorded; verification incomplete"}</span>
         </>
       );
       afterBorder = "#bbf7d0";
@@ -60,7 +65,7 @@ export function BeforeAfterComparison({ evidence, verification }: BeforeAfterCom
       afterLabel = (
         <>
           <span style={{ color: "#c2410c" }}>⚠️ FAILED</span>
-          <span style={{ color: "#6b7280", fontWeight: 400, fontSize: 12 }}> — Patch did not fix the bug</span>
+          <span style={{ color: "#6b7280", fontWeight: 400, fontSize: 12 }}> — {afterRun.outcome === "INFRASTRUCTURE_ERROR" ? "Infrastructure error; verification blocked" : "Verification failed"}</span>
         </>
       );
       afterBorder = "#fed7aa";
@@ -71,9 +76,10 @@ export function BeforeAfterComparison({ evidence, verification }: BeforeAfterCom
 
   return (
     <div
+      className="btp-before-after"
       style={{
         display: "grid",
-        gridTemplateColumns: "1fr 1fr",
+        gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
         gap: 20,
       }}
     >
@@ -85,6 +91,7 @@ export function BeforeAfterComparison({ evidence, verification }: BeforeAfterCom
 
       {/* Before panel */}
       <div
+        className="comparison-card"
         style={{
           border: `1px solid ${beforeBorder}`,
           borderRadius: 8,
@@ -113,6 +120,7 @@ export function BeforeAfterComparison({ evidence, verification }: BeforeAfterCom
 
       {/* After panel */}
       <div
+        className="comparison-card"
         style={{
           border: `1px solid ${afterBorder}`,
           borderRadius: 8,

@@ -1,0 +1,169 @@
+{
+  "scope": "Reinspection of saved execution evidence; no new model/browser/check execution",
+  "rows": [
+    {
+      "caseId": "case-005-cart-total-quantities",
+      "runId": "run-06c9c881-96ac-48c1-8f75-20d420098939",
+      "phases": [
+        {
+          "name": "baseline",
+          "outcome": "ASSERTION_FAILED",
+          "hashMatches": true,
+          "identitiesMatch": true,
+          "fingerprintMatchesManifest": true
+        },
+        {
+          "name": "after",
+          "outcome": "PASSED",
+          "hashMatches": true,
+          "identitiesMatch": true,
+          "fingerprintMatchesManifest": true
+        }
+      ],
+      "sameTests": true,
+      "checks": [
+        {
+          "type": "typecheck",
+          "passed": true,
+          "exitCode": 0,
+          "logExists": true
+        },
+        {
+          "type": "build",
+          "passed": true,
+          "exitCode": 0,
+          "logExists": true
+        },
+        {
+          "type": "unit-tests",
+          "passed": true,
+          "exitCode": 0,
+          "logExists": true
+        }
+      ]
+    },
+    {
+      "caseId": "case-002-repeated-item-qty",
+      "runId": "run-11a1ea23-0c5d-42de-9cb2-3229913f0e0f",
+      "phases": [
+        {
+          "name": "baseline",
+          "outcome": "ASSERTION_FAILED",
+          "hashMatches": true,
+          "identitiesMatch": true,
+          "fingerprintMatchesManifest": true
+        },
+        {
+          "name": "after",
+          "outcome": "PASSED",
+          "hashMatches": true,
+          "identitiesMatch": true,
+          "fingerprintMatchesManifest": true
+        }
+      ],
+      "sameTests": true,
+      "checks": [
+        {
+          "type": "typecheck",
+          "passed": true,
+          "exitCode": 0,
+          "logExists": true
+        },
+        {
+          "type": "build",
+          "passed": true,
+          "exitCode": 0,
+          "logExists": true
+        },
+        {
+          "type": "unit-tests",
+          "passed": true,
+          "exitCode": 0,
+          "logExists": true
+        }
+      ]
+    },
+    {
+      "caseId": "case-004-cart-clear",
+      "runId": "run-202c0b03-6022-477a-9f28-6b8625adfdf2",
+      "phases": [
+        {
+          "name": "baseline",
+          "outcome": "ASSERTION_FAILED",
+          "hashMatches": true,
+          "identitiesMatch": true,
+          "fingerprintMatchesManifest": true
+        },
+        {
+          "name": "after",
+          "outcome": "PASSED",
+          "hashMatches": true,
+          "identitiesMatch": true,
+          "fingerprintMatchesManifest": true
+        }
+      ],
+      "sameTests": true,
+      "checks": [
+        {
+          "type": "typecheck",
+          "passed": true,
+          "exitCode": 0,
+          "logExists": true
+        },
+        {
+          "type": "build",
+          "passed": true,
+          "exitCode": 0,
+          "logExists": true
+        },
+        {
+          "type": "unit-tests",
+          "passed": true,
+          "exitCode": 0,
+          "logExists": true
+        }
+      ]
+    },
+    {
+      "caseId": "case-001-cart-total",
+      "runId": "run-d00cd884-c111-456f-b751-65186e854807",
+      "phases": [
+        {
+          "name": "baseline",
+          "outcome": "ASSERTION_FAILED",
+          "hashMatches": true,
+          "identitiesMatch": true,
+          "fingerprintMatchesManifest": true
+        },
+        {
+          "name": "after",
+          "outcome": "PASSED",
+          "hashMatches": true,
+          "identitiesMatch": true,
+          "fingerprintMatchesManifest": true
+        }
+      ],
+      "sameTests": true,
+      "checks": [
+        {
+          "type": "typecheck",
+          "passed": true,
+          "exitCode": 0,
+          "logExists": true
+        },
+        {
+          "type": "build",
+          "passed": true,
+          "exitCode": 0,
+          "logExists": true
+        },
+        {
+          "type": "unit-tests",
+          "passed": true,
+          "exitCode": 0,
+          "logExists": true
+        }
+      ]
+    }
+  ]
+}

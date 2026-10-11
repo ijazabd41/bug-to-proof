@@ -1,0 +1,73 @@
+{
+  "timestamp": "2026-10-09T18:30:48.994Z",
+  "mode": "REAL_BROWSER_REFERENCE_VALIDATION",
+  "datasetHash": "b216b2bcf87bc508c3b0d13573c1ca222e0cba4a179b4dc40afd302ef366e13b",
+  "datasetPath": "data/evals/repair-cases.json",
+  "primarySourceFingerprint": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289",
+  "casesRequested": 3,
+  "casesEvaluated": 3,
+  "allVerified": true,
+  "isComplete": true,
+  "results": [
+    {
+      "id": "case-006-nav-cart-count",
+      "title": "Navbar cart counter shows number of unique items instead of total quantity",
+      "type": "dev",
+      "runId": "ref-eval-case-006-nav-cart-count-1791570522456-n1qk",
+      "testFingerprint": "ab94d3fb8b850bb40e68b678fdb5b3d22dbdc6ced00ebaf09a4d21443a7f2416",
+      "reproductionTest": "tests/playwright/cases/case-006-nav-cart-count.spec.ts",
+      "baselineOutcome": "ASSERTION_FAILED",
+      "baselinePassed": false,
+      "postPatchOutcome": "PASSED",
+      "postPatchPassed": true,
+      "checksCount": 3,
+      "checksPassed": true,
+      "status": "VERIFIED",
+      "evidencePaths": {
+        "baseline": "artifacts/runs/ref-eval-case-006-nav-cart-count-1791570522456-n1qk/baseline",
+        "verification": "artifacts/runs/ref-eval-case-006-nav-cart-count-1791570522456-n1qk/verification",
+        "checks": "artifacts/runs/ref-eval-case-006-nav-cart-count-1791570522456-n1qk/checks"
+      }
+    },
+    {
+      "id": "case-007-promo-discount",
+      "title": "Async promo code application race condition drops concurrent cart updates",
+      "type": "held-out",
+      "runId": "ref-eval-case-007-promo-discount-1791570563931-iy3z",
+      "testFingerprint": "aa0f4b95add3e4ade27e4e56a83338c3bd7b26e595ba86a0b5b97ca1c3bb3b13",
+      "reproductionTest": "tests/playwright/cases/case-007-promo-discount.spec.ts",
+      "baselineOutcome": "ASSERTION_FAILED",
+      "baselinePassed": false,
+      "postPatchOutcome": "PASSED",
+      "postPatchPassed": true,
+      "checksCount": 3,
+      "checksPassed": true,
+      "status": "VERIFIED",
+      "evidencePaths": {
+        "baseline": "artifacts/runs/ref-eval-case-007-promo-discount-1791570563931-iy3z/baseline",
+        "verification": "artifacts/runs/ref-eval-case-007-promo-discount-1791570563931-iy3z/verification",
+        "checks": "artifacts/runs/ref-eval-case-007-promo-discount-1791570563931-iy3z/checks"
+      }
+    },
+    {
+      "id": "case-008-tiered-shipping",
+      "title": "Free shipping threshold defect coordinated across store calculation and Cart component display",
+      "type": "held-out",
+      "runId": "ref-eval-case-008-tiered-shipping-1791570607877-ymez",
+      "testFingerprint": "d5ccb36dd386bc0b9513f46768f9d482c931966c888e998f3de15964a2f126f8",
+      "reproductionTest": "tests/playwright/cases/case-008-tiered-shipping.spec.ts",
+      "baselineOutcome": "ASSERTION_FAILED",
+      "baselinePassed": false,
+      "postPatchOutcome": "PASSED",
+      "postPatchPassed": true,
+      "checksCount": 3,
+      "checksPassed": true,
+      "status": "VERIFIED",
+      "evidencePaths": {
+        "baseline": "artifacts/runs/ref-eval-case-008-tiered-shipping-1791570607877-ymez/baseline",
+        "verification": "artifacts/runs/ref-eval-case-008-tiered-shipping-1791570607877-ymez/verification",
+        "checks": "artifacts/runs/ref-eval-case-008-tiered-shipping-1791570607877-ymez/checks"
+      }
+    }
+  ]
+}

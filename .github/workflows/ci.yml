@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+    branches:
+      - master
+      - main
+
+jobs:
+  validate:
+    name: Validate (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck monorepo
+        run: npm run typecheck
+
+      - name: Unit test suite (persistence, recovery, cleanup, lifecycle)
+        run: npm run test:unit
+
+      - name: Production builds
+        run: npm run build
+
+      - name: Install Playwright Browsers (Linux)
+        if: runner.os == 'Linux'
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Playwright Browsers (Windows)
+        if: runner.os == 'Windows'
+        run: npx playwright install chromium
+
+      - name: Repair Benchmark Evaluation (Simulated Suite)
+        run: npx tsx scripts/evaluate-repair.ts --simulated
+
+      - name: Real Browser Failure-to-Pass Workflow Verification
+        run: npx tsx scripts/verify-real-browser-workflow.ts
+
+      - name: Upload Proof & Verification Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: proof-verification-artifacts-${{ matrix.os }}
+          path: |
+            artifacts/
+            !artifacts/**/node_modules/**
+            !artifacts/**/.git/**
+            !artifacts/**/.env*
+            !artifacts/**/workspace/**
+            !artifacts/**/pristine/**
+          if-no-files-found: warn

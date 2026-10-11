@@ -1,0 +1,268 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-aba2e0c9-6fdd-4430-8568-4734600baeed",
+  "caseId": "case-002-repeated-item-qty",
+  "mode": "simulated",
+  "state": "VERIFIED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [
+    {
+      "attemptNumber": 1,
+      "proposal": {
+        "schemaVersion": "1.0",
+        "proposalId": "prop-sim-case-002-repeated-item-qty",
+        "diagnosis": "The addItem method resets quantity to 1 when a matching existing item is found instead of incrementing quantity by 1.",
+        "assumptions": [
+          "Standard MiniShop cart operations"
+        ],
+        "rationale": "Fix defective logic in src/store/cartStore.ts",
+        "edits": [
+          {
+            "relativePath": "src/store/cartStore.ts",
+            "oldContent": "            i.id === product.id ? { ...i, quantity: 1 } : i",
+            "newContent": "            i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i"
+          }
+        ],
+        "unifiedDiff": "--- src/store/cartStore.ts\n+++ src/store/cartStore.ts\n@@\n-            i.id === product.id ? { ...i, quantity: 1 } : i\n+            i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i\n",
+        "proposalHash": "88c94349f78a58786f151a94a9bf8db22ef3eeece7f1d7cb2074ac9ba604059a",
+        "proposedAt": "2026-10-08T22:40:01.867Z"
+      },
+      "state": "VERIFIED",
+      "startedAt": "2026-10-08T22:40:01.867Z",
+      "stageLatenciesMs": {
+        "baseline": 0,
+        "proposal": 0,
+        "application": 3,
+        "reproduction": 0,
+        "checks": 0
+      },
+      "review": {
+        "reviewId": "rev-577fb2dc-3650-4e44-86df-e8abaa73f59e",
+        "proposalId": "prop-sim-case-002-repeated-item-qty",
+        "proposalHash": "88c94349f78a58786f151a94a9bf8db22ef3eeece7f1d7cb2074ac9ba604059a",
+        "decision": "APPROVED",
+        "reviewedAt": "2026-10-08T22:40:01.879Z"
+      },
+      "postPatchRun": {
+        "outcome": "PASSED",
+        "testFingerprint": "sim-fp",
+        "testIds": [
+          "case-002-repeated-item-qty"
+        ],
+        "runId": "sim-eval-after",
+        "reportHash": "sim-hash",
+        "runAt": "2026-10-08T22:40:01.899Z",
+        "passed": true,
+        "expected": "Expected value matches calculation",
+        "actual": "Expected value matches calculation",
+        "durationMs": 150,
+        "evidenceIds": []
+      },
+      "requiredChecks": [
+        {
+          "checkId": "check-typecheck",
+          "name": "TypeScript compilation",
+          "type": "typecheck",
+          "command": "tsc --noEmit",
+          "passed": true,
+          "exitCode": 0,
+          "durationMs": 320,
+          "output": "Found 0 errors"
+        },
+        {
+          "checkId": "check-build",
+          "name": "Production Vite build",
+          "type": "build",
+          "command": "vite build",
+          "passed": true,
+          "exitCode": 0,
+          "durationMs": 450,
+          "output": "built in 0.4s"
+        },
+        {
+          "checkId": "check-unit-tests",
+          "name": "MiniShop unit tests",
+          "type": "unit-tests",
+          "command": "vitest run apps/minishop",
+          "passed": true,
+          "exitCode": 0,
+          "durationMs": 250,
+          "output": "3 passed"
+        }
+      ],
+      "completedAt": "2026-10-08T22:40:01.913Z"
+    }
+  ],
+  "diagnostics": [],
+  "originalSourceFingerprint": "6b9e4e065a5e9f314f0b33b00ef95c0f0be55005feb108fbd9b3976fa9d662cf",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-aba2e0c9-6fdd-4430-8568-4734600baeed\\workspace",
+  "testFingerprint": "a25a0a4295708656ad116f7978d27683d96c595e5093b1ca9066afa629e9f425",
+  "reproductionTestFile": "tests/playwright/cases/case-002-repeated-item-qty.spec.ts",
+  "requiredChecks": [
+    {
+      "checkId": "check-typecheck",
+      "name": "TypeScript compilation",
+      "type": "typecheck",
+      "command": "tsc --noEmit",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 320,
+      "output": "Found 0 errors"
+    },
+    {
+      "checkId": "check-build",
+      "name": "Production Vite build",
+      "type": "build",
+      "command": "vite build",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 450,
+      "output": "built in 0.4s"
+    },
+    {
+      "checkId": "check-unit-tests",
+      "name": "MiniShop unit tests",
+      "type": "unit-tests",
+      "command": "vitest run apps/minishop",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 250,
+      "output": "3 passed"
+    }
+  ],
+  "events": [
+    {
+      "timestamp": "2026-10-08T22:40:01.831Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot",
+      "data": {
+        "originalSourceFingerprint": "6b9e4e065a5e9f314f0b33b00ef95c0f0be55005feb108fbd9b3976fa9d662cf"
+      }
+    },
+    {
+      "timestamp": "2026-10-08T22:40:01.841Z",
+      "stage": "initialization",
+      "message": "Started isolated MiniShop server on port 5210",
+      "data": {
+        "url": "http://localhost:5210"
+      }
+    },
+    {
+      "timestamp": "2026-10-08T22:40:01.849Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    },
+    {
+      "timestamp": "2026-10-08T22:40:01.857Z",
+      "stage": "baseline",
+      "message": "Valid baseline failure confirmed: Expected value matches calculation vs Defective value received"
+    },
+    {
+      "timestamp": "2026-10-08T22:40:01.864Z",
+      "stage": "investigation",
+      "message": "Investigating source files and generating minimal patch proposal"
+    },
+    {
+      "timestamp": "2026-10-08T22:40:01.872Z",
+      "stage": "proposal",
+      "message": "Generated and validated patch proposal. Awaiting exact review approval.",
+      "data": {
+        "proposalId": "prop-sim-case-002-repeated-item-qty",
+        "proposalHash": "88c94349f78a58786f151a94a9bf8db22ef3eeece7f1d7cb2074ac9ba604059a",
+        "attempt": 1
+      }
+    },
+    {
+      "timestamp": "2026-10-08T22:40:01.883Z",
+      "stage": "application",
+      "message": "Applying reviewed proposal transactionally to isolated target"
+    },
+    {
+      "timestamp": "2026-10-08T22:40:01.891Z",
+      "stage": "application",
+      "message": "Applied edits successfully to src/store/cartStore.ts"
+    },
+    {
+      "timestamp": "2026-10-08T22:40:01.897Z",
+      "stage": "verification",
+      "message": "Running reproduction test against patched target"
+    },
+    {
+      "timestamp": "2026-10-08T22:40:01.907Z",
+      "stage": "checks",
+      "message": "Running required regression checks (typecheck, build, unit tests)"
+    },
+    {
+      "timestamp": "2026-10-08T22:40:01.919Z",
+      "stage": "finalization",
+      "message": "Dynamic AI Repair verified successfully on attempt 1",
+      "data": {
+        "isVerified": true,
+        "allChecksPassed": true
+      }
+    }
+  ],
+  "createdAt": "2026-10-08T22:40:01.828Z",
+  "updatedAt": "2026-10-08T22:40:01.920Z",
+  "targetPort": 5210,
+  "targetUrl": "http://localhost:5210",
+  "baselineRun": {
+    "outcome": "ASSERTION_FAILED",
+    "testFingerprint": "sim-fp",
+    "testIds": [
+      "case-002-repeated-item-qty"
+    ],
+    "runId": "sim-eval-before",
+    "reportHash": "sim-hash",
+    "runAt": "2026-10-08T22:40:01.852Z",
+    "passed": false,
+    "expected": "Expected value matches calculation",
+    "actual": "Defective value received",
+    "durationMs": 150,
+    "evidenceIds": []
+  },
+  "proposal": {
+    "schemaVersion": "1.0",
+    "proposalId": "prop-sim-case-002-repeated-item-qty",
+    "diagnosis": "The addItem method resets quantity to 1 when a matching existing item is found instead of incrementing quantity by 1.",
+    "assumptions": [
+      "Standard MiniShop cart operations"
+    ],
+    "rationale": "Fix defective logic in src/store/cartStore.ts",
+    "edits": [
+      {
+        "relativePath": "src/store/cartStore.ts",
+        "oldContent": "            i.id === product.id ? { ...i, quantity: 1 } : i",
+        "newContent": "            i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i"
+      }
+    ],
+    "unifiedDiff": "--- src/store/cartStore.ts\n+++ src/store/cartStore.ts\n@@\n-            i.id === product.id ? { ...i, quantity: 1 } : i\n+            i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i\n",
+    "proposalHash": "88c94349f78a58786f151a94a9bf8db22ef3eeece7f1d7cb2074ac9ba604059a",
+    "proposedAt": "2026-10-08T22:40:01.867Z"
+  },
+  "review": {
+    "reviewId": "rev-577fb2dc-3650-4e44-86df-e8abaa73f59e",
+    "proposalId": "prop-sim-case-002-repeated-item-qty",
+    "proposalHash": "88c94349f78a58786f151a94a9bf8db22ef3eeece7f1d7cb2074ac9ba604059a",
+    "decision": "APPROVED",
+    "reviewedAt": "2026-10-08T22:40:01.879Z"
+  },
+  "postPatchRun": {
+    "outcome": "PASSED",
+    "testFingerprint": "sim-fp",
+    "testIds": [
+      "case-002-repeated-item-qty"
+    ],
+    "runId": "sim-eval-after",
+    "reportHash": "sim-hash",
+    "runAt": "2026-10-08T22:40:01.899Z",
+    "passed": true,
+    "expected": "Expected value matches calculation",
+    "actual": "Expected value matches calculation",
+    "durationMs": 150,
+    "evidenceIds": []
+  },
+  "stopReason": "Patch passed reproduction test and all required regression checks with unchanged test identities.",
+  "completedAt": "2026-10-08T22:40:01.913Z"
+}

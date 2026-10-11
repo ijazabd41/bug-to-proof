@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-356e3c17-0003-4fe9-ac23-59539769dbf7",
+  "caseId": "case-002-repeated-item-qty",
+  "mode": "simulated",
+  "state": "BLOCKED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [],
+  "diagnostics": [],
+  "originalSourceFingerprint": "6b9e4e065a5e9f314f0b33b00ef95c0f0be55005feb108fbd9b3976fa9d662cf",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-356e3c17-0003-4fe9-ac23-59539769dbf7\\workspace",
+  "testFingerprint": "a25a0a4295708656ad116f7978d27683d96c595e5093b1ca9066afa629e9f425",
+  "reproductionTestFile": "tests/playwright/cases/case-002-repeated-item-qty.spec.ts",
+  "requiredChecks": [],
+  "events": [
+    {
+      "timestamp": "2026-10-09T02:17:51.760Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "6b9e4e065a5e9f314f0b33b00ef95c0f0be55005feb108fbd9b3976fa9d662cf",
+        "url": "http://localhost:5210"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T02:17:51.791Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    }
+  ],
+  "createdAt": "2026-10-09T02:17:51.755Z",
+  "updatedAt": "2026-10-09T02:17:51.806Z",
+  "error": "testFingerprint is not defined",
+  "completedAt": "2026-10-09T02:17:51.805Z"
+}

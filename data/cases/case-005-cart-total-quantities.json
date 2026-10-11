@@ -1,0 +1,22 @@
+{
+  "id": "case-005-cart-total-quantities",
+  "title": "Cart total calculation ignores item quantities",
+  "description": "When items have quantity > 1, the total sums item prices without multiplying by quantity.",
+  "status": "READY_TO_REPRODUCE",
+  "createdAt": "2026-10-09T13:12:51.543Z",
+  "updatedAt": "2026-10-09T13:12:51.543Z",
+  "reproduction": {
+    "preconditions": [],
+    "steps": [
+      "Execute reproduction test in isolated environment"
+    ],
+    "expected": "All calculations and assertions pass",
+    "actual": "Assertion failure on defective code",
+    "testFile": "tests/playwright/cases/case-005-cart-total-quantities.spec.ts",
+    "lastRun": null
+  },
+  "patch": null,
+  "verification": null,
+  "evidence": [],
+  "rootCauseExplanation": null
+}

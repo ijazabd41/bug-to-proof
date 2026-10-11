@@ -1,0 +1,241 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-3af9b3ab-41d1-473a-bd6e-b84c63fd4ca3",
+  "caseId": "case-008-tiered-shipping",
+  "mode": "simulated",
+  "state": "VERIFIED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [
+    {
+      "attemptNumber": 1,
+      "proposal": {
+        "schemaVersion": "1.0",
+        "proposalId": "prop-sim-case-008-tiered-shipping",
+        "diagnosis": "cartStore checks total > 50 strictly instead of >= 50 for free shipping, and Cart.tsx hardcodes $5.00 display instead of referencing shippingFee.",
+        "assumptions": [
+          "Standard MiniShop cart operations"
+        ],
+        "rationale": "Fix defective logic in src/store/cartStore.ts, src/components/Cart.tsx",
+        "edits": [
+          {
+            "relativePath": "src/store/cartStore.ts",
+            "oldContent": "  shipping: () => (get().total() > 50 || get().items.length === 0 ? 0 : 5),",
+            "newContent": "  shipping: () => (get().total() >= 50 || get().items.length === 0 ? 0 : 5),"
+          },
+          {
+            "relativePath": "src/components/Cart.tsx",
+            "oldContent": "            <span data-testid=\"shipping-fee\">$5.00</span>",
+            "newContent": "            <span data-testid=\"shipping-fee\">${shippingFee.toFixed(2)}</span>"
+          }
+        ],
+        "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -62,1 +62,1 @@\n-  shipping: () => (get().total() > 50 || get().items.length === 0 ? 0 : 5),\n+  shipping: () => (get().total() >= 50 || get().items.length === 0 ? 0 : 5),\n--- a/src/components/Cart.tsx\n+++ b/src/components/Cart.tsx\n@@ -93,1 +93,1 @@\n-            <span data-testid=\"shipping-fee\">$5.00</span>\n+            <span data-testid=\"shipping-fee\">${shippingFee.toFixed(2)}</span>\n",
+        "proposalHash": "0a4b23d65bd2831dd837584abcb12e64e7f20777dda146fc02ebe8ba36b78624",
+        "proposedAt": "2026-10-10T16:36:01.049Z"
+      },
+      "state": "VERIFIED",
+      "startedAt": "2026-10-10T16:36:01.022Z",
+      "stageLatenciesMs": {
+        "baseline": 11,
+        "proposal": 1,
+        "postPatchReproduction": 11,
+        "regressionChecks": 1
+      },
+      "completedAt": "2026-10-10T16:36:01.777Z"
+    }
+  ],
+  "inputs": {
+    "caseSnapshot": {
+      "id": "case-008-tiered-shipping",
+      "title": "Free shipping threshold defect coordinated across store calculation and Cart component display",
+      "description": "Free shipping threshold for orders >= $50 is not applied due to strict inequality in cartStore and hardcoded fee display in Cart component.",
+      "status": "READY_TO_REPRODUCE",
+      "createdAt": "2026-10-10T16:36:00.588Z",
+      "updatedAt": "2026-10-10T16:36:00.588Z",
+      "reproduction": {
+        "preconditions": [],
+        "steps": [
+          "Execute reproduction test in isolated environment"
+        ],
+        "expected": "All calculations and assertions pass",
+        "actual": "Assertion failure on defective code",
+        "testFile": "tests/playwright/cases/case-008-tiered-shipping.spec.ts",
+        "lastRun": null
+      },
+      "patch": null,
+      "verification": null,
+      "evidence": [],
+      "rootCauseExplanation": null
+    },
+    "reproductionTest": {
+      "filePath": "tests/playwright/cases/case-008-tiered-shipping.spec.ts",
+      "content": "import { test, expect } from \"@playwright/test\";\nimport { MiniShopPage } from \"./helpers/minishop\";\n\n/**\n * Case 008 — Coordinated multi-file defect in tiered shipping calculation and display\n *\n * Expected: Adding 5 Keyboards ($10 x 5 = $50.00) meets the $50 free shipping threshold.\n * Shipping fee should display \"$0.00\".\n * Actual (buggy): Shipping displays \"$5.00\" because cartStore calculates shipping > 50 strictly\n * and Cart component hardcodes the fee display.\n */\n\nasync function assertShipping(actual: string, expected: string, message: string) {\n  if (actual !== expected) {\n    await test.info().attach(\"btp-assertion\", {\n      body: Buffer.from(JSON.stringify({ actual, expected })),\n      contentType: \"application/json\",\n    });\n  }\n  expect(actual, message).toBe(expected);\n}\n\ntest.describe(\"Case 008 — Coordinated tiered shipping calculation and display\", () => {\n  test(\"shipping fee should be $0.00 for orders of $50.00 or more\", async ({ page }) => {\n    const shop = new MiniShopPage(page);\n    await shop.navigate();\n\n    // Add Keyboard 5 times ($10.00 x 5 = $50.00)\n    for (let i = 0; i < 5; i++) {\n      await shop.addToCart(1);\n    }\n\n    await shop.takeScreenshot(\"screenshot\");\n\n    const shippingEl = page.getByTestId(\"shipping-fee\");\n    await shippingEl.waitFor({ state: \"visible\" });\n    const shippingFee = (await shippingEl.innerText()).trim();\n\n    await assertShipping(\n      shippingFee,\n      \"$0.00\",\n      \"BTP_ASSERTION: Shipping fee should be $0.00 (free shipping) on $50.00 total\"\n    );\n  });\n});\n",
+      "fingerprint": "d5ccb36dd386bc0b9513f46768f9d482c931966c888e998f3de15964a2f126f8"
+    }
+  },
+  "diagnostics": [],
+  "originalSourceFingerprint": "751d5180da726146ed3dd8897bd41f577b90d4df16178db95d53548f335cc1b9",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-3af9b3ab-41d1-473a-bd6e-b84c63fd4ca3\\workspace",
+  "testFingerprint": "d5ccb36dd386bc0b9513f46768f9d482c931966c888e998f3de15964a2f126f8",
+  "reproductionTestFile": "tests/playwright/cases/case-008-tiered-shipping.spec.ts",
+  "requiredChecks": [
+    {
+      "checkId": "check-typecheck",
+      "name": "TypeScript compilation",
+      "type": "typecheck",
+      "command": "tsc --noEmit",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 320,
+      "output": "Found 0 errors"
+    },
+    {
+      "checkId": "check-build",
+      "name": "Production Vite build",
+      "type": "build",
+      "command": "vite build",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 450,
+      "output": "built in 0.4s"
+    },
+    {
+      "checkId": "check-unit-tests",
+      "name": "MiniShop unit tests",
+      "type": "unit-tests",
+      "command": "vitest run apps/minishop",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 250,
+      "output": "3 passed"
+    }
+  ],
+  "events": [
+    {
+      "timestamp": "2026-10-10T16:36:00.607Z",
+      "stage": "initialization",
+      "message": "Repair run initialized and queued for background execution"
+    },
+    {
+      "timestamp": "2026-10-10T16:36:00.912Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "751d5180da726146ed3dd8897bd41f577b90d4df16178db95d53548f335cc1b9",
+        "url": "http://localhost:5210"
+      }
+    },
+    {
+      "timestamp": "2026-10-10T16:36:00.971Z",
+      "stage": "baseline",
+      "message": "Valid baseline failure confirmed: Expected value matches calculation vs Defective value received"
+    },
+    {
+      "timestamp": "2026-10-10T16:36:01.013Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-10T16:36:01.099Z",
+      "stage": "proposal",
+      "message": "Generated and validated patch proposal. Awaiting exact review approval.",
+      "data": {
+        "proposalId": "prop-sim-case-008-tiered-shipping",
+        "proposalHash": "0a4b23d65bd2831dd837584abcb12e64e7f20777dda146fc02ebe8ba36b78624",
+        "attempt": 1
+      }
+    },
+    {
+      "timestamp": "2026-10-10T16:36:01.442Z",
+      "stage": "patch_applied",
+      "message": "Exact reviewed patch applied transactionally to candidate workspace",
+      "data": {
+        "proposalId": "prop-sim-case-008-tiered-shipping",
+        "proposalHash": "0a4b23d65bd2831dd837584abcb12e64e7f20777dda146fc02ebe8ba36b78624",
+        "modifiedFiles": [
+          "src/store/cartStore.ts",
+          "src/components/Cart.tsx"
+        ],
+        "expectedPatchedFingerprint": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289"
+      }
+    },
+    {
+      "timestamp": "2026-10-10T16:36:01.484Z",
+      "stage": "verification",
+      "message": "Post-patch reproduction outcome: PASSED (passed: true)"
+    },
+    {
+      "timestamp": "2026-10-10T16:36:01.618Z",
+      "stage": "regression",
+      "message": "All 3 candidate regression checks passed cleanly."
+    },
+    {
+      "timestamp": "2026-10-10T16:36:01.779Z",
+      "stage": "completion",
+      "message": "Run finalized with status: VERIFIED (All verification gates and regression checks passed cleanly.)"
+    }
+  ],
+  "createdAt": "2026-10-10T16:36:00.607Z",
+  "updatedAt": "2026-10-10T16:36:01.779Z",
+  "baselineRun": {
+    "outcome": "ASSERTION_FAILED",
+    "testFingerprint": "d5ccb36dd386bc0b9513f46768f9d482c931966c888e998f3de15964a2f126f8",
+    "testIds": [
+      "case-008-tiered-shipping.spec.ts:Free shipping threshold defect coordinated across store calculation and Cart component display:chromium"
+    ],
+    "runId": "sim-eval-before",
+    "reportHash": "sim-hash",
+    "runAt": "2026-10-10T16:36:00.954Z",
+    "passed": false,
+    "expected": "Expected value matches calculation",
+    "actual": "Defective value received",
+    "durationMs": 150,
+    "evidenceIds": []
+  },
+  "proposal": {
+    "schemaVersion": "1.0",
+    "proposalId": "prop-sim-case-008-tiered-shipping",
+    "diagnosis": "cartStore checks total > 50 strictly instead of >= 50 for free shipping, and Cart.tsx hardcodes $5.00 display instead of referencing shippingFee.",
+    "assumptions": [
+      "Standard MiniShop cart operations"
+    ],
+    "rationale": "Fix defective logic in src/store/cartStore.ts, src/components/Cart.tsx",
+    "edits": [
+      {
+        "relativePath": "src/store/cartStore.ts",
+        "oldContent": "  shipping: () => (get().total() > 50 || get().items.length === 0 ? 0 : 5),",
+        "newContent": "  shipping: () => (get().total() >= 50 || get().items.length === 0 ? 0 : 5),"
+      },
+      {
+        "relativePath": "src/components/Cart.tsx",
+        "oldContent": "            <span data-testid=\"shipping-fee\">$5.00</span>",
+        "newContent": "            <span data-testid=\"shipping-fee\">${shippingFee.toFixed(2)}</span>"
+      }
+    ],
+    "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -62,1 +62,1 @@\n-  shipping: () => (get().total() > 50 || get().items.length === 0 ? 0 : 5),\n+  shipping: () => (get().total() >= 50 || get().items.length === 0 ? 0 : 5),\n--- a/src/components/Cart.tsx\n+++ b/src/components/Cart.tsx\n@@ -93,1 +93,1 @@\n-            <span data-testid=\"shipping-fee\">$5.00</span>\n+            <span data-testid=\"shipping-fee\">${shippingFee.toFixed(2)}</span>\n",
+    "proposalHash": "0a4b23d65bd2831dd837584abcb12e64e7f20777dda146fc02ebe8ba36b78624",
+    "proposedAt": "2026-10-10T16:36:01.049Z"
+  },
+  "review": {
+    "proposalId": "prop-sim-case-008-tiered-shipping",
+    "proposalHash": "0a4b23d65bd2831dd837584abcb12e64e7f20777dda146fc02ebe8ba36b78624",
+    "decision": "APPROVED"
+  },
+  "postPatchRun": {
+    "outcome": "PASSED",
+    "testFingerprint": "d5ccb36dd386bc0b9513f46768f9d482c931966c888e998f3de15964a2f126f8",
+    "testIds": [
+      "case-008-tiered-shipping.spec.ts:Free shipping threshold defect coordinated across store calculation and Cart component display:chromium"
+    ],
+    "runId": "sim-eval-after",
+    "reportHash": "sim-hash",
+    "runAt": "2026-10-10T16:36:01.481Z",
+    "passed": true,
+    "expected": "Expected value matches calculation",
+    "actual": "Expected value matches calculation",
+    "durationMs": 150,
+    "evidenceIds": []
+  },
+  "stopReason": "All verification gates and regression checks passed cleanly.",
+  "completedAt": "2026-10-10T16:36:01.777Z"
+}

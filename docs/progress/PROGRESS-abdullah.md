@@ -1,4 +1,6 @@
 # Abdullah Ijaz — Progress Tracker
+
+> **Archive notice:** Historical team tracker retained for attribution. Use [`arbitrary-bug-reproduction.md`](arbitrary-bug-reproduction.md) for active work.
 ### Track: Node.js API + LLM · Branch: `feature/api`
 
 > Own: `services/api/`, `packages/shared-types/` (types already frozen), `data/cases/`

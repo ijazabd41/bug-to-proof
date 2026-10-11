@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-35a5778b-403a-4ad9-a519-2d990395a95a",
+  "caseId": "case-test-async-start",
+  "mode": "dynamic",
+  "state": "BLOCKED",
+  "attempt": 1,
+  "maxAttempts": 1,
+  "originalSourceFingerprint": "",
+  "targetSnapshotDir": "",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "testFingerprint": "71ded93e74881cb66804a7ac8dbacd2264d095f1f790aa4ab743e9a8533153c9",
+  "createdAt": "2026-10-09T10:55:37.942Z",
+  "updatedAt": "2026-10-09T10:55:38.291Z",
+  "attempts": [],
+  "diagnostics": [],
+  "requiredChecks": [],
+  "events": [
+    {
+      "timestamp": "2026-10-09T10:55:37.942Z",
+      "stage": "initialization",
+      "message": "Repair run initialized and queued for background execution"
+    }
+  ],
+  "error": "ENOENT: no such file or directory, copyfile 'D:\\bug-to-proof\\apps\\minishop\\vite.config.ts.timestamp-1791543337092-6a61f89a34df4.mjs' -> 'D:\\bug-to-proof\\artifacts\\runs\\run-35a5778b-403a-4ad9-a519-2d990395a95a\\workspace\\apps\\minishop\\vite.config.ts.timestamp-1791543337092-6a61f89a34df4.mjs'",
+  "completedAt": "2026-10-09T10:55:38.291Z"
+}

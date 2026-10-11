@@ -1,0 +1,210 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-9a518f84-8240-476d-ae5a-d758b077b718",
+  "caseId": "case-004-cart-clear",
+  "mode": "simulated",
+  "state": "VERIFIED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [
+    {
+      "attemptNumber": 1,
+      "proposal": {
+        "schemaVersion": "1.0",
+        "proposalId": "prop-sim-case-004-cart-clear",
+        "diagnosis": "The clearCart method drops only the first item using slice(1) instead of setting items to an empty array.",
+        "assumptions": [
+          "Standard MiniShop cart operations"
+        ],
+        "rationale": "Fix defective logic in src/store/cartStore.ts",
+        "edits": [
+          {
+            "relativePath": "src/store/cartStore.ts",
+            "oldContent": "  clearCart: () => set((state) => ({ items: state.items.slice(1) })),",
+            "newContent": "  clearCart: () => set({ items: [] }),"
+          }
+        ],
+        "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -36,1 +36,1 @@\n-  clearCart: () => set((state) => ({ items: state.items.slice(1) })),\n+  clearCart: () => set({ items: [] }),\n",
+        "proposalHash": "9aad4c721b20ca6f052a856aea21930302749fbd9c72bfec06a94f73de35b647",
+        "proposedAt": "2026-10-09T02:18:40.580Z"
+      },
+      "state": "VERIFIED",
+      "startedAt": "2026-10-09T02:18:40.568Z",
+      "stageLatenciesMs": {
+        "baseline": 5,
+        "proposal": 1,
+        "postPatchReproduction": 5,
+        "regressionChecks": 0
+      },
+      "completedAt": "2026-10-09T02:18:40.803Z"
+    }
+  ],
+  "diagnostics": [],
+  "originalSourceFingerprint": "7043632c87950456cf2bfc4b1a4a43f36d8a2ac71c8e3f58c59bf27eb6bb80a6",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-9a518f84-8240-476d-ae5a-d758b077b718\\workspace",
+  "testFingerprint": "5b810831c91bf57bc509f17ba6672a18a55d4e46c3b4a34d6353218e34a0fa2c",
+  "reproductionTestFile": "tests/playwright/cases/case-004-cart-clear.spec.ts",
+  "requiredChecks": [
+    {
+      "checkId": "check-typecheck",
+      "name": "TypeScript compilation",
+      "type": "typecheck",
+      "command": "tsc --noEmit",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 320,
+      "output": "Found 0 errors"
+    },
+    {
+      "checkId": "check-build",
+      "name": "Production Vite build",
+      "type": "build",
+      "command": "vite build",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 450,
+      "output": "built in 0.4s"
+    },
+    {
+      "checkId": "check-unit-tests",
+      "name": "MiniShop unit tests",
+      "type": "unit-tests",
+      "command": "vitest run apps/minishop",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 250,
+      "output": "3 passed"
+    }
+  ],
+  "events": [
+    {
+      "timestamp": "2026-10-09T02:18:40.504Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "7043632c87950456cf2bfc4b1a4a43f36d8a2ac71c8e3f58c59bf27eb6bb80a6",
+        "url": "http://localhost:5210"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T02:18:40.522Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    },
+    {
+      "timestamp": "2026-10-09T02:18:40.532Z",
+      "stage": "baseline",
+      "message": "Valid baseline failure confirmed: Expected value matches calculation vs Defective value received"
+    },
+    {
+      "timestamp": "2026-10-09T02:18:40.558Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T02:18:40.599Z",
+      "stage": "proposal",
+      "message": "Generated and validated patch proposal. Awaiting exact review approval.",
+      "data": {
+        "proposalId": "prop-sim-case-004-cart-clear",
+        "proposalHash": "9aad4c721b20ca6f052a856aea21930302749fbd9c72bfec06a94f73de35b647",
+        "attempt": 1
+      }
+    },
+    {
+      "timestamp": "2026-10-09T02:18:40.697Z",
+      "stage": "patch_applied",
+      "message": "Exact reviewed patch applied transactionally to candidate workspace",
+      "data": {
+        "proposalId": "prop-sim-case-004-cart-clear",
+        "proposalHash": "9aad4c721b20ca6f052a856aea21930302749fbd9c72bfec06a94f73de35b647",
+        "modifiedFiles": [
+          "src/store/cartStore.ts"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-10-09T02:18:40.722Z",
+      "stage": "verification",
+      "message": "Running post-patch reproduction verification (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T02:18:40.741Z",
+      "stage": "verification",
+      "message": "Post-patch reproduction outcome: PASSED (passed: true)"
+    },
+    {
+      "timestamp": "2026-10-09T02:18:40.771Z",
+      "stage": "regression",
+      "message": "Running required candidate regression checks (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T02:18:40.776Z",
+      "stage": "regression",
+      "message": "All 3 candidate regression checks passed cleanly."
+    },
+    {
+      "timestamp": "2026-10-09T02:18:40.805Z",
+      "stage": "completion",
+      "message": "Run finalized with status: VERIFIED (All verification gates and regression checks passed cleanly.)"
+    }
+  ],
+  "createdAt": "2026-10-09T02:18:40.495Z",
+  "updatedAt": "2026-10-09T02:18:40.809Z",
+  "baselineRun": {
+    "outcome": "ASSERTION_FAILED",
+    "testFingerprint": "5b810831c91bf57bc509f17ba6672a18a55d4e46c3b4a34d6353218e34a0fa2c",
+    "testIds": [
+      "case-004-cart-clear"
+    ],
+    "runId": "sim-eval-before",
+    "reportHash": "sim-hash",
+    "runAt": "2026-10-09T02:18:40.530Z",
+    "passed": false,
+    "expected": "Expected value matches calculation",
+    "actual": "Defective value received",
+    "durationMs": 150,
+    "evidenceIds": []
+  },
+  "proposal": {
+    "schemaVersion": "1.0",
+    "proposalId": "prop-sim-case-004-cart-clear",
+    "diagnosis": "The clearCart method drops only the first item using slice(1) instead of setting items to an empty array.",
+    "assumptions": [
+      "Standard MiniShop cart operations"
+    ],
+    "rationale": "Fix defective logic in src/store/cartStore.ts",
+    "edits": [
+      {
+        "relativePath": "src/store/cartStore.ts",
+        "oldContent": "  clearCart: () => set((state) => ({ items: state.items.slice(1) })),",
+        "newContent": "  clearCart: () => set({ items: [] }),"
+      }
+    ],
+    "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -36,1 +36,1 @@\n-  clearCart: () => set((state) => ({ items: state.items.slice(1) })),\n+  clearCart: () => set({ items: [] }),\n",
+    "proposalHash": "9aad4c721b20ca6f052a856aea21930302749fbd9c72bfec06a94f73de35b647",
+    "proposedAt": "2026-10-09T02:18:40.580Z"
+  },
+  "review": {
+    "proposalId": "prop-sim-case-004-cart-clear",
+    "proposalHash": "9aad4c721b20ca6f052a856aea21930302749fbd9c72bfec06a94f73de35b647",
+    "decision": "APPROVED"
+  },
+  "postPatchRun": {
+    "outcome": "PASSED",
+    "testFingerprint": "5b810831c91bf57bc509f17ba6672a18a55d4e46c3b4a34d6353218e34a0fa2c",
+    "testIds": [
+      "case-004-cart-clear"
+    ],
+    "runId": "sim-eval-after",
+    "reportHash": "sim-hash",
+    "runAt": "2026-10-09T02:18:40.738Z",
+    "passed": true,
+    "expected": "Expected value matches calculation",
+    "actual": "Expected value matches calculation",
+    "durationMs": 150,
+    "evidenceIds": []
+  },
+  "stopReason": "All verification gates and regression checks passed cleanly.",
+  "completedAt": "2026-10-09T02:18:40.803Z"
+}

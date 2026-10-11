@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-fe37bd81-6d1e-4664-a2bb-d950fb086c33",
+  "caseId": "case-003-item-removal",
+  "mode": "simulated",
+  "state": "BLOCKED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [],
+  "diagnostics": [],
+  "originalSourceFingerprint": "82bda4eb468077e1e6183a7776eb0c9a7f040d1b25612cfda5f3a77579ca303f",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-fe37bd81-6d1e-4664-a2bb-d950fb086c33\\workspace",
+  "testFingerprint": "b6526dc799cdd281e73df70ff4590ade4e34ebccbb3ae71e25a96e6a3e1a0b53",
+  "reproductionTestFile": "tests/playwright/cases/case-003-item-removal.spec.ts",
+  "requiredChecks": [],
+  "events": [
+    {
+      "timestamp": "2026-10-09T00:29:59.750Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "82bda4eb468077e1e6183a7776eb0c9a7f040d1b25612cfda5f3a77579ca303f",
+        "url": "http://localhost:5210"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T00:29:59.770Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    }
+  ],
+  "createdAt": "2026-10-09T00:29:59.746Z",
+  "updatedAt": "2026-10-09T00:29:59.780Z",
+  "error": "testFingerprint is not defined",
+  "completedAt": "2026-10-09T00:29:59.780Z"
+}

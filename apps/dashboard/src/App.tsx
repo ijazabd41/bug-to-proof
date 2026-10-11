@@ -1,40 +1,23 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route, NavLink, Link } from "react-router-dom";
 import { CasesPage } from "./pages/CasesPage";
 import { CaseDetailPage } from "./pages/CaseDetailPage";
+import { Icon } from "./components/Icon";
+import "./styles.css";
 
 export default function App() {
-  return (
-    <BrowserRouter>
-      <div style={{ minHeight: "100vh", background: "#f7f8fa" }}>
-        <header
-          style={{
-            background: "#fff",
-            borderBottom: "1px solid #e5e7eb",
-            padding: "0 24px",
-            height: 56,
-            display: "flex",
-            alignItems: "center",
-            gap: 16,
-          }}
-        >
-          <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
-            <span style={{ fontWeight: 700, fontSize: 16, color: "#1f2328" }}>
-              🔍 Bug-to-Proof
-            </span>
-          </Link>
-          <span style={{ fontSize: 12, color: "#9ca3af" }}>
-            Reported → Reproduced → Patched → Verified
-          </span>
-        </header>
-
-        <main style={{ maxWidth: 900, margin: "0 auto", padding: "32px 24px" }}>
-          <Routes>
-            <Route path="/" element={<CasesPage />} />
-            <Route path="/cases/:id" element={<CaseDetailPage />} />
-          </Routes>
-        </main>
-      </div>
-    </BrowserRouter>
-  );
+  return <BrowserRouter><div className="app-shell">
+    <a className="skip-link" href="#main-content">Skip to content</a>
+    <aside className="sidebar">
+      <Link to="/" className="brand"><span className="brand-mark"><Icon name="proof" /></span><span>Bug-to-Proof</span></Link>
+      <div className="sidebar-label">WORKSPACE</div>
+      <nav aria-label="Main navigation"><NavLink to="/" className="nav-item"><Icon name="cases" />Bug cases<Icon name="arrow" /></NavLink></nav>
+      <div className="sidebar-guide"><span className="sidebar-label">THE WORKFLOW</span><p>Every fix starts<br />with a proven failure.</p><ol><li>Report the behavior</li><li>Reproduce the failure</li><li>Review the patch</li><li>Verify with evidence</li></ol></div>
+      <div className="sidebar-footer"><span className="local-dot" /><div><strong>Local workspace</strong><span>Evidence-backed repair</span></div></div>
+    </aside>
+    <div className="workspace">
+      <header className="workspace-bar"><span><Icon name="cases" />Engineering workspace</span><span className="workspace-note"><Icon name="proof" />Proof over promises</span></header>
+      <main id="main-content" className="main-content" tabIndex={-1}><Routes><Route path="/" element={<CasesPage />} /><Route path="/cases/:id" element={<CaseDetailPage />} /></Routes></main>
+    </div>
+  </div></BrowserRouter>;
 }

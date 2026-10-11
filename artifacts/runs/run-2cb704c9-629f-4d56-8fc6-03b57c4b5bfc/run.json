@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-2cb704c9-629f-4d56-8fc6-03b57c4b5bfc",
+  "caseId": "case-test-lifecycle",
+  "mode": "simulated",
+  "state": "CANCELLED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [],
+  "diagnostics": [],
+  "originalSourceFingerprint": "520562cf00f42f5037f21bd2fcfef890d522891cc720c867398dd6397a0d5d26",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-2cb704c9-629f-4d56-8fc6-03b57c4b5bfc\\workspace",
+  "testFingerprint": "71ded93e74881cb66804a7ac8dbacd2264d095f1f790aa4ab743e9a8533153c9",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "requiredChecks": [],
+  "events": [
+    {
+      "timestamp": "2026-10-09T10:50:02.912Z",
+      "stage": "initialization",
+      "message": "Repair run initialized and queued for background execution"
+    },
+    {
+      "timestamp": "2026-10-09T10:50:03.769Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "520562cf00f42f5037f21bd2fcfef890d522891cc720c867398dd6397a0d5d26",
+        "url": "http://localhost:5199"
+      }
+    },
+    {
+      "timestamp": "2026-10-09T10:50:04.102Z",
+      "stage": "baseline",
+      "message": "Running reproduction test against unmodified target source"
+    },
+    {
+      "timestamp": "2026-10-09T10:50:04.275Z",
+      "stage": "baseline",
+      "message": "Valid baseline failure confirmed: Pass vs Fail"
+    },
+    {
+      "timestamp": "2026-10-09T10:50:04.483Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-09T10:50:04.654Z",
+      "stage": "cancellation",
+      "message": "Run cancelled: Cancelled by user during proposal generation"
+    }
+  ],
+  "createdAt": "2026-10-09T10:50:02.912Z",
+  "updatedAt": "2026-10-09T10:50:04.654Z",
+  "baselineRun": {
+    "outcome": "ASSERTION_FAILED",
+    "testFingerprint": "71ded93e74881cb66804a7ac8dbacd2264d095f1f790aa4ab743e9a8533153c9",
+    "testIds": [
+      "tests/playwright/cases/case-001-cart-total.spec.ts:cart total:chromium"
+    ],
+    "runId": "run-base",
+    "reportHash": "rep-hash",
+    "runAt": "2026-10-09T10:50:04.209Z",
+    "passed": false,
+    "expected": "Pass",
+    "actual": "Fail",
+    "durationMs": 100,
+    "evidenceIds": []
+  },
+  "stopReason": "Cancelled by user during proposal generation",
+  "completedAt": "2026-10-09T10:50:04.633Z"
+}

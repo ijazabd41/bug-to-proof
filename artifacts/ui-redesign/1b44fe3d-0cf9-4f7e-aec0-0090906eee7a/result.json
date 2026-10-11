@@ -1,0 +1,208 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\bug-to-proof\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "tests/playwright/playwright.config.ts",
+      "tests/playwright/cases/ui-smoke-1b44fe3d-0cf9-4f7e-aec0-0090906eee7a.spec.ts",
+      "--reporter=json",
+      "--output",
+      "D:\\bug-to-proof\\artifacts\\ui-redesign\\1b44fe3d-0cf9-4f7e-aec0-0090906eee7a"
+    ],
+    "configFile": "D:\\bug-to-proof\\tests\\playwright\\playwright.config.ts",
+    "rootDir": "D:/bug-to-proof/tests/playwright/cases",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/bug-to-proof/artifacts/ui-redesign/1b44fe3d-0cf9-4f7e-aec0-0090906eee7a",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "D:/bug-to-proof/tests/playwright/cases",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "ui-smoke-1b44fe3d-0cf9-4f7e-aec0-0090906eee7a.spec.ts",
+      "file": "ui-smoke-1b44fe3d-0cf9-4f7e-aec0-0090906eee7a.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "desktop case workspace and report submission",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2830,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T19:39:57.523Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "desktop-overview",
+                      "contentType": "image/png",
+                      "path": "D:\\bug-to-proof\\artifacts\\ui-redesign\\1b44fe3d-0cf9-4f7e-aec0-0090906eee7a\\ui-smoke-1b44fe3d-0cf9-4f7-8e091-space-and-report-submission-chromium\\attachments\\desktop-overview-d1935280b5e21d52d07bc7a2471b0ab47d311223.png"
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\bug-to-proof\\artifacts\\ui-redesign\\1b44fe3d-0cf9-4f7e-aec0-0090906eee7a\\ui-smoke-1b44fe3d-0cf9-4f7-8e091-space-and-report-submission-chromium\\test-finished-1.png"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\bug-to-proof\\artifacts\\ui-redesign\\1b44fe3d-0cf9-4f7e-aec0-0090906eee7a\\ui-smoke-1b44fe3d-0cf9-4f7-8e091-space-and-report-submission-chromium\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9652cc572458a7fc3589-f0f66c3badea8871a2d2",
+          "file": "ui-smoke-1b44fe3d-0cf9-4f7e-aec0-0090906eee7a.spec.ts",
+          "line": 12,
+          "column": 5
+        },
+        {
+          "title": "real case evidence on desktop and mobile",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 15878,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.case-card').first()\nExpected: visible\nReceived: hidden\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('.case-card').first() with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('.case-card').first()\u001b[22m\n\u001b[2m    32 × locator resolved to <a class=\"case-card\" href=\"/cases/case-001-cart-total\">…</a>\u001b[22m\n\u001b[2m       - unexpected value \"hidden\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.case-card').first()\nExpected: visible\nReceived: hidden\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('.case-card').first() with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('.case-card').first()\u001b[22m\n\u001b[2m    32 × locator resolved to <a class=\"case-card\" href=\"/cases/case-001-cart-total\">…</a>\u001b[22m\n\u001b[2m       - unexpected value \"hidden\"\u001b[22m\n\n    at D:\\bug-to-proof\\tests\\playwright\\cases\\ui-smoke-1b44fe3d-0cf9-4f7e-aec0-0090906eee7a.spec.ts:68:52",
+                    "location": {
+                      "file": "D:\\bug-to-proof\\tests\\playwright\\cases\\ui-smoke-1b44fe3d-0cf9-4f7e-aec0-0090906eee7a.spec.ts",
+                      "column": 52,
+                      "line": 68
+                    },
+                    "snippet": "  66 | test(\"real case evidence on desktop and mobile\", async ({ page }, testInfo) => {\n  67 |   await page.goto(\"/\");\n> 68 |   await expect(page.locator(\".case-card\").first()).toBeVisible();\n     |                                                    ^\n  69 |   await expect(page.getByRole(\"table\")).toBeHidden();\n  70 |   const cases = await (await page.request.get(\"/api/cases\")).json();\n  71 |   const selected = cases.find((c: any) => c.evidence?.length) ?? cases[0];"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\bug-to-proof\\tests\\playwright\\cases\\ui-smoke-1b44fe3d-0cf9-4f7e-aec0-0090906eee7a.spec.ts",
+                        "column": 52,
+                        "line": 68
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.case-card').first()\nExpected: visible\nReceived: hidden\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('.case-card').first() with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('.case-card').first()\u001b[22m\n\u001b[2m    32 × locator resolved to <a class=\"case-card\" href=\"/cases/case-001-cart-total\">…</a>\u001b[22m\n\u001b[2m       - unexpected value \"hidden\"\u001b[22m\n\n\n  66 | test(\"real case evidence on desktop and mobile\", async ({ page }, testInfo) => {\n  67 |   await page.goto(\"/\");\n> 68 |   await expect(page.locator(\".case-card\").first()).toBeVisible();\n     |                                                    ^\n  69 |   await expect(page.getByRole(\"table\")).toBeHidden();\n  70 |   const cases = await (await page.request.get(\"/api/cases\")).json();\n  71 |   const selected = cases.find((c: any) => c.evidence?.length) ?? cases[0];\n    at D:\\bug-to-proof\\tests\\playwright\\cases\\ui-smoke-1b44fe3d-0cf9-4f7e-aec0-0090906eee7a.spec.ts:68:52"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T19:40:01.275Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\bug-to-proof\\artifacts\\ui-redesign\\1b44fe3d-0cf9-4f7e-aec0-0090906eee7a\\ui-smoke-1b44fe3d-0cf9-4f7-13065-dence-on-desktop-and-mobile-chromium\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\bug-to-proof\\artifacts\\ui-redesign\\1b44fe3d-0cf9-4f7e-aec0-0090906eee7a\\ui-smoke-1b44fe3d-0cf9-4f7-13065-dence-on-desktop-and-mobile-chromium\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\bug-to-proof\\artifacts\\ui-redesign\\1b44fe3d-0cf9-4f7e-aec0-0090906eee7a\\ui-smoke-1b44fe3d-0cf9-4f7-13065-dence-on-desktop-and-mobile-chromium\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\bug-to-proof\\tests\\playwright\\cases\\ui-smoke-1b44fe3d-0cf9-4f7e-aec0-0090906eee7a.spec.ts",
+                    "column": 52,
+                    "line": 68
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "9652cc572458a7fc3589-eaf1d2be91c26bc11349",
+          "file": "ui-smoke-1b44fe3d-0cf9-4f7e-aec0-0090906eee7a.spec.ts",
+          "line": 66,
+          "column": 5
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-11T19:39:56.206Z",
+    "duration": 21233.5,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}
