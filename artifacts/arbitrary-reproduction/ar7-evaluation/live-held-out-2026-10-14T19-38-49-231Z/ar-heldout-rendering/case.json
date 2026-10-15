@@ -1,0 +1,38 @@
+{
+  "id": "case-1792006828897-paot5g0d",
+  "title": "Cart badge counts product lines instead of units",
+  "description": "The navigation badge appears to show unique products rather than total quantity.",
+  "report": {
+    "schemaVersion": "1.0",
+    "steps": [
+      "Open the shop page",
+      "Add Keyboard twice",
+      "Observe the Cart navigation badge"
+    ],
+    "expected": "The Cart badge should display 2.",
+    "actual": "The Cart badge displays 1.",
+    "startPath": "/",
+    "context": "Fresh browser storage and an empty cart."
+  },
+  "reportCompleteness": {
+    "complete": true,
+    "missingFields": []
+  },
+  "status": "REPORTED",
+  "createdAt": "2026-10-14T19:40:28.897Z",
+  "updatedAt": "2026-10-14T19:40:28.897Z",
+  "reproduction": {
+    "preconditions": [],
+    "steps": [
+      "The navigation badge appears to show unique products rather than total quantity."
+    ],
+    "expected": "",
+    "actual": "",
+    "testFile": "",
+    "lastRun": null
+  },
+  "patch": null,
+  "verification": null,
+  "evidence": [],
+  "rootCauseExplanation": null
+}

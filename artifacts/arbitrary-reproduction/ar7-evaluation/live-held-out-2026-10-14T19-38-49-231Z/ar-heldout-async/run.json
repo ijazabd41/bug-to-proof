@@ -1,0 +1,246 @@
+{
+  "schemaVersion": "1.0",
+  "reproductionRunId": "24458c90-dbe6-4f07-be5f-d73d9644e49b",
+  "caseId": "case-1792006748145-jjf3dygv",
+  "state": "CANDIDATE_EXECUTION_ERROR",
+  "reportSnapshot": {
+    "title": "Promo completion loses a concurrently added item",
+    "description": "An item added while promo validation is pending disappears when validation completes.",
+    "steps": [
+      "Open the shop page",
+      "Add Keyboard",
+      "Enter SAVE20",
+      "Apply the promo and immediately add Mouse Pad",
+      "Wait for the promo result"
+    ],
+    "expected": "Keyboard and Mouse Pad should both remain after the promo is applied.",
+    "actual": "Mouse Pad disappears when the promo result arrives.",
+    "startPath": "/",
+    "context": "Fresh browser storage; promo validation is asynchronous."
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "attemptExecutionId": "24458c90-dbe6-4f07-be5f-d73d9644e49b-attempt-1",
+      "definition": {
+        "schemaVersion": "1.0",
+        "title": "Promo completion loses a concurrently added item",
+        "startPath": "/",
+        "preconditions": [
+          {
+            "type": "clearLocalStorage"
+          }
+        ],
+        "steps": [
+          {
+            "type": "clickTarget",
+            "testId": "add-to-cart-1"
+          },
+          {
+            "type": "fill",
+            "label": "Promo code",
+            "text": "SAVE20"
+          },
+          {
+            "type": "clickTarget",
+            "testId": "apply-promo-button"
+          },
+          {
+            "type": "clickTarget",
+            "testId": "add-to-cart-2"
+          }
+        ],
+        "assertion": {
+          "type": "targetCurrencyEquals",
+          "testId": "cart-total",
+          "expected": 30,
+          "currency": "USD"
+        },
+        "rationale": "After promo application, both items should remain, so cart total should reflect both items.",
+        "reportMapping": [
+          {
+            "reportFact": "title",
+            "definitionPath": "title"
+          },
+          {
+            "reportFact": "description",
+            "definitionPath": "rationale"
+          },
+          {
+            "reportFact": "steps",
+            "definitionPath": "steps"
+          },
+          {
+            "reportFact": "expected",
+            "definitionPath": "assertion.expected"
+          }
+        ]
+      },
+      "definitionHash": "137d3a285b4ffd9f6db0e0f8bb8d32f2a0be6c4a89f4f1a13ebcbf421fba979e",
+      "compilerVersion": "1.0.0",
+      "compiledTestHash": "ed1293f298394883c7006c8b04a6bfc8ac2d4a563563f05e782d12c9dabd6e14",
+      "provider": "legacy",
+      "model": "openai/gpt-oss-20b",
+      "promptVersion": "reproduction-v1",
+      "classification": "CANDIDATE_EXECUTION_ERROR",
+      "failureKind": "SELECTOR_OR_ACTION_ERROR",
+      "diagnostics": "Test timeout of 30000ms exceeded.\nTest timeout of 30000ms exceeded.\nError: locator.fill: Test timeout of 30000ms exceeded.\nCall log:\n  - waiting for getByLabel('Promo code', { exact: true })\n\n\n  23 |     else if (step.type === \"waitForTargetVisible\") await expect(page.getByTestId(step.testId)).toBeVisible();\n  24 |     else if (step.type === \"click\") await locateAction(page, step).click();\n> 25 |     else if (step.type === \"fill\") await page.getByLabel(step.label, { exact: true }).fill(step.text);\n     |                                                                                       ^\n  26 |     else if (step.type === \"selectOption\") await page.getByLabel(step.label, { exact: true }).selectOption(step.value);\n  27 |     else if (step.type === \"waitForVisible\") await expect(locateAction(page, step)).toBeVisible();\n  28 |     else if (step.type === \"reload\") await page.reload();\n    at D:\\bug-to-proof\\artifacts\\reproduction-runs\\generated\\24458c90-dbe6-4f07-be5f-d73d9644e49b-attempt-1\\generated-test\\reproduction.spec.ts:25:87",
+      "durationMs": 34132,
+      "artifactPaths": [
+        "24458c90-dbe6-4f07-be5f-d73d9644e49b/attempt-1/model-output.txt",
+        "24458c90-dbe6-4f07-be5f-d73d9644e49b-attempt-1/generated-test/reproduction.spec.ts",
+        "artifacts/reproduction-runs/24458c90-dbe6-4f07-be5f-d73d9644e49b-attempt-1/evidence/result.json",
+        "artifacts/reproduction-runs/24458c90-dbe6-4f07-be5f-d73d9644e49b-attempt-1/evidence/reproduction-btp-24458c90--2589d-b-attempt-1-v1-137d3a285b4f-chromium/test-failed-1.png",
+        "artifacts/reproduction-runs/24458c90-dbe6-4f07-be5f-d73d9644e49b-attempt-1/evidence/reproduction-btp-24458c90--2589d-b-attempt-1-v1-137d3a285b4f-chromium/trace.zip"
+      ]
+    },
+    {
+      "attempt": 2,
+      "attemptExecutionId": "24458c90-dbe6-4f07-be5f-d73d9644e49b-attempt-2",
+      "provider": "legacy",
+      "model": "openai/gpt-oss-20b",
+      "promptVersion": "reproduction-v1",
+      "responseShape": "choices_array:first_choice_object:message_object:content_string_empty",
+      "classification": "CANDIDATE_INVALID",
+      "diagnostics": "Provider response contained no usable text (choices_array:first_choice_object:message_object:content_string_empty)",
+      "validationFindings": [
+        "definition is not valid JSON"
+      ],
+      "durationMs": 3546,
+      "artifactPaths": [
+        "24458c90-dbe6-4f07-be5f-d73d9644e49b/attempt-2/model-output.txt"
+      ]
+    },
+    {
+      "attempt": 3,
+      "attemptExecutionId": "24458c90-dbe6-4f07-be5f-d73d9644e49b-attempt-3",
+      "definition": {
+        "schemaVersion": "1.0",
+        "title": "Promo completion loses a concurrently added item",
+        "startPath": "/",
+        "preconditions": [
+          {
+            "type": "clearLocalStorage"
+          }
+        ],
+        "steps": [
+          {
+            "type": "clickTarget",
+            "testId": "add-to-cart-1"
+          },
+          {
+            "type": "fill",
+            "label": "Promo code",
+            "text": "SAVE20"
+          },
+          {
+            "type": "clickTarget",
+            "testId": "apply-promo-button"
+          },
+          {
+            "type": "clickTarget",
+            "testId": "add-to-cart-2"
+          }
+        ],
+        "assertion": {
+          "type": "targetVisibilityEquals",
+          "testId": "cart-item-2",
+          "visible": true
+        },
+        "rationale": "The test verifies that an item added while a promo is being validated remains in the cart after the promo result is received.",
+        "reportMapping": [
+          {
+            "reportFact": "Keyboard and Mouse Pad should both remain after the promo is applied.",
+            "definitionPath": "assertion.expected"
+          }
+        ]
+      },
+      "definitionHash": "442354dfb12c1f1ab1b6711676f56f667a8f10cdd9815fca82ef6091ba917ad0",
+      "compilerVersion": "1.0.0",
+      "compiledTestHash": "348fb7ee6c54898ced76ee52f51ee790ff592a383bfd097fdf01884ecf72634c",
+      "provider": "legacy",
+      "model": "openai/gpt-oss-20b",
+      "promptVersion": "reproduction-v1",
+      "classification": "CANDIDATE_EXECUTION_ERROR",
+      "failureKind": "SELECTOR_OR_ACTION_ERROR",
+      "diagnostics": "Test timeout of 30000ms exceeded.\nTest timeout of 30000ms exceeded.\nError: locator.fill: Test timeout of 30000ms exceeded.\nCall log:\n  - waiting for getByLabel('Promo code', { exact: true })\n\n\n  23 |     else if (step.type === \"waitForTargetVisible\") await expect(page.getByTestId(step.testId)).toBeVisible();\n  24 |     else if (step.type === \"click\") await locateAction(page, step).click();\n> 25 |     else if (step.type === \"fill\") await page.getByLabel(step.label, { exact: true }).fill(step.text);\n     |                                                                                       ^\n  26 |     else if (step.type === \"selectOption\") await page.getByLabel(step.label, { exact: true }).selectOption(step.value);\n  27 |     else if (step.type === \"waitForVisible\") await expect(locateAction(page, step)).toBeVisible();\n  28 |     else if (step.type === \"reload\") await page.reload();\n    at D:\\bug-to-proof\\artifacts\\reproduction-runs\\generated\\24458c90-dbe6-4f07-be5f-d73d9644e49b-attempt-3\\generated-test\\reproduction.spec.ts:25:87",
+      "durationMs": 34805,
+      "artifactPaths": [
+        "24458c90-dbe6-4f07-be5f-d73d9644e49b/attempt-3/model-output.txt",
+        "24458c90-dbe6-4f07-be5f-d73d9644e49b-attempt-3/generated-test/reproduction.spec.ts",
+        "artifacts/reproduction-runs/24458c90-dbe6-4f07-be5f-d73d9644e49b-attempt-3/evidence/result.json",
+        "artifacts/reproduction-runs/24458c90-dbe6-4f07-be5f-d73d9644e49b-attempt-3/evidence/reproduction-btp-24458c90--e8f4e-b-attempt-3-v1-442354dfb12c-chromium/test-failed-1.png",
+        "artifacts/reproduction-runs/24458c90-dbe6-4f07-be5f-d73d9644e49b-attempt-3/evidence/reproduction-btp-24458c90--e8f4e-b-attempt-3-v1-442354dfb12c-chromium/trace.zip"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "sequence": 1,
+      "state": "DISCOVERING_TARGET",
+      "message": "Started bounded target discovery",
+      "createdAt": "2026-10-14T19:39:08.159Z"
+    },
+    {
+      "sequence": 2,
+      "state": "GENERATING_CANDIDATE",
+      "message": "Generating candidate attempt 1",
+      "createdAt": "2026-10-14T19:39:08.186Z"
+    },
+    {
+      "sequence": 3,
+      "state": "CANDIDATE_EXECUTION_ERROR",
+      "message": "Candidate execution failed without a report assertion",
+      "createdAt": "2026-10-14T19:39:45.492Z"
+    },
+    {
+      "sequence": 4,
+      "state": "GENERATING_CANDIDATE",
+      "message": "Generating candidate attempt 2",
+      "createdAt": "2026-10-14T19:39:45.494Z"
+    },
+    {
+      "sequence": 5,
+      "state": "CANDIDATE_INVALID",
+      "message": "Candidate 2 failed validation",
+      "createdAt": "2026-10-14T19:39:49.043Z"
+    },
+    {
+      "sequence": 6,
+      "state": "GENERATING_CANDIDATE",
+      "message": "Generating candidate attempt 3",
+      "createdAt": "2026-10-14T19:39:49.046Z"
+    },
+    {
+      "sequence": 7,
+      "state": "CANDIDATE_EXECUTION_ERROR",
+      "message": "Candidate execution failed without a report assertion",
+      "createdAt": "2026-10-14T19:40:27.257Z"
+    }
+  ],
+  "limits": {
+    "maxAttempts": 3,
+    "maxSteps": 20,
+    "maxRuntimeMs": 120000,
+    "maxDefinitionBytes": 32000,
+    "maxDiagnosticBytes": 16000
+  },
+  "createdAt": "2026-10-14T19:39:08.159Z",
+  "updatedAt": "2026-10-14T19:40:27.257Z",
+  "targetSnapshot": {
+    "sourceFingerprint": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289",
+    "targetUrl": "http://localhost:5174",
+    "createdAt": "2026-10-14T19:39:08.182Z"
+  },
+  "discovery": {
+    "artifactPath": "24458c90-dbe6-4f07-be5f-d73d9644e49b/discovery/discovery.json",
+    "inventoryDigest": "17822468a35e921c7b66b92c24f728bea1f78d9cc91244bd9ca7ef361545e86b",
+    "routes": [
+      "/",
+      "/cart"
+    ],
+    "capturedAt": "2026-10-14T19:39:08.182Z"
+  },
+  "completedAt": "2026-10-14T19:40:27.261Z",
+  "stopReason": "Candidate attempt limit (3) reached"
+}

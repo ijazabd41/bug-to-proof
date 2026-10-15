@@ -1,0 +1,23 @@
+﻿{
+    "category":  "calculation-state",
+    "caseId":  "case-1791841749095-0lqn3ztn",
+    "reproductionRunId":  "3cbd3559-afdf-4ef0-a220-1fe78c0afaf9",
+    "state":  "CANDIDATE_INVALID",
+    "stopReason":  "Candidate attempt limit (3) reached",
+    "attemptExecutionIds":  [
+                                "3cbd3559-afdf-4ef0-a220-1fe78c0afaf9-attempt-1",
+                                "3cbd3559-afdf-4ef0-a220-1fe78c0afaf9-attempt-2",
+                                "3cbd3559-afdf-4ef0-a220-1fe78c0afaf9-attempt-3"
+                            ],
+    "classifications":  [
+                            "CANDIDATE_INVALID",
+                            "CANDIDATE_INVALID",
+                            "CANDIDATE_INVALID"
+                        ],
+    "responseShapes":  [
+                           "choices_array:first_choice_object:message_object:content_string_nonempty",
+                           "choices_array:first_choice_object:message_object:content_string_nonempty",
+                           "choices_array:first_choice_object:message_object:content_string_empty"
+                       ],
+    "evidenceDirectory":  "D:\\bug-to-proof\\artifacts\\arbitrary-reproduction\\ar4-generation-execution\\final-live-acceptance-corrected\\calculation-state-case-1791841749095-0lqn3ztn-3cbd3559-afdf-4ef0-a220-1fe78c0afaf9"
+}

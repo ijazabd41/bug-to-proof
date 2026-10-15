@@ -1,0 +1,48 @@
+{
+  "caseId": "case-1791917776888-hvza72c3",
+  "runId": "run-43ebe23d-fcf4-4f26-9494-4a2cb913427b",
+  "state": "VERIFIED",
+  "baselineOutcome": "ASSERTION_FAILED",
+  "postPatchOutcome": "PASSED",
+  "sameTestFingerprint": true,
+  "testFingerprint": "48f3565ee820b974f24a16c4d15a3550ef2d613e3d152df5832c93370194fd10",
+  "reproductionProvenance": {
+    "reproductionRunId": "8dca2a60-8416-40e4-a4e6-e7de42948cf4",
+    "definitionHash": "19604a7965f6ecb5027b25e6b1eba557990bd0a490ed22d20b2b9f9ceebe8aff",
+    "compiledTestHash": "4c571551e174c161da1f2093ac138eda138b4f4e512bd3ff54b7d23d378431f9",
+    "sourceFingerprint": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289",
+    "acceptedAt": "2026-10-14T07:55:50.46Z",
+    "acceptedBy": "AR5 live acceptance reviewer"
+  },
+  "proposalId": "prop-ad2faa7c-2084-484b-a5b7-593d5fea39cd",
+  "proposalHash": "10b7a94d994956978550ad5edea84c774da45c86481b6c94f94edb9393425a4a",
+  "reviewDecision": "APPROVED",
+  "requiredChecks": [
+    {
+      "type": "typecheck",
+      "passed": true,
+      "exitCode": 0
+    },
+    {
+      "type": "build",
+      "passed": true,
+      "exitCode": 0
+    },
+    {
+      "type": "unit-tests",
+      "passed": true,
+      "exitCode": 0
+    }
+  ],
+  "proofBundle": "D:\\bug-to-proof\\artifacts\\arbitrary-reproduction\\ar6-repair-proof\\proof-bundle-case-1791917776888-hvza72c3-run-43ebe23d-fcf4-4f26-9494-4a2cb913427b.zip",
+  "proofManifestVerified": true,
+  "proofManifestProvenance": {
+    "reproductionRunId": "8dca2a60-8416-40e4-a4e6-e7de42948cf4",
+    "definitionHash": "19604a7965f6ecb5027b25e6b1eba557990bd0a490ed22d20b2b9f9ceebe8aff",
+    "compiledTestHash": "4c571551e174c161da1f2093ac138eda138b4f4e512bd3ff54b7d23d378431f9",
+    "sourceFingerprint": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289",
+    "acceptedAt": "2026-10-14T07:55:50.46Z",
+    "acceptedBy": "AR5 live acceptance reviewer"
+  },
+  "extractedEntries": 25
+}

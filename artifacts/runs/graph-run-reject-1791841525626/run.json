@@ -1,0 +1,126 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "graph-run-reject-1791841525626",
+  "caseId": "test-graph-case-001",
+  "mode": "simulated",
+  "state": "REJECTED",
+  "attempt": 1,
+  "maxAttempts": 2,
+  "attempts": [
+    {
+      "attemptNumber": 1,
+      "proposal": {
+        "schemaVersion": "1.0",
+        "proposalId": "prop-graph-test-1",
+        "diagnosis": "Total only reads first item price",
+        "assumptions": [
+          "Standard cart logic"
+        ],
+        "rationale": "Use array reduce to calculate total",
+        "edits": [
+          {
+            "relativePath": "src/store/cartStore.ts",
+            "oldContent": "  total: () => get().items[0]?.price ?? 0,",
+            "newContent": "  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),"
+          }
+        ],
+        "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -64,1 +64,1 @@\n-  total: () => get().items[0]?.price ?? 0,\n+  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),\n",
+        "proposalHash": "8106cc64f6709eebf1300df92da94b93c7c3d33666a9f2cfd6d21b6a4958b1d8",
+        "proposedAt": "2026-10-12T21:45:22.090Z"
+      },
+      "state": "REJECTED",
+      "startedAt": "2026-10-12T21:45:26.248Z",
+      "stageLatenciesMs": {
+        "baseline": 2,
+        "proposal": 1
+      },
+      "failureReason": "Proposal rejected by reviewer: Approach violates requirements",
+      "completedAt": "2026-10-12T21:45:26.559Z"
+    }
+  ],
+  "diagnostics": [],
+  "originalSourceFingerprint": "0248e0d27084c5fad9ab416c1db35d60dd2731e3946e1fbd25d88c1bcb273718",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\graph-run-reject-1791841525626\\workspace",
+  "testFingerprint": "fp-test",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "requiredChecks": [],
+  "events": [
+    {
+      "timestamp": "2026-10-12T21:45:26.068Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "0248e0d27084c5fad9ab416c1db35d60dd2731e3946e1fbd25d88c1bcb273718",
+        "url": "http://localhost:5313"
+      }
+    },
+    {
+      "timestamp": "2026-10-12T21:45:26.188Z",
+      "stage": "baseline",
+      "message": "Baseline verification stopped: Baseline evidence gates violated: Baseline report hash is missing or empty; Baseline test fingerprint (fp-test) does not match current disk test (018984f150ad1b1c60ca4768165280cfdcbc4aef96c8f7d702e33b95f4f6ea07); Reproduction test inputs changed: recorded fp-test vs current disk 018984f150ad1b1c60ca4768165280cfdcbc4aef96c8f7d702e33b95f4f6ea07"
+    },
+    {
+      "timestamp": "2026-10-12T21:45:26.241Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-12T21:45:26.446Z",
+      "stage": "proposal",
+      "message": "Generated and validated patch proposal. Awaiting exact review approval.",
+      "data": {
+        "proposalId": "prop-graph-test-1",
+        "proposalHash": "8106cc64f6709eebf1300df92da94b93c7c3d33666a9f2cfd6d21b6a4958b1d8",
+        "attempt": 1
+      }
+    },
+    {
+      "timestamp": "2026-10-12T21:45:26.567Z",
+      "stage": "completion",
+      "message": "Run finalized with status: REJECTED (Proposal rejected by reviewer: Approach violates requirements)"
+    }
+  ],
+  "createdAt": "2026-10-12T21:45:26.068Z",
+  "updatedAt": "2026-10-12T21:45:26.568Z",
+  "baselineRun": {
+    "outcome": "ASSERTION_FAILED",
+    "testFingerprint": "fp-test",
+    "testIds": [
+      "tests/playwright/cases/case-001-cart-total.spec.ts:cart total should equal sum:chromium"
+    ],
+    "runId": "run-before",
+    "runAt": "2026-10-12T21:45:26.112Z",
+    "passed": false,
+    "expected": "Total is $30.00",
+    "actual": "Total is $10.00",
+    "durationMs": 90,
+    "evidenceIds": []
+  },
+  "stopReason": "Proposal rejected by reviewer: Approach violates requirements",
+  "proposal": {
+    "schemaVersion": "1.0",
+    "proposalId": "prop-graph-test-1",
+    "diagnosis": "Total only reads first item price",
+    "assumptions": [
+      "Standard cart logic"
+    ],
+    "rationale": "Use array reduce to calculate total",
+    "edits": [
+      {
+        "relativePath": "src/store/cartStore.ts",
+        "oldContent": "  total: () => get().items[0]?.price ?? 0,",
+        "newContent": "  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),"
+      }
+    ],
+    "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -64,1 +64,1 @@\n-  total: () => get().items[0]?.price ?? 0,\n+  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),\n",
+    "proposalHash": "8106cc64f6709eebf1300df92da94b93c7c3d33666a9f2cfd6d21b6a4958b1d8",
+    "proposedAt": "2026-10-12T21:45:22.090Z"
+  },
+  "review": {
+    "proposalId": "prop-graph-test-1",
+    "proposalHash": "8106cc64f6709eebf1300df92da94b93c7c3d33666a9f2cfd6d21b6a4958b1d8",
+    "decision": "REJECTED",
+    "reviewerNotes": "Approach violates requirements"
+  },
+  "completedAt": "2026-10-12T21:45:26.559Z"
+}

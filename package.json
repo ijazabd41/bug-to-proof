@@ -27,6 +27,11 @@
     "typecheck": "npm run typecheck --workspace=services/api && npm run typecheck --workspace=apps/dashboard && npm run typecheck --workspace=apps/minishop",
     "rag:evaluate": "tsx scripts/evaluate-rag.ts",
     "repair:evaluate": "tsx scripts/evaluate-repair.ts",
+    "arbitrary:evaluate": "tsx scripts/report-ar7-evaluation.ts",
+    "arbitrary:evaluate:live": "tsx scripts/run-arbitrary-heldout-evaluation.ts",
+    "arbitrary:evaluate:reconcile": "tsx scripts/reconcile-arbitrary-heldout-evaluation.ts",
+    "arbitrary:verify": "tsx scripts/verify-arbitrary-report-to-proof.ts",
+    "demo:check": "tsx scripts/check-dynamic-demo-readiness.ts",
     "artifacts:clean": "tsx scripts/clean-artifacts.ts"
   },
   "devDependencies": {

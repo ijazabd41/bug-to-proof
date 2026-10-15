@@ -1,0 +1,44 @@
+﻿{
+    "id":  "case-1791917326989-2k8rp9h8",
+    "title":  "Cart navigation does not open the dedicated cart route",
+    "description":  "After adding a product, activating the Cart navigation link appears to leave the user on the shop route instead of opening the dedicated cart page.",
+    "report":  {
+                   "schemaVersion":  "1.0",
+                   "steps":  [
+                                 "Open the shop page",
+                                 "Add USB Hub to the cart",
+                                 "Activate the Cart navigation link"
+                             ],
+                   "expected":  "The browser URL path should become /cart and the Cart page should be visible.",
+                   "actual":  "The browser appears to remain on / and still shows the shop product grid.",
+                   "startPath":  "/",
+                   "context":  "Fresh browser storage and an initially empty cart."
+               },
+    "reportCompleteness":  {
+                               "complete":  true,
+                               "missingFields":  [
+
+                                                 ]
+                           },
+    "status":  "REPORTED",
+    "createdAt":  "2026-10-13T18:48:46.989Z",
+    "updatedAt":  "2026-10-13T18:48:46.989Z",
+    "reproduction":  {
+                         "preconditions":  [
+
+                                           ],
+                         "steps":  [
+                                       "After adding a product, activating the Cart navigation link appears to leave the user on the shop route instead of opening the dedicated cart page."
+                                   ],
+                         "expected":  "",
+                         "actual":  "",
+                         "testFile":  "",
+                         "lastRun":  null
+                     },
+    "patch":  null,
+    "verification":  null,
+    "evidence":  [
+
+                 ],
+    "rootCauseExplanation":  null
+}

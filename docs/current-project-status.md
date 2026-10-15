@@ -2,7 +2,7 @@
 
 **Platform**: Windows x64 & Ubuntu Linux (Node.js >= 22.0.0)  
 **Verification Date**: October 2026  
-**Status**: Existing-test repair path healthy and verified; arbitrary reproduction not implemented  
+**Status**: Arbitrary report generation, review, frozen baseline, isolated repair verification, provenance-bearing proof integration, held-out evaluation, and portfolio packaging are implemented through AR7
 **Historical Documents**: For older milestone audits, see [Historical Review Index](#historical-reviews).
 
 ---
@@ -19,7 +19,7 @@ Bug-to-Proof is an evidence-backed repair and verification prototype for the con
 
 ### Current limitation
 
-A newly submitted arbitrary report is saved, but it is created with an empty `reproduction.testFile`. Reproduction and dynamic repair correctly refuse to run until a trusted test exists. Automatic report-to-test generation, human test review, and frozen generated baselines are planned in the [arbitrary reproduction implementation plan](../plans/arbitrary-bug-reproduction-plan.md) and tracked in the [progress page](progress/arbitrary-bug-reproduction.md).
+A complete arbitrary report can now generate a discovery-bound candidate, receive hash-bound human approval, freeze the accepted test, confirm a failing baseline, verify a reviewed isolated patch with the identical test, run required regressions, and export a provenance-bearing proof bundle. AR7 includes a reproducible scorecard, a frozen 2-development/4-held-out arbitrary-report set, one retained held-out execution, and portfolio/demo materials. Held-out results were 2/4 valid candidates, 1/4 executable passing baseline, 0/4 relevant reproductions, and 2/4 provider-connectivity failures. That run exposed a trusted-input locator mismatch; compiler 1.1.0 adds inventory-bound `fillTarget`, verified with a real browser fixture, without rerunning the consumed split. The recorded AR6 end-to-end patch proposal remains deterministic reference output; a live-model repair of arbitrary source was not sent without separate authorization. See the [arbitrary reproduction tracker](progress/arbitrary-bug-reproduction.md).
 
 ---
 

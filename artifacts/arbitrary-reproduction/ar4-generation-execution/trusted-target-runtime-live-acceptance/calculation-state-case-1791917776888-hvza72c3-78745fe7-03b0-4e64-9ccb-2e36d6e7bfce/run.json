@@ -1,0 +1,117 @@
+﻿{
+    "schemaVersion":  "1.0",
+    "reproductionRunId":  "78745fe7-03b0-4e64-9ccb-2e36d6e7bfce",
+    "caseId":  "case-1791917776888-hvza72c3",
+    "state":  "AWAITING_TEST_REVIEW",
+    "reportSnapshot":  {
+                           "title":  "Cart total omits the shipping charge",
+                           "description":  "When the cart subtotal is below the free-shipping threshold, the displayed Total shows only the merchandise subtotal instead of subtotal plus the visible shipping charge.",
+                           "steps":  [
+                                         "Open the shop page",
+                                         "Add Keyboard to the cart",
+                                         "Observe the Shipping and Total values"
+                                     ],
+                           "expected":  "With a .00 Keyboard and .00 shipping, Total should display .00.",
+                           "actual":  "Shipping displays .00 but Total displays .00.",
+                           "startPath":  "/",
+                           "context":  "Fresh browser storage and an initially empty cart."
+                       },
+    "attempts":  [
+                     {
+                         "attempt":  1,
+                         "attemptExecutionId":  "78745fe7-03b0-4e64-9ccb-2e36d6e7bfce-attempt-1",
+                         "definition":  {
+                                            "schemaVersion":  "1.0",
+                                            "title":  "Cart total omits the shipping charge",
+                                            "startPath":  "/",
+                                            "preconditions":  [
+                                                                  {
+                                                                      "type":  "clearLocalStorage"
+                                                                  }
+                                                              ],
+                                            "steps":  [
+                                                          {
+                                                              "type":  "goto",
+                                                              "path":  "/"
+                                                          },
+                                                          {
+                                                              "type":  "clickTarget",
+                                                              "testId":  "add-to-cart-1"
+                                                          }
+                                                      ],
+                                            "assertion":  {
+                                                              "type":  "targetCurrencyEquals",
+                                                              "testId":  "cart-total",
+                                                              "expected":  0,
+                                                              "currency":  "USD"
+                                                          },
+                                            "rationale":  "Total should include shipping fee but currently shows only merchandise subtotal.",
+                                            "reportMapping":  [
+                                                                  {
+                                                                      "reportFact":  "Total should display .00.",
+                                                                      "definitionPath":  "assertion.expected"
+                                                                  }
+                                                              ]
+                                        },
+                         "definitionHash":  "c7bcf8b3f05731c4e6430c97bd72f52aed6125ae6507229b3cbee6c806e0beb0",
+                         "compilerVersion":  "1.0.0",
+                         "compiledTestHash":  "d0e0dc5cfe93f785af4f754e04b37018f77e0e02e6413ecaef6b8d839466ee43",
+                         "provider":  "legacy",
+                         "model":  "openai/gpt-oss-20b",
+                         "promptVersion":  "reproduction-v1",
+                         "classification":  "ASSERTION_FAILED",
+                         "diagnostics":  "Error: BTP_ASSERTION: targetCurrencyEquals\nExpected: 0\nReceived: 10\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: 0\nReceived: 10",
+                         "durationMs":  7410,
+                         "artifactPaths":  [
+                                               "78745fe7-03b0-4e64-9ccb-2e36d6e7bfce/attempt-1/model-output.txt",
+                                               "78745fe7-03b0-4e64-9ccb-2e36d6e7bfce-attempt-1/generated-test/reproduction.spec.ts",
+                                               "artifacts/reproduction-runs/78745fe7-03b0-4e64-9ccb-2e36d6e7bfce-attempt-1/evidence/result.json",
+                                               "artifacts/reproduction-runs/78745fe7-03b0-4e64-9ccb-2e36d6e7bfce-attempt-1/evidence/reproduction-btp-78745fe7--8df38-e-attempt-1-v1-c7bcf8b3f057-chromium/test-failed-1.png",
+                                               "artifacts/reproduction-runs/78745fe7-03b0-4e64-9ccb-2e36d6e7bfce-attempt-1/evidence/reproduction-btp-78745fe7--8df38-e-attempt-1-v1-c7bcf8b3f057-chromium/trace.zip"
+                                           ]
+                     }
+                 ],
+    "events":  [
+                   {
+                       "sequence":  1,
+                       "state":  "DISCOVERING_TARGET",
+                       "message":  "Started bounded target discovery",
+                       "createdAt":  "2026-10-13T18:56:29.077Z"
+                   },
+                   {
+                       "sequence":  2,
+                       "state":  "GENERATING_CANDIDATE",
+                       "message":  "Generating candidate attempt 1",
+                       "createdAt":  "2026-10-13T18:56:29.263Z"
+                   },
+                   {
+                       "sequence":  3,
+                       "state":  "AWAITING_TEST_REVIEW",
+                       "message":  "Candidate produced a structured assertion failure and requires review",
+                       "createdAt":  "2026-10-13T18:56:39.686Z"
+                   }
+               ],
+    "limits":  {
+                   "maxAttempts":  3,
+                   "maxSteps":  20,
+                   "maxRuntimeMs":  120000,
+                   "maxDefinitionBytes":  32000,
+                   "maxDiagnosticBytes":  16000
+               },
+    "createdAt":  "2026-10-13T18:56:29.077Z",
+    "updatedAt":  "2026-10-13T18:56:39.686Z",
+    "targetSnapshot":  {
+                           "sourceFingerprint":  "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289",
+                           "targetUrl":  "http://localhost:5174",
+                           "createdAt":  "2026-10-13T18:56:29.254Z"
+                       },
+    "discovery":  {
+                      "artifactPath":  "78745fe7-03b0-4e64-9ccb-2e36d6e7bfce/discovery/discovery.json",
+                      "inventoryDigest":  "17822468a35e921c7b66b92c24f728bea1f78d9cc91244bd9ca7ef361545e86b",
+                      "routes":  [
+                                     "/",
+                                     "/cart"
+                                 ],
+                      "capturedAt":  "2026-10-13T18:56:29.254Z"
+                  }
+}

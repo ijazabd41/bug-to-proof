@@ -1,0 +1,304 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "run-43ebe23d-fcf4-4f26-9494-4a2cb913427b",
+  "caseId": "case-1791917776888-hvza72c3",
+  "mode": "simulated",
+  "state": "VERIFIED",
+  "attempt": 1,
+  "maxAttempts": 1,
+  "attempts": [
+    {
+      "attemptNumber": 1,
+      "proposal": {
+        "schemaVersion": "1.0",
+        "proposalId": "prop-ad2faa7c-2084-484b-a5b7-593d5fea39cd",
+        "diagnosis": "The cart UI renders the merchandise subtotal as Total even though shipping is calculated and displayed separately.",
+        "assumptions": [
+          "The accepted reproduction requires shipping to be included in the displayed total."
+        ],
+        "rationale": "Add the already-computed shipping fee to the displayed cart total without changing item subtotal or shipping threshold behavior.",
+        "edits": [
+          {
+            "relativePath": "src/components/Cart.tsx",
+            "oldContent": "<span data-testid=\"cart-total\">${cartTotal.toFixed(2)}</span>",
+            "newContent": "<span data-testid=\"cart-total\">${(cartTotal + shippingFee).toFixed(2)}</span>"
+          }
+        ],
+        "unifiedDiff": "--- a/src/components/Cart.tsx\n+++ b/src/components/Cart.tsx\n@@ -108,1 +108,1 @@\n-<span data-testid=\"cart-total\">${cartTotal.toFixed(2)}</span>\n+<span data-testid=\"cart-total\">${(cartTotal + shippingFee).toFixed(2)}</span>\n",
+        "proposalHash": "10b7a94d994956978550ad5edea84c774da45c86481b6c94f94edb9393425a4a",
+        "proposedAt": "2026-10-14T08:14:42.614Z"
+      },
+      "state": "VERIFIED",
+      "startedAt": "2026-10-14T08:14:42.571Z",
+      "stageLatenciesMs": {
+        "baseline": 5630,
+        "proposal": 16,
+        "postPatchReproduction": 6842,
+        "regressionChecks": 11718
+      },
+      "completedAt": "2026-10-14T08:15:01.922Z"
+    }
+  ],
+  "inputs": {
+    "caseSnapshot": {
+      "id": "case-1791917776888-hvza72c3",
+      "title": "Cart total omits the shipping charge",
+      "description": "When the cart subtotal is below the free-shipping threshold, the displayed Total shows only the merchandise subtotal instead of subtotal plus the visible shipping charge.",
+      "report": {
+        "schemaVersion": "1.0",
+        "steps": [
+          "Open the shop page",
+          "Add Keyboard to the cart",
+          "Observe the Shipping and Total values"
+        ],
+        "expected": "With a $10.00 Keyboard and $5.00 shipping, Total should display $15.00.",
+        "actual": "Shipping displays $5.00 but Total displays $10.00.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an initially empty cart."
+      },
+      "reportCompleteness": {
+        "complete": true,
+        "missingFields": []
+      },
+      "status": "REPRODUCED",
+      "createdAt": "2026-10-13T18:56:16.888Z",
+      "updatedAt": "2026-10-14T07:56:00.416Z",
+      "reproduction": {
+        "preconditions": [],
+        "steps": [
+          "Open the shop page",
+          "Add Keyboard to the cart",
+          "Observe the Shipping and Total values"
+        ],
+        "expected": "With a $10.00 Keyboard and $5.00 shipping, Total should display $15.00.",
+        "actual": "Shipping displays $5.00 but Total displays $10.00.",
+        "testFile": "D:\\bug-to-proof\\artifacts\\reproduction-runs\\accepted\\8dca2a60-8416-40e4-a4e6-e7de42948cf4\\reproduction.spec.ts",
+        "testRoot": "D:\\bug-to-proof\\artifacts\\reproduction-runs\\accepted",
+        "generatedTest": {
+          "reproductionRunId": "8dca2a60-8416-40e4-a4e6-e7de42948cf4",
+          "definitionHash": "19604a7965f6ecb5027b25e6b1eba557990bd0a490ed22d20b2b9f9ceebe8aff",
+          "compiledTestHash": "4c571551e174c161da1f2093ac138eda138b4f4e512bd3ff54b7d23d378431f9",
+          "sourceFingerprint": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289",
+          "acceptedAt": "2026-10-14T07:55:50.46Z",
+          "acceptedBy": "AR5 live acceptance reviewer"
+        },
+        "lastRun": {
+          "outcome": "ASSERTION_FAILED",
+          "testFingerprint": "48f3565ee820b974f24a16c4d15a3550ef2d613e3d152df5832c93370194fd10",
+          "testIds": [
+            "reproduction.spec.ts:btp-8dca2a60-8416-40e4-a4e6-e7de42948cf4-attempt-1-v1-19604a7965f6:chromium"
+          ],
+          "runId": "8dca2a60-8416-40e4-a4e6-e7de42948cf4-accepted-baseline",
+          "reportHash": "c781c41811cd1daea03e1fe9cda129a519f6253a0fe30029000ef9d3a7e780a4",
+          "runAt": "2026-10-14T07:56:00.373Z",
+          "passed": false,
+          "expected": "",
+          "actual": "Error: BTP_ASSERTION: targetCurrencyEquals\nExpected: 15\nReceived: 10\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: 15\nReceived: 10",
+          "durationMs": 9823,
+          "evidenceIds": []
+        }
+      },
+      "patch": null,
+      "verification": {
+        "status": "PENDING",
+        "beforeRun": {
+          "outcome": "ASSERTION_FAILED",
+          "testFingerprint": "48f3565ee820b974f24a16c4d15a3550ef2d613e3d152df5832c93370194fd10",
+          "testIds": [
+            "reproduction.spec.ts:btp-8dca2a60-8416-40e4-a4e6-e7de42948cf4-attempt-1-v1-19604a7965f6:chromium"
+          ],
+          "runId": "8dca2a60-8416-40e4-a4e6-e7de42948cf4-accepted-baseline",
+          "reportHash": "c781c41811cd1daea03e1fe9cda129a519f6253a0fe30029000ef9d3a7e780a4",
+          "runAt": "2026-10-14T07:56:00.373Z",
+          "passed": false,
+          "expected": "",
+          "actual": "Error: BTP_ASSERTION: targetCurrencyEquals\nExpected: 15\nReceived: 10\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: 15\nReceived: 10",
+          "durationMs": 9823,
+          "evidenceIds": []
+        },
+        "afterRun": null,
+        "comparison": null
+      },
+      "evidence": [],
+      "rootCauseExplanation": null
+    },
+    "reproductionTest": {
+      "filePath": "D:\\bug-to-proof\\artifacts\\reproduction-runs\\accepted\\8dca2a60-8416-40e4-a4e6-e7de42948cf4\\reproduction.spec.ts",
+      "root": "D:\\bug-to-proof\\artifacts\\reproduction-runs\\accepted",
+      "content": "// Generated by Bug-to-Proof compiler 1.0.0; definition 19604a7965f6ecb5027b25e6b1eba557990bd0a490ed22d20b2b9f9ceebe8aff\nimport { test, expect } from \"@playwright/test\";\n\nconst definition = {\"schemaVersion\":\"1.0\",\"title\":\"Cart total omits the shipping charge\",\"startPath\":\"/\",\"preconditions\":[{\"type\":\"clearLocalStorage\"}],\"steps\":[{\"type\":\"clickTarget\",\"testId\":\"add-to-cart-1\"}],\"assertion\":{\"type\":\"targetCurrencyEquals\",\"testId\":\"cart-total\",\"expected\":15,\"currency\":\"USD\"},\"rationale\":\"The cart total should include the $5.00 shipping fee when the subtotal is below the free‑shipping threshold, resulting in a displayed total of $15.00.\",\"reportMapping\":[{\"reportFact\":\"With a $10.00 Keyboard and $5.00 shipping, Total should display $15.00.\",\"definitionPath\":\"assertion.expected\"}]} as const;\nconst normalizeNumber = (value: string) => Number(value.replace(/[^0-9.+-]/g, \"\"));\nconst locate = (page: any, role: string, name?: string) => page.getByRole(role, name === undefined ? undefined : { name, exact: true });\nconst locateInProduct = (page: any, productId: number) => page.getByTestId(`add-to-cart-${productId}`);\nconst locateAction = (page: any, action: any) => action.within?.kind === 'product' ? locateInProduct(page, action.within.productId) : locate(page, action.role, action.name);\nasync function assertWithEvidence(testInfo: any, label: string, expected: unknown, received: unknown, check: () => void | Promise<void>) {\n  await testInfo.attach(\"btp-assertion\", { body: JSON.stringify({ actual: String(received), expected: String(expected), label }), contentType: \"application/json\" });\n  try { await check(); } catch (error) { throw new Error(`BTP_ASSERTION: ${label}\\nExpected: ${JSON.stringify(expected)}\\nReceived: ${JSON.stringify(received)}\\n${error instanceof Error ? error.message : String(error)}`); }\n}\n\ntest(\"btp-8dca2a60-8416-40e4-a4e6-e7de42948cf4-attempt-1-v1-19604a7965f6\", async ({ page }, testInfo) => {\n  for (const precondition of definition.preconditions) {\n    if (precondition.type === \"clearLocalStorage\") { await page.goto(\"/\"); await page.evaluate(() => localStorage.clear()); }\n    else if (precondition.type === \"seedCart\") { await page.goto(\"/\"); await page.getByTestId(`add-to-cart-${precondition.productId}`).click({ clickCount: precondition.quantity }); }\n  }\n  await page.goto(\"/\");\n  for (const step of definition.steps) {\n    if (step.type === \"goto\") await page.goto(step.path);\n    else if (step.type === \"clickTarget\") await page.getByTestId(step.testId).click();\n    else if (step.type === \"waitForTargetVisible\") await expect(page.getByTestId(step.testId)).toBeVisible();\n    else if (step.type === \"click\") await locateAction(page, step).click();\n    else if (step.type === \"fill\") await page.getByLabel(step.label, { exact: true }).fill(step.text);\n    else if (step.type === \"selectOption\") await page.getByLabel(step.label, { exact: true }).selectOption(step.value);\n    else if (step.type === \"waitForVisible\") await expect(locateAction(page, step)).toBeVisible();\n    else if (step.type === \"reload\") await page.reload();\n  }\n  const assertion = definition.assertion;\n  if (assertion.type === \"targetTextEquals\" || assertion.type === \"targetNumberEquals\" || assertion.type === \"targetCurrencyEquals\" || assertion.type === \"targetVisibilityEquals\") { const target = page.getByTestId(assertion.testId); const exists = await target.count(); const text = exists ? (await target.textContent()) ?? \"\" : \"\"; const received = assertion.type === \"targetVisibilityEquals\" ? exists > 0 && await target.isVisible() : !exists ? \"<missing>\" : assertion.type === \"targetTextEquals\" ? text.trim() : normalizeNumber(text); const expected = assertion.type === \"targetVisibilityEquals\" ? assertion.visible : assertion.expected; await assertWithEvidence(testInfo, assertion.type, expected, received, () => expect(received).toBe(expected)); }\n  else if (assertion.type === \"urlPathEquals\") { const received = new URL(page.url()).pathname; await assertWithEvidence(testInfo, assertion.type, assertion.expected, received, () => expect(received).toBe(assertion.expected)); }\n  else {\n    const target = locate(page, assertion.role, \"name\" in assertion ? assertion.name : undefined);\n    if (assertion.type === \"countEquals\") { const received = await target.count(); await assertWithEvidence(testInfo, assertion.type, assertion.expected, received, () => expect(received).toBe(assertion.expected)); }\n    else if (assertion.type === \"visibilityEquals\") { const received = await target.isVisible(); await assertWithEvidence(testInfo, assertion.type, assertion.visible, received, () => expect(received).toBe(assertion.visible)); }\n    else if (assertion.type === \"accessibleAttributeEquals\") { const received = await target.getAttribute(assertion.attribute); await assertWithEvidence(testInfo, assertion.type, assertion.expected, received, () => expect(received).toBe(assertion.expected)); }\n    else { const text = (await target.textContent()) ?? \"\"; const received = assertion.type === \"visibleTextEquals\" ? text.trim() : normalizeNumber(text); await assertWithEvidence(testInfo, assertion.type, assertion.expected, received, () => expect(received).toBe(assertion.expected)); }\n  }\n});\n",
+      "fingerprint": "48f3565ee820b974f24a16c4d15a3550ef2d613e3d152df5832c93370194fd10",
+      "provenance": {
+        "reproductionRunId": "8dca2a60-8416-40e4-a4e6-e7de42948cf4",
+        "definitionHash": "19604a7965f6ecb5027b25e6b1eba557990bd0a490ed22d20b2b9f9ceebe8aff",
+        "compiledTestHash": "4c571551e174c161da1f2093ac138eda138b4f4e512bd3ff54b7d23d378431f9",
+        "sourceFingerprint": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289",
+        "acceptedAt": "2026-10-14T07:55:50.46Z",
+        "acceptedBy": "AR5 live acceptance reviewer"
+      }
+    }
+  },
+  "diagnostics": [],
+  "originalSourceFingerprint": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\run-43ebe23d-fcf4-4f26-9494-4a2cb913427b\\workspace",
+  "testFingerprint": "48f3565ee820b974f24a16c4d15a3550ef2d613e3d152df5832c93370194fd10",
+  "reproductionTestFile": "D:\\bug-to-proof\\artifacts\\reproduction-runs\\accepted\\8dca2a60-8416-40e4-a4e6-e7de42948cf4\\reproduction.spec.ts",
+  "reproductionTestRoot": "D:\\bug-to-proof\\artifacts\\reproduction-runs\\accepted",
+  "requiredChecks": [
+    {
+      "checkId": "check-typecheck",
+      "name": "TypeScript compilation",
+      "type": "typecheck",
+      "command": "tsc --project artifacts/runs/run-43ebe23d-fcf4-4f26-9494-4a2cb913427b/workspace/apps/minishop/tsconfig.json --noEmit",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 3838,
+      "output": "",
+      "artifactPath": "artifacts/runs/run-43ebe23d-fcf4-4f26-9494-4a2cb913427b/attempt-1/checks/checks/typecheck.log"
+    },
+    {
+      "checkId": "check-build",
+      "name": "Production Vite build",
+      "type": "build",
+      "command": "vite build artifacts/runs/run-43ebe23d-fcf4-4f26-9494-4a2cb913427b/workspace/apps/minishop --config artifacts/runs/run-43ebe23d-fcf4-4f26-9494-4a2cb913427b/workspace/apps/minishop/vite.config.ts",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 1673,
+      "output": "1:14:54 PM [vite] warning: `esbuild` option was specified by \"vite:react-babel\" plugin. This option is deprecated, please use `oxc` instead.\n`optimizeDeps.rollupOptions` / `ssr.optimizeDeps.rollupOptions` is deprecated. Use `optimizeDeps.rolldownOptions` instead. Note that this option may be set by a plugin. Set VITE_DEPRECATION_TRACE=1 to see where it is called.\n[vite:react-babel] We recommend switching to `@vitejs/plugin-react-oxc` for improved performance. More information at https://vite.dev/rolldown\nvite v8.3.1 building client environment for production...\ntransforming...\n✓ 32 modules transformed.\nrendering chunks...\ncomputing gzip size...\nartifacts/runs/run-43ebe23d-fcf4-4f26-9494-4a2cb913427b/workspace/apps/minishop/dist/index.html                  0.45 kB │ gzip:  0.32 kB\nartifacts/runs/run-43ebe23d-fcf4-4f26-9494-4a2cb913427b/workspace/apps/minishop/dist/assets/index-tdJfXRpo.js  171.43 kB │ gzip: 56.17 kB\n\n✓ built in 766ms\n",
+      "artifactPath": "artifacts/runs/run-43ebe23d-fcf4-4f26-9494-4a2cb913427b/attempt-1/checks/checks/build.log"
+    },
+    {
+      "checkId": "check-unit-tests",
+      "name": "MiniShop unit tests",
+      "type": "unit-tests",
+      "command": "vitest run --no-file-parallelism (in artifacts/runs/run-43ebe23d-fcf4-4f26-9494-4a2cb913427b/workspace/apps/minishop)",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 6157,
+      "output": "1:14:56 PM [vite] warning: `esbuild` option was specified by \"vite:react-babel\" plugin. This option is deprecated, please use `oxc` instead.\n`optimizeDeps.rollupOptions` / `ssr.optimizeDeps.rollupOptions` is deprecated. Use `optimizeDeps.rolldownOptions` instead. Note that this option may be set by a plugin. Set VITE_DEPRECATION_TRACE=1 to see where it is called.\nBoth esbuild and oxc options were set. oxc options will be used and esbuild options will be ignored. The following esbuild options were set: `{ jsx: 'automatic', jsxImportSource: undefined }`\n[vite:react-babel] We recommend switching to `@vitejs/plugin-react-oxc` for improved performance. More information at https://vite.dev/rolldown\n\n RUN  v5.0.2 D:/bug-to-proof/artifacts/runs/run-43ebe23d-fcf4-4f26-9494-4a2cb913427b/workspace/apps/minishop\n\n\n Test Files  2 passed (2)\n      Tests  4 passed (4)\n   Start at  13:14:56\n   Duration  4.97s (environment 75%, setup 11%, transform 5%, import 4%, tests 4%, worker 1%)\n\nEnvironment  jsdom was created 2 times · 3.23s total, 75% of tracked time\n             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)\n             learn more: https://vitest.dev/guide/improving-performance#test-environments\n\n",
+      "artifactPath": "artifacts/runs/run-43ebe23d-fcf4-4f26-9494-4a2cb913427b/attempt-1/checks/checks/unit-tests.log"
+    }
+  ],
+  "events": [
+    {
+      "timestamp": "2026-10-14T08:14:35.076Z",
+      "stage": "initialization",
+      "message": "Repair run initialized and queued for background execution"
+    },
+    {
+      "timestamp": "2026-10-14T08:14:36.860Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289",
+        "url": "http://127.0.0.1:5564"
+      }
+    },
+    {
+      "timestamp": "2026-10-14T08:14:42.535Z",
+      "stage": "baseline",
+      "message": "Valid baseline failure confirmed:  vs Error: BTP_ASSERTION: targetCurrencyEquals\nExpected: 15\nReceived: 10\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: 15\nReceived: 10"
+    },
+    {
+      "timestamp": "2026-10-14T08:14:42.566Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-14T08:14:42.641Z",
+      "stage": "proposal",
+      "message": "Generated and validated patch proposal. Awaiting exact review approval.",
+      "data": {
+        "proposalId": "prop-ad2faa7c-2084-484b-a5b7-593d5fea39cd",
+        "proposalHash": "10b7a94d994956978550ad5edea84c774da45c86481b6c94f94edb9393425a4a",
+        "attempt": 1
+      }
+    },
+    {
+      "timestamp": "2026-10-14T08:14:42.952Z",
+      "stage": "patch_applied",
+      "message": "Exact reviewed patch applied transactionally to candidate workspace",
+      "data": {
+        "proposalId": "prop-ad2faa7c-2084-484b-a5b7-593d5fea39cd",
+        "proposalHash": "10b7a94d994956978550ad5edea84c774da45c86481b6c94f94edb9393425a4a",
+        "modifiedFiles": [
+          "src/components/Cart.tsx"
+        ],
+        "expectedPatchedFingerprint": "417dc7e61e4d6a15029ed148f0ffe1dd435a45801eeef97dc63de187f62242cd"
+      }
+    },
+    {
+      "timestamp": "2026-10-14T08:14:49.831Z",
+      "stage": "verification",
+      "message": "Post-patch reproduction outcome: PASSED (passed: true)"
+    },
+    {
+      "timestamp": "2026-10-14T08:15:01.581Z",
+      "stage": "regression",
+      "message": "All 3 candidate regression checks passed cleanly."
+    },
+    {
+      "timestamp": "2026-10-14T08:15:01.924Z",
+      "stage": "completion",
+      "message": "Run finalized with status: VERIFIED (All verification gates and regression checks passed cleanly.)"
+    }
+  ],
+  "createdAt": "2026-10-14T08:14:35.073Z",
+  "updatedAt": "2026-10-14T08:15:01.924Z",
+  "baselineRun": {
+    "outcome": "ASSERTION_FAILED",
+    "testFingerprint": "48f3565ee820b974f24a16c4d15a3550ef2d613e3d152df5832c93370194fd10",
+    "testIds": [
+      "reproduction.spec.ts:btp-8dca2a60-8416-40e4-a4e6-e7de42948cf4-attempt-1-v1-19604a7965f6:chromium"
+    ],
+    "runId": "run-43ebe23d-fcf4-4f26-9494-4a2cb913427b",
+    "reportHash": "97e9fd26a9b8ff3233da99fd9ccfd1666867fbdd0ca6a8970469ed331ddeffba",
+    "runAt": "2026-10-14T08:14:42.522Z",
+    "passed": false,
+    "expected": "",
+    "actual": "Error: BTP_ASSERTION: targetCurrencyEquals\nExpected: 15\nReceived: 10\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: 15\nReceived: 10",
+    "durationMs": 5602,
+    "evidenceIds": []
+  },
+  "proposal": {
+    "schemaVersion": "1.0",
+    "proposalId": "prop-ad2faa7c-2084-484b-a5b7-593d5fea39cd",
+    "diagnosis": "The cart UI renders the merchandise subtotal as Total even though shipping is calculated and displayed separately.",
+    "assumptions": [
+      "The accepted reproduction requires shipping to be included in the displayed total."
+    ],
+    "rationale": "Add the already-computed shipping fee to the displayed cart total without changing item subtotal or shipping threshold behavior.",
+    "edits": [
+      {
+        "relativePath": "src/components/Cart.tsx",
+        "oldContent": "<span data-testid=\"cart-total\">${cartTotal.toFixed(2)}</span>",
+        "newContent": "<span data-testid=\"cart-total\">${(cartTotal + shippingFee).toFixed(2)}</span>"
+      }
+    ],
+    "unifiedDiff": "--- a/src/components/Cart.tsx\n+++ b/src/components/Cart.tsx\n@@ -108,1 +108,1 @@\n-<span data-testid=\"cart-total\">${cartTotal.toFixed(2)}</span>\n+<span data-testid=\"cart-total\">${(cartTotal + shippingFee).toFixed(2)}</span>\n",
+    "proposalHash": "10b7a94d994956978550ad5edea84c774da45c86481b6c94f94edb9393425a4a",
+    "proposedAt": "2026-10-14T08:14:42.614Z"
+  },
+  "review": {
+    "proposalId": "prop-ad2faa7c-2084-484b-a5b7-593d5fea39cd",
+    "proposalHash": "10b7a94d994956978550ad5edea84c774da45c86481b6c94f94edb9393425a4a",
+    "decision": "APPROVED",
+    "reviewerNotes": "Deterministic AR6 reference verification of the accepted arbitrary reproduction."
+  },
+  "postPatchRun": {
+    "outcome": "PASSED",
+    "testFingerprint": "48f3565ee820b974f24a16c4d15a3550ef2d613e3d152df5832c93370194fd10",
+    "testIds": [
+      "reproduction.spec.ts:btp-8dca2a60-8416-40e4-a4e6-e7de42948cf4-attempt-1-v1-19604a7965f6:chromium"
+    ],
+    "runId": "run-43ebe23d-fcf4-4f26-9494-4a2cb913427b",
+    "reportHash": "24e18a2aff72a00387773fdde3167f90eadd98742542ef6b6d97b59669767a5e",
+    "runAt": "2026-10-14T08:14:49.827Z",
+    "passed": true,
+    "expected": "",
+    "actual": "All selected tests passed",
+    "durationMs": 6826,
+    "evidenceIds": []
+  },
+  "stopReason": "All verification gates and regression checks passed cleanly.",
+  "completedAt": "2026-10-14T08:15:01.922Z"
+}

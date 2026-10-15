@@ -1,0 +1,150 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\bug-to-proof\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "D:\\bug-to-proof\\artifacts\\reproduction-runs\\generated\\24458c90-dbe6-4f07-be5f-d73d9644e49b-attempt-3\\generated-test\\playwright.generated.config.cjs",
+      "artifacts/reproduction-runs/generated/24458c90-dbe6-4f07-be5f-d73d9644e49b-attempt-3/generated-test/reproduction.spec.ts",
+      "--reporter=json",
+      "--output",
+      "D:\\bug-to-proof\\artifacts\\reproduction-runs\\24458c90-dbe6-4f07-be5f-d73d9644e49b-attempt-3\\evidence"
+    ],
+    "configFile": "D:\\bug-to-proof\\artifacts\\reproduction-runs\\generated\\24458c90-dbe6-4f07-be5f-d73d9644e49b-attempt-3\\generated-test\\playwright.generated.config.cjs",
+    "rootDir": "D:/bug-to-proof/artifacts/reproduction-runs/generated/24458c90-dbe6-4f07-be5f-d73d9644e49b-attempt-3/generated-test",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/bug-to-proof/artifacts/reproduction-runs/24458c90-dbe6-4f07-be5f-d73d9644e49b-attempt-3/evidence",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "D:/bug-to-proof/artifacts/reproduction-runs/generated/24458c90-dbe6-4f07-be5f-d73d9644e49b-attempt-3/generated-test",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "reproduction.spec.ts",
+      "file": "reproduction.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "btp-24458c90-dbe6-4f07-be5f-d73d9644e49b-attempt-3-v1-442354dfb12c",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "timedOut",
+                  "duration": 30541,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "D:\\bug-to-proof\\artifacts\\reproduction-runs\\generated\\24458c90-dbe6-4f07-be5f-d73d9644e49b-attempt-3\\generated-test\\reproduction.spec.ts",
+                        "column": 87,
+                        "line": 25
+                      },
+                      "message": "Error: locator.fill: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByLabel('Promo code', { exact: true })\u001b[22m\n\n\n  23 |     else if (step.type === \"waitForTargetVisible\") await expect(page.getByTestId(step.testId)).toBeVisible();\n  24 |     else if (step.type === \"click\") await locateAction(page, step).click();\n> 25 |     else if (step.type === \"fill\") await page.getByLabel(step.label, { exact: true }).fill(step.text);\n     |                                                                                       ^\n  26 |     else if (step.type === \"selectOption\") await page.getByLabel(step.label, { exact: true }).selectOption(step.value);\n  27 |     else if (step.type === \"waitForVisible\") await expect(locateAction(page, step)).toBeVisible();\n  28 |     else if (step.type === \"reload\") await page.reload();\n    at D:\\bug-to-proof\\artifacts\\reproduction-runs\\generated\\24458c90-dbe6-4f07-be5f-d73d9644e49b-attempt-3\\generated-test\\reproduction.spec.ts:25:87"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T19:39:55.579Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\bug-to-proof\\artifacts\\reproduction-runs\\24458c90-dbe6-4f07-be5f-d73d9644e49b-attempt-3\\evidence\\reproduction-btp-24458c90--e8f4e-b-attempt-3-v1-442354dfb12c-chromium\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\bug-to-proof\\artifacts\\reproduction-runs\\24458c90-dbe6-4f07-be5f-d73d9644e49b-attempt-3\\evidence\\reproduction-btp-24458c90--e8f4e-b-attempt-3-v1-442354dfb12c-chromium\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\bug-to-proof\\artifacts\\reproduction-runs\\24458c90-dbe6-4f07-be5f-d73d9644e49b-attempt-3\\evidence\\reproduction-btp-24458c90--e8f4e-b-attempt-3-v1-442354dfb12c-chromium\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "ff0f9736443589895b2b-0ba5b8f7951c8894328b",
+          "file": "reproduction.spec.ts",
+          "line": 14,
+          "column": 5
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-14T19:39:54.059Z",
+    "duration": 33079.468,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

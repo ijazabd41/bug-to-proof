@@ -1,0 +1,18 @@
+﻿{
+    "category":  "navigation-cart",
+    "caseId":  "case-1791834771825-wh5ynp1g",
+    "reproductionRunId":  "6e4f32a2-5758-4d35-8273-11cb59774cb5",
+    "state":  "BASELINE_PASSED",
+    "stopReason":  "Candidate baseline passed without reproducing the bug",
+    "attemptExecutionIds":  [
+                                "6e4f32a2-5758-4d35-8273-11cb59774cb5-attempt-1",
+                                "6e4f32a2-5758-4d35-8273-11cb59774cb5-attempt-2",
+                                "6e4f32a2-5758-4d35-8273-11cb59774cb5-attempt-3"
+                            ],
+    "classifications":  [
+                            "CANDIDATE_INVALID",
+                            "CANDIDATE_EXECUTION_ERROR",
+                            "BASELINE_PASSED"
+                        ],
+    "evidenceDirectory":  "D:\\bug-to-proof\\artifacts\\arbitrary-reproduction\\ar4-generation-execution\\live-acceptance-rerun-prompt-schema\\navigation-cart-case-1791834771825-wh5ynp1g-6e4f32a2-5758-4d35-8273-11cb59774cb5"
+}

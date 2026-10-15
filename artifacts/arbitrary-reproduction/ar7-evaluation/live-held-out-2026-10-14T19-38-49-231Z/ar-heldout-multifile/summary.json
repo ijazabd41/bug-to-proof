@@ -1,0 +1,19 @@
+{
+  "evaluationId": "ar-heldout-multifile",
+  "split": "held-out",
+  "category": "multi-file",
+  "caseId": "case-1792006841078-3vuizgbs",
+  "reproductionRunId": "49d633c6-d35b-44e1-9045-8fb214c07710",
+  "state": "BLOCKED",
+  "stopReason": "Generation provider failed",
+  "attempts": 0,
+  "classifications": [],
+  "responseShapes": [],
+  "validCandidate": false,
+  "executableCandidate": false,
+  "relevantReproduction": false,
+  "infrastructureError": false,
+  "unsupported": false,
+  "durationMs": 0,
+  "usage": []
+}

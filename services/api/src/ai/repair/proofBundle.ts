@@ -4,6 +4,7 @@ import { createHash } from "crypto";
 import { ARTIFACTS_DIR } from "../../utils/paths";
 import { getRunRecord } from "./runStore";
 import { testFingerprint } from "../../runner/integrity";
+import { generatedTestFingerprint } from "../../runner/playwrightRunner";
 import {
   createZipArchive,
   validateZipPath,
@@ -41,6 +42,8 @@ export interface ProofManifest {
   testFingerprint: string;
   testFingerprintMatched: boolean;
   reproductionTestFile: string;
+  reproductionTestRoot?: string;
+  reproductionProvenance?: NonNullable<NonNullable<RepairRunRecord["inputs"]>["reproductionTest"]>["provenance"];
   proposalId?: string;
   proposalHash?: string;
   reviewDecision?: "APPROVED" | "REJECTED";
@@ -198,7 +201,7 @@ export async function buildProofBundle(runId: string): Promise<ProofBundleResult
   let testMatched = false;
   let currentDiskFp = "";
   try {
-    currentDiskFp = testFingerprint(run.reproductionTestFile);
+    currentDiskFp = run.reproductionTestRoot ? generatedTestFingerprint(run.reproductionTestFile) : testFingerprint(run.reproductionTestFile);
   } catch {}
 
   if (run.inputs?.reproductionTest) {
@@ -306,6 +309,7 @@ export async function buildProofBundle(runId: string): Promise<ProofBundleResult
   const gateResult = validateVerificationGates({
     caseId: run.caseId,
     reproductionTestFile: run.reproductionTestFile,
+    reproductionTestRoot: run.reproductionTestRoot,
     testFingerprint: run.testFingerprint,
     baselineRun: run.baselineRun,
     postPatchRun: run.postPatchRun,
@@ -366,6 +370,8 @@ export async function buildProofBundle(runId: string): Promise<ProofBundleResult
     testFingerprint: run.testFingerprint,
     testFingerprintMatched: testMatched,
     reproductionTestFile: run.reproductionTestFile,
+    reproductionTestRoot: run.reproductionTestRoot,
+    reproductionProvenance: run.inputs?.reproductionTest.provenance,
     proposalId: run.proposal?.proposalId,
     proposalHash: run.proposal?.proposalHash,
     reviewDecision: run.review?.decision,

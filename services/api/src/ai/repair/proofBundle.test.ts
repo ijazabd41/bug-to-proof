@@ -68,6 +68,8 @@ describe("Proof Bundle Exporter & Secure Artifact Archive", () => {
         filePath: testSpecRelPath,
         content: testSpecContent,
         fingerprint,
+        provenance: { reproductionRunId: "generated-source-run", definitionHash: "a".repeat(64), compiledTestHash: "b".repeat(64),
+          sourceFingerprint: "c".repeat(64), acceptedAt: "2026-10-14T00:00:00.000Z", acceptedBy: "reviewer" },
       },
     };
 
@@ -302,6 +304,7 @@ describe("Proof Bundle Exporter & Secure Artifact Archive", () => {
 
     expect(extractedManifest.verified).toBe(true);
     expect(extractedManifest.runId).toBe(testRunId);
+    expect(extractedManifest.reproductionProvenance).toMatchObject({ reproductionRunId: "generated-source-run", definitionHash: "a".repeat(64), compiledTestHash: "b".repeat(64) });
 
     // Check that every single file in the manifest matches the SHA-256 of extracted bytes
     for (const fileEntry of bundle.manifest.files) {

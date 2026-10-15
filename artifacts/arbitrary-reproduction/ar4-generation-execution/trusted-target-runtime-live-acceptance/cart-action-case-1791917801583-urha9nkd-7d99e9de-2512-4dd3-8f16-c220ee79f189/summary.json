@@ -1,0 +1,20 @@
+﻿{
+    "category":  "cart-action",
+    "caseId":  "case-1791917801583-urha9nkd",
+    "reproductionRunId":  "7d99e9de-2512-4dd3-8f16-c220ee79f189",
+    "state":  "BLOCKED",
+    "stopReason":  "Generation provider failed",
+    "attemptExecutionIds":  [
+                                "7d99e9de-2512-4dd3-8f16-c220ee79f189-attempt-1",
+                                "7d99e9de-2512-4dd3-8f16-c220ee79f189-attempt-2"
+                            ],
+    "classifications":  [
+                            "CANDIDATE_INVALID",
+                            "CANDIDATE_INVALID"
+                        ],
+    "responseShapes":  [
+                           "choices_array:first_choice_object:message_object:content_string_nonempty",
+                           "choices_array:first_choice_object:message_object:content_string_nonempty"
+                       ],
+    "evidenceDirectory":  "D:\\bug-to-proof\\artifacts\\arbitrary-reproduction\\ar4-generation-execution\\trusted-target-runtime-live-acceptance\\cart-action-case-1791917801583-urha9nkd-7d99e9de-2512-4dd3-8f16-c220ee79f189"
+}

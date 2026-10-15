@@ -1,0 +1,65 @@
+{
+  "schemaVersion": "1.0",
+  "reproductionRunId": "2ce4bdd4-70ff-40c5-94c9-328876ce5e50",
+  "caseId": "case-1791834688378-6az2xjp9",
+  "state": "BLOCKED",
+  "reportSnapshot": {
+    "title": "Cart total omits the shipping charge",
+    "description": "When the cart subtotal is below the free-shipping threshold, the displayed Total shows only the merchandise subtotal instead of subtotal plus the visible shipping charge.",
+    "steps": [
+      "Open the shop page",
+      "Add Keyboard to the cart",
+      "Observe the Shipping and Total values"
+    ],
+    "expected": "With a .00 Keyboard and .00 shipping, Total should display .00.",
+    "actual": "Shipping displays .00 but Total displays .00.",
+    "startPath": "/",
+    "context": "Fresh browser storage and an initially empty cart."
+  },
+  "attempts": [],
+  "events": [
+    {
+      "sequence": 1,
+      "state": "DISCOVERING_TARGET",
+      "message": "Started bounded target discovery",
+      "createdAt": "2026-10-12T19:51:40.522Z"
+    },
+    {
+      "sequence": 2,
+      "state": "GENERATING_CANDIDATE",
+      "message": "Generating candidate attempt 1",
+      "createdAt": "2026-10-12T19:51:40.695Z"
+    },
+    {
+      "sequence": 3,
+      "state": "BLOCKED",
+      "message": "Reproduction generation provider returned an empty response",
+      "createdAt": "2026-10-12T19:51:43.349Z"
+    }
+  ],
+  "limits": {
+    "maxAttempts": 3,
+    "maxSteps": 20,
+    "maxRuntimeMs": 120000,
+    "maxDefinitionBytes": 32000,
+    "maxDiagnosticBytes": 16000
+  },
+  "createdAt": "2026-10-12T19:51:40.522Z",
+  "updatedAt": "2026-10-12T19:51:43.349Z",
+  "targetSnapshot": {
+    "sourceFingerprint": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289",
+    "targetUrl": "http://localhost:5174",
+    "createdAt": "2026-10-12T19:51:40.690Z"
+  },
+  "discovery": {
+    "artifactPath": "2ce4bdd4-70ff-40c5-94c9-328876ce5e50/discovery/discovery.json",
+    "inventoryDigest": "2f7855d90514749e47c0c4c59e9dbfbd19ffbacee0548df05e5b3953e7f48489",
+    "routes": [
+      "/",
+      "/cart"
+    ],
+    "capturedAt": "2026-10-12T19:51:40.690Z"
+  },
+  "stopReason": "Generation provider failed",
+  "completedAt": "2026-10-12T19:51:43.351Z"
+}

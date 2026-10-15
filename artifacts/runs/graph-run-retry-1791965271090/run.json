@@ -1,0 +1,273 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "graph-run-retry-1791965271090",
+  "caseId": "test-graph-case-001",
+  "mode": "simulated",
+  "state": "VERIFIED",
+  "attempt": 2,
+  "maxAttempts": 3,
+  "attempts": [
+    {
+      "attemptNumber": 1,
+      "proposal": {
+        "schemaVersion": "1.0",
+        "proposalId": "prop-attempt-1",
+        "diagnosis": "Total only reads first item price",
+        "assumptions": [
+          "Standard cart logic"
+        ],
+        "rationale": "Use array reduce to calculate total",
+        "edits": [
+          {
+            "relativePath": "src/store/cartStore.ts",
+            "oldContent": "  total: () => get().items[0]?.price ?? 0,",
+            "newContent": "  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),"
+          }
+        ],
+        "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -64,1 +64,1 @@\n-  total: () => get().items[0]?.price ?? 0,\n+  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),\n",
+        "proposalHash": "8106cc64f6709eebf1300df92da94b93c7c3d33666a9f2cfd6d21b6a4958b1d8",
+        "proposedAt": "2026-10-14T08:07:50.120Z"
+      },
+      "state": "VERIFICATION_FAILED",
+      "startedAt": "2026-10-14T08:07:51.222Z",
+      "completedAt": "2026-10-14T08:07:51.446Z",
+      "failureReason": "Required regression checks failed on candidate source",
+      "stageLatenciesMs": {
+        "baseline": 1,
+        "proposal": 0,
+        "postPatchReproduction": 0,
+        "regressionChecks": 0
+      }
+    },
+    {
+      "attemptNumber": 2,
+      "proposal": {
+        "schemaVersion": "1.0",
+        "proposalId": "prop-attempt-2",
+        "diagnosis": "Total only reads first item price",
+        "assumptions": [
+          "Standard cart logic"
+        ],
+        "rationale": "Use array reduce to calculate total",
+        "edits": [
+          {
+            "relativePath": "src/store/cartStore.ts",
+            "oldContent": "  total: () => get().items[0]?.price ?? 0,",
+            "newContent": "  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),"
+          }
+        ],
+        "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -64,1 +64,1 @@\n-  total: () => get().items[0]?.price ?? 0,\n+  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),\n",
+        "proposalHash": "8106cc64f6709eebf1300df92da94b93c7c3d33666a9f2cfd6d21b6a4958b1d8",
+        "proposedAt": "2026-10-14T08:07:50.120Z"
+      },
+      "state": "VERIFIED",
+      "startedAt": "2026-10-14T08:07:51.467Z",
+      "stageLatenciesMs": {
+        "baseline": 1,
+        "proposal": 0,
+        "postPatchReproduction": 0,
+        "regressionChecks": 0
+      },
+      "completedAt": "2026-10-14T08:07:51.724Z"
+    }
+  ],
+  "diagnostics": [
+    "Required regression checks failed on candidate source"
+  ],
+  "originalSourceFingerprint": "0248e0d27084c5fad9ab416c1db35d60dd2731e3946e1fbd25d88c1bcb273718",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\graph-run-retry-1791965271090\\workspace",
+  "testFingerprint": "8768f154ce1bde6ca8ceed591bfe83f4d33d1e955568c2d08997f6335f2287c7",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "requiredChecks": [
+    {
+      "checkId": "check-typecheck",
+      "name": "TypeScript compilation",
+      "type": "typecheck",
+      "command": "tsc --noEmit",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 200,
+      "output": "Found 0 errors"
+    },
+    {
+      "checkId": "check-build",
+      "name": "Vite build",
+      "type": "build",
+      "command": "vite build",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 300,
+      "output": "built in 0.3s"
+    },
+    {
+      "checkId": "check-unit-tests",
+      "name": "MiniShop unit tests",
+      "type": "unit-tests",
+      "command": "vitest run apps/minishop",
+      "passed": true,
+      "exitCode": 0,
+      "durationMs": 180,
+      "output": "3 passed"
+    }
+  ],
+  "events": [
+    {
+      "timestamp": "2026-10-14T08:07:51.191Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "0248e0d27084c5fad9ab416c1db35d60dd2731e3946e1fbd25d88c1bcb273718",
+        "url": "http://localhost:5314"
+      }
+    },
+    {
+      "timestamp": "2026-10-14T08:07:51.211Z",
+      "stage": "baseline",
+      "message": "Valid baseline failure confirmed: Total is $30.00 vs Total is $10.00"
+    },
+    {
+      "timestamp": "2026-10-14T08:07:51.220Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 1)"
+    },
+    {
+      "timestamp": "2026-10-14T08:07:51.242Z",
+      "stage": "proposal",
+      "message": "Generated and validated patch proposal. Awaiting exact review approval.",
+      "data": {
+        "proposalId": "prop-attempt-1",
+        "proposalHash": "8106cc64f6709eebf1300df92da94b93c7c3d33666a9f2cfd6d21b6a4958b1d8",
+        "attempt": 1
+      }
+    },
+    {
+      "timestamp": "2026-10-14T08:07:51.366Z",
+      "stage": "patch_applied",
+      "message": "Exact reviewed patch applied transactionally to candidate workspace",
+      "data": {
+        "proposalId": "prop-attempt-1",
+        "proposalHash": "8106cc64f6709eebf1300df92da94b93c7c3d33666a9f2cfd6d21b6a4958b1d8",
+        "modifiedFiles": [
+          "src/store/cartStore.ts"
+        ],
+        "expectedPatchedFingerprint": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289"
+      }
+    },
+    {
+      "timestamp": "2026-10-14T08:07:51.380Z",
+      "stage": "verification",
+      "message": "Post-patch reproduction outcome: PASSED (passed: true)"
+    },
+    {
+      "timestamp": "2026-10-14T08:07:51.394Z",
+      "stage": "regression",
+      "message": "Candidate regression checks failed (3 failure(s))."
+    },
+    {
+      "timestamp": "2026-10-14T08:07:51.448Z",
+      "stage": "retry",
+      "message": "Attempt 1 failed: Required regression checks failed on candidate source. Restoring pristine workspace."
+    },
+    {
+      "timestamp": "2026-10-14T08:07:51.463Z",
+      "stage": "investigation",
+      "message": "Investigating source files (Attempt 2)"
+    },
+    {
+      "timestamp": "2026-10-14T08:07:51.497Z",
+      "stage": "proposal",
+      "message": "Generated and validated patch proposal. Awaiting exact review approval.",
+      "data": {
+        "proposalId": "prop-attempt-2",
+        "proposalHash": "8106cc64f6709eebf1300df92da94b93c7c3d33666a9f2cfd6d21b6a4958b1d8",
+        "attempt": 2
+      }
+    },
+    {
+      "timestamp": "2026-10-14T08:07:51.643Z",
+      "stage": "patch_applied",
+      "message": "Exact reviewed patch applied transactionally to candidate workspace",
+      "data": {
+        "proposalId": "prop-attempt-2",
+        "proposalHash": "8106cc64f6709eebf1300df92da94b93c7c3d33666a9f2cfd6d21b6a4958b1d8",
+        "modifiedFiles": [
+          "src/store/cartStore.ts"
+        ],
+        "expectedPatchedFingerprint": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289"
+      }
+    },
+    {
+      "timestamp": "2026-10-14T08:07:51.657Z",
+      "stage": "verification",
+      "message": "Post-patch reproduction outcome: PASSED (passed: true)"
+    },
+    {
+      "timestamp": "2026-10-14T08:07:51.674Z",
+      "stage": "regression",
+      "message": "All 3 candidate regression checks passed cleanly."
+    },
+    {
+      "timestamp": "2026-10-14T08:07:51.726Z",
+      "stage": "completion",
+      "message": "Run finalized with status: VERIFIED (All verification gates and regression checks passed cleanly.)"
+    }
+  ],
+  "createdAt": "2026-10-14T08:07:51.191Z",
+  "updatedAt": "2026-10-14T08:07:51.726Z",
+  "baselineRun": {
+    "outcome": "ASSERTION_FAILED",
+    "testFingerprint": "8768f154ce1bde6ca8ceed591bfe83f4d33d1e955568c2d08997f6335f2287c7",
+    "testIds": [
+      "tests/playwright/cases/case-001-cart-total.spec.ts:cart total should equal sum:chromium"
+    ],
+    "runId": "run-before",
+    "reportHash": "report-hash-retry",
+    "runAt": "2026-10-14T08:07:51.200Z",
+    "passed": false,
+    "expected": "Total is $30.00",
+    "actual": "Total is $10.00",
+    "durationMs": 90,
+    "evidenceIds": []
+  },
+  "proposal": {
+    "schemaVersion": "1.0",
+    "proposalId": "prop-attempt-2",
+    "diagnosis": "Total only reads first item price",
+    "assumptions": [
+      "Standard cart logic"
+    ],
+    "rationale": "Use array reduce to calculate total",
+    "edits": [
+      {
+        "relativePath": "src/store/cartStore.ts",
+        "oldContent": "  total: () => get().items[0]?.price ?? 0,",
+        "newContent": "  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),"
+      }
+    ],
+    "unifiedDiff": "--- a/src/store/cartStore.ts\n+++ b/src/store/cartStore.ts\n@@ -64,1 +64,1 @@\n-  total: () => get().items[0]?.price ?? 0,\n+  total: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),\n",
+    "proposalHash": "8106cc64f6709eebf1300df92da94b93c7c3d33666a9f2cfd6d21b6a4958b1d8",
+    "proposedAt": "2026-10-14T08:07:50.120Z"
+  },
+  "review": {
+    "proposalId": "prop-attempt-2",
+    "proposalHash": "8106cc64f6709eebf1300df92da94b93c7c3d33666a9f2cfd6d21b6a4958b1d8",
+    "decision": "APPROVED"
+  },
+  "postPatchRun": {
+    "outcome": "PASSED",
+    "testFingerprint": "8768f154ce1bde6ca8ceed591bfe83f4d33d1e955568c2d08997f6335f2287c7",
+    "testIds": [
+      "tests/playwright/cases/case-001-cart-total.spec.ts:cart total should equal sum:chromium"
+    ],
+    "runId": "run-after",
+    "reportHash": "report-hash-retry",
+    "runAt": "2026-10-14T08:07:51.656Z",
+    "passed": true,
+    "expected": "Total is $30.00",
+    "actual": "Total is $30.00",
+    "durationMs": 90,
+    "evidenceIds": []
+  },
+  "stopReason": "All verification gates and regression checks passed cleanly.",
+  "completedAt": "2026-10-14T08:07:51.724Z"
+}

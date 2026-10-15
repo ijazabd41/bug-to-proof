@@ -1,0 +1,65 @@
+{
+  "schemaVersion": "1.0",
+  "reproductionRunId": "a1afc45b-efd6-4166-a0db-0a8f26d930df",
+  "caseId": "case-1792006828897-paot5g0d",
+  "state": "BLOCKED",
+  "reportSnapshot": {
+    "title": "Cart badge counts product lines instead of units",
+    "description": "The navigation badge appears to show unique products rather than total quantity.",
+    "steps": [
+      "Open the shop page",
+      "Add Keyboard twice",
+      "Observe the Cart navigation badge"
+    ],
+    "expected": "The Cart badge should display 2.",
+    "actual": "The Cart badge displays 1.",
+    "startPath": "/",
+    "context": "Fresh browser storage and an empty cart."
+  },
+  "attempts": [],
+  "events": [
+    {
+      "sequence": 1,
+      "state": "DISCOVERING_TARGET",
+      "message": "Started bounded target discovery",
+      "createdAt": "2026-10-14T19:40:28.936Z"
+    },
+    {
+      "sequence": 2,
+      "state": "GENERATING_CANDIDATE",
+      "message": "Generating candidate attempt 1",
+      "createdAt": "2026-10-14T19:40:28.969Z"
+    },
+    {
+      "sequence": 3,
+      "state": "BLOCKED",
+      "message": "Reproduction generation provider request failed (request_failed)",
+      "createdAt": "2026-10-14T19:40:39.533Z"
+    }
+  ],
+  "limits": {
+    "maxAttempts": 3,
+    "maxSteps": 20,
+    "maxRuntimeMs": 120000,
+    "maxDefinitionBytes": 32000,
+    "maxDiagnosticBytes": 16000
+  },
+  "createdAt": "2026-10-14T19:40:28.936Z",
+  "updatedAt": "2026-10-14T19:40:39.533Z",
+  "targetSnapshot": {
+    "sourceFingerprint": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289",
+    "targetUrl": "http://localhost:5174",
+    "createdAt": "2026-10-14T19:40:28.964Z"
+  },
+  "discovery": {
+    "artifactPath": "a1afc45b-efd6-4166-a0db-0a8f26d930df/discovery/discovery.json",
+    "inventoryDigest": "17822468a35e921c7b66b92c24f728bea1f78d9cc91244bd9ca7ef361545e86b",
+    "routes": [
+      "/",
+      "/cart"
+    ],
+    "capturedAt": "2026-10-14T19:40:28.964Z"
+  },
+  "stopReason": "Generation provider failed",
+  "completedAt": "2026-10-14T19:40:39.538Z"
+}

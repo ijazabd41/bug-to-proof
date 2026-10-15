@@ -1,0 +1,117 @@
+{
+  "schemaVersion": "1.0",
+  "sourceFingerprint": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289",
+  "routes": [
+    "/",
+    "/cart"
+  ],
+  "controls": [
+    {
+      "role": "button",
+      "name": "Add to Cart",
+      "sourcePath": "src/components/ProductCard.tsx"
+    },
+    {
+      "role": "button",
+      "name": "Apply",
+      "sourcePath": "src/components/Cart.tsx"
+    },
+    {
+      "role": "button",
+      "name": "Checkout",
+      "sourcePath": "src/components/Cart.tsx"
+    },
+    {
+      "role": "button",
+      "name": "Checkout",
+      "sourcePath": "src/pages/CartPage.tsx"
+    },
+    {
+      "role": "button",
+      "name": "Remove item",
+      "sourcePath": "src/components/CartItem.tsx"
+    },
+    {
+      "role": "link",
+      "name": "← Back to Shop",
+      "sourcePath": "src/pages/CartPage.tsx"
+    },
+    {
+      "role": "link",
+      "name": "🛒 MiniShop",
+      "sourcePath": "src/App.tsx"
+    },
+    {
+      "role": "link",
+      "name": "Cart",
+      "sourcePath": "src/App.tsx"
+    },
+    {
+      "role": "textbox",
+      "name": "Promo code",
+      "sourcePath": "src/components/Cart.tsx"
+    }
+  ],
+  "headings": [
+    {
+      "level": 1,
+      "text": "🛒 MiniShop",
+      "sourcePath": "src/App.tsx"
+    },
+    {
+      "level": 2,
+      "text": "Cart",
+      "sourcePath": "src/components/Cart.tsx"
+    },
+    {
+      "level": 2,
+      "text": "Products",
+      "sourcePath": "src/components/ProductList.tsx"
+    },
+    {
+      "level": 2,
+      "text": "Your Cart",
+      "sourcePath": "src/pages/CartPage.tsx"
+    }
+  ],
+  "fixtures": {
+    "products": [
+      {
+        "id": 1,
+        "name": "Keyboard",
+        "price": 10
+      },
+      {
+        "id": 2,
+        "name": "Mouse Pad",
+        "price": 20
+      },
+      {
+        "id": 3,
+        "name": "USB Hub",
+        "price": 15
+      },
+      {
+        "id": 4,
+        "name": "Webcam",
+        "price": 35
+      }
+    ]
+  },
+  "sourceFiles": [
+    "src/App.tsx",
+    "src/components/Cart.tsx",
+    "src/components/CartItem.tsx",
+    "src/components/ProductCard.tsx",
+    "src/components/ProductList.tsx",
+    "src/data/products.ts",
+    "src/main.tsx",
+    "src/pages/CartPage.tsx",
+    "src/pages/ShopPage.tsx",
+    "src/setupTests.ts",
+    "src/store/cartStore.ts",
+    "src/types/index.ts"
+  ],
+  "inventoryDigest": "2f7855d90514749e47c0c4c59e9dbfbd19ffbacee0548df05e5b3953e7f48489",
+  "capturedAt": "2026-10-12T19:57:01.125Z"
+}

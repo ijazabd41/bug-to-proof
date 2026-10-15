@@ -13,6 +13,7 @@ import { reproduceRouter } from "./routes/reproduce";
 import { verifyRouter } from "./routes/verify";
 import { aiRouter } from "./routes/ai";
 import { demoRouter } from "./routes/demo";
+import { reproductionRunsRouter, reproductionRunStore } from "./routes/reproductionRuns";
 import { errorHandler } from "./middleware/errorHandler";
 import { recoverInterruptedRuns } from "./ai/repair/runStore";
 import { recoverInterruptedLegacyCases } from "./storage/caseStore";
@@ -169,6 +170,7 @@ app.use("/api/cases", reproduceRouter);
 app.use("/api/cases", verifyRouter);
 app.use("/api/demo", demoRouter);
 app.use("/api/ai", aiRouter);
+app.use("/api", reproductionRunsRouter);
 
 // ── Health check ────────────────────────────────────────────────────────────
 app.get("/api/health", (_req, res) => {
@@ -182,6 +184,7 @@ app.use(errorHandler);
 // Reconcile legacy running cases and dynamic repair runs from previous process lifecycle
 recoverInterruptedLegacyCases();
 recoverInterruptedRuns();
+reproductionRunStore.recoverInterrupted();
 
 const isDirectRun =
   process.env.NODE_ENV !== "test" &&

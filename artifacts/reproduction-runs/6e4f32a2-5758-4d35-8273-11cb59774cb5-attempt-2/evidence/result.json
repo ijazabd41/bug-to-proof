@@ -1,0 +1,158 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\bug-to-proof\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "D:\\bug-to-proof\\artifacts\\reproduction-runs\\generated\\6e4f32a2-5758-4d35-8273-11cb59774cb5-attempt-2\\generated-test\\playwright.generated.config.cjs",
+      "artifacts/reproduction-runs/generated/6e4f32a2-5758-4d35-8273-11cb59774cb5-attempt-2/generated-test/reproduction.spec.ts",
+      "--reporter=json",
+      "--output",
+      "D:\\bug-to-proof\\artifacts\\reproduction-runs\\6e4f32a2-5758-4d35-8273-11cb59774cb5-attempt-2\\evidence"
+    ],
+    "configFile": "D:\\bug-to-proof\\artifacts\\reproduction-runs\\generated\\6e4f32a2-5758-4d35-8273-11cb59774cb5-attempt-2\\generated-test\\playwright.generated.config.cjs",
+    "rootDir": "D:/bug-to-proof/artifacts/reproduction-runs/generated/6e4f32a2-5758-4d35-8273-11cb59774cb5-attempt-2/generated-test",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/bug-to-proof/artifacts/reproduction-runs/6e4f32a2-5758-4d35-8273-11cb59774cb5-attempt-2/evidence",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "D:/bug-to-proof/artifacts/reproduction-runs/generated/6e4f32a2-5758-4d35-8273-11cb59774cb5-attempt-2/generated-test",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "reproduction.spec.ts",
+      "file": "reproduction.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "btp-6e4f32a2-5758-4d35-8273-11cb59774cb5-attempt-2-v1-43f50537386f",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 2657,
+                  "error": {
+                    "message": "Error: locator.click: Error: strict mode violation: getByRole('button', { name: 'Add to Cart', exact: true }) resolved to 4 elements:\n    1) <button data-testid=\"add-to-cart-1\">Add to Cart</button> aka getByTestId('add-to-cart-1')\n    2) <button data-testid=\"add-to-cart-2\">Add to Cart</button> aka getByTestId('add-to-cart-2')\n    3) <button data-testid=\"add-to-cart-3\">Add to Cart</button> aka getByTestId('add-to-cart-3')\n    4) <button data-testid=\"add-to-cart-4\">Add to Cart</button> aka getByTestId('add-to-cart-4')\n\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Add to Cart', exact: true })\u001b[22m\n",
+                    "stack": "Error: locator.click: Error: strict mode violation: getByRole('button', { name: 'Add to Cart', exact: true }) resolved to 4 elements:\n    1) <button data-testid=\"add-to-cart-1\">Add to Cart</button> aka getByTestId('add-to-cart-1')\n    2) <button data-testid=\"add-to-cart-2\">Add to Cart</button> aka getByTestId('add-to-cart-2')\n    3) <button data-testid=\"add-to-cart-3\">Add to Cart</button> aka getByTestId('add-to-cart-3')\n    4) <button data-testid=\"add-to-cart-4\">Add to Cart</button> aka getByTestId('add-to-cart-4')\n\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Add to Cart', exact: true })\u001b[22m\n\n    at D:\\bug-to-proof\\artifacts\\reproduction-runs\\generated\\6e4f32a2-5758-4d35-8273-11cb59774cb5-attempt-2\\generated-test\\reproduction.spec.ts:20:78",
+                    "location": {
+                      "file": "D:\\bug-to-proof\\artifacts\\reproduction-runs\\generated\\6e4f32a2-5758-4d35-8273-11cb59774cb5-attempt-2\\generated-test\\reproduction.spec.ts",
+                      "column": 78,
+                      "line": 20
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 18 |\u001b[39m   \u001b[36mfor\u001b[39m (\u001b[36mconst\u001b[39m step \u001b[36mof\u001b[39m definition\u001b[33m.\u001b[39msteps) {\n \u001b[90m 19 |\u001b[39m     \u001b[36mif\u001b[39m (step\u001b[33m.\u001b[39mtype \u001b[33m===\u001b[39m \u001b[32m\"goto\"\u001b[39m) \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(step\u001b[33m.\u001b[39mpath)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 20 |\u001b[39m     \u001b[36melse\u001b[39m \u001b[36mif\u001b[39m (step\u001b[33m.\u001b[39mtype \u001b[33m===\u001b[39m \u001b[32m\"click\"\u001b[39m) \u001b[36mawait\u001b[39m locate(page\u001b[33m,\u001b[39m step\u001b[33m.\u001b[39mrole\u001b[33m,\u001b[39m step\u001b[33m.\u001b[39mname)\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 21 |\u001b[39m     \u001b[36melse\u001b[39m \u001b[36mif\u001b[39m (step\u001b[33m.\u001b[39mtype \u001b[33m===\u001b[39m \u001b[32m\"fill\"\u001b[39m) \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByLabel(step\u001b[33m.\u001b[39mlabel\u001b[33m,\u001b[39m { exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\u001b[33m.\u001b[39mfill(step\u001b[33m.\u001b[39mtext)\u001b[33m;\u001b[39m\n \u001b[90m 22 |\u001b[39m     \u001b[36melse\u001b[39m \u001b[36mif\u001b[39m (step\u001b[33m.\u001b[39mtype \u001b[33m===\u001b[39m \u001b[32m\"selectOption\"\u001b[39m) \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByLabel(step\u001b[33m.\u001b[39mlabel\u001b[33m,\u001b[39m { exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\u001b[33m.\u001b[39mselectOption(step\u001b[33m.\u001b[39mvalue)\u001b[33m;\u001b[39m\n \u001b[90m 23 |\u001b[39m     \u001b[36melse\u001b[39m \u001b[36mif\u001b[39m (step\u001b[33m.\u001b[39mtype \u001b[33m===\u001b[39m \u001b[32m\"waitForVisible\"\u001b[39m) \u001b[36mawait\u001b[39m expect(locate(page\u001b[33m,\u001b[39m step\u001b[33m.\u001b[39mrole\u001b[33m,\u001b[39m step\u001b[33m.\u001b[39mname))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\bug-to-proof\\artifacts\\reproduction-runs\\generated\\6e4f32a2-5758-4d35-8273-11cb59774cb5-attempt-2\\generated-test\\reproduction.spec.ts",
+                        "column": 78,
+                        "line": 20
+                      },
+                      "message": "Error: locator.click: Error: strict mode violation: getByRole('button', { name: 'Add to Cart', exact: true }) resolved to 4 elements:\n    1) <button data-testid=\"add-to-cart-1\">Add to Cart</button> aka getByTestId('add-to-cart-1')\n    2) <button data-testid=\"add-to-cart-2\">Add to Cart</button> aka getByTestId('add-to-cart-2')\n    3) <button data-testid=\"add-to-cart-3\">Add to Cart</button> aka getByTestId('add-to-cart-3')\n    4) <button data-testid=\"add-to-cart-4\">Add to Cart</button> aka getByTestId('add-to-cart-4')\n\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Add to Cart', exact: true })\u001b[22m\n\n\n  18 |   for (const step of definition.steps) {\n  19 |     if (step.type === \"goto\") await page.goto(step.path);\n> 20 |     else if (step.type === \"click\") await locate(page, step.role, step.name).click();\n     |                                                                              ^\n  21 |     else if (step.type === \"fill\") await page.getByLabel(step.label, { exact: true }).fill(step.text);\n  22 |     else if (step.type === \"selectOption\") await page.getByLabel(step.label, { exact: true }).selectOption(step.value);\n  23 |     else if (step.type === \"waitForVisible\") await expect(locate(page, step.role, step.name)).toBeVisible();\n    at D:\\bug-to-proof\\artifacts\\reproduction-runs\\generated\\6e4f32a2-5758-4d35-8273-11cb59774cb5-attempt-2\\generated-test\\reproduction.spec.ts:20:78"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-12T19:53:19.206Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\bug-to-proof\\artifacts\\reproduction-runs\\6e4f32a2-5758-4d35-8273-11cb59774cb5-attempt-2\\evidence\\reproduction-btp-6e4f32a2--bb85b-5-attempt-2-v1-43f50537386f-chromium\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\bug-to-proof\\artifacts\\reproduction-runs\\6e4f32a2-5758-4d35-8273-11cb59774cb5-attempt-2\\evidence\\reproduction-btp-6e4f32a2--bb85b-5-attempt-2-v1-43f50537386f-chromium\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\bug-to-proof\\artifacts\\reproduction-runs\\6e4f32a2-5758-4d35-8273-11cb59774cb5-attempt-2\\evidence\\reproduction-btp-6e4f32a2--bb85b-5-attempt-2-v1-43f50537386f-chromium\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\bug-to-proof\\artifacts\\reproduction-runs\\generated\\6e4f32a2-5758-4d35-8273-11cb59774cb5-attempt-2\\generated-test\\reproduction.spec.ts",
+                    "column": 78,
+                    "line": 20
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "ff0f9736443589895b2b-606ba37204394ae70e7b",
+          "file": "reproduction.spec.ts",
+          "line": 12,
+          "column": 5
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-12T19:53:15.982Z",
+    "duration": 7526.4310000000005,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

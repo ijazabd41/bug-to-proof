@@ -1,0 +1,150 @@
+﻿{
+    "schemaVersion":  "1.0",
+    "reproductionRunId":  "f8c046fe-f61b-48bb-91db-3ef7852caa9c",
+    "caseId":  "case-1791917152458-q2v3hxi6",
+    "state":  "BLOCKED",
+    "reportSnapshot":  {
+                           "title":  "Cart total omits the shipping charge",
+                           "description":  "When the cart subtotal is below the free-shipping threshold, the displayed Total shows only the merchandise subtotal instead of subtotal plus the visible shipping charge.",
+                           "steps":  [
+                                         "Open the shop page",
+                                         "Add Keyboard to the cart",
+                                         "Observe the Shipping and Total values"
+                                     ],
+                           "expected":  "With a .00 Keyboard and .00 shipping, Total should display .00.",
+                           "actual":  "Shipping displays .00 but Total displays .00.",
+                           "startPath":  "/",
+                           "context":  "Fresh browser storage and an initially empty cart."
+                       },
+    "attempts":  [
+                     {
+                         "attempt":  1,
+                         "attemptExecutionId":  "f8c046fe-f61b-48bb-91db-3ef7852caa9c-attempt-1",
+                         "provider":  "legacy",
+                         "model":  "openai/gpt-oss-20b",
+                         "promptVersion":  "reproduction-v1",
+                         "responseShape":  "choices_array:first_choice_object:message_object:content_string_nonempty",
+                         "classification":  "CANDIDATE_INVALID",
+                         "diagnostics":  "definition is not valid JSON",
+                         "validationFindings":  [
+                                                    "definition is not valid JSON"
+                                                ],
+                         "durationMs":  4628,
+                         "artifactPaths":  [
+                                               "f8c046fe-f61b-48bb-91db-3ef7852caa9c/attempt-1/model-output.txt"
+                                           ]
+                     },
+                     {
+                         "attempt":  2,
+                         "attemptExecutionId":  "f8c046fe-f61b-48bb-91db-3ef7852caa9c-attempt-2",
+                         "definition":  {
+                                            "schemaVersion":  "1.0",
+                                            "title":  "Cart total omits the shipping charge",
+                                            "startPath":  "/",
+                                            "preconditions":  [
+                                                                  {
+                                                                      "type":  "clearLocalStorage"
+                                                                  }
+                                                              ],
+                                            "steps":  [
+                                                          {
+                                                              "type":  "goto",
+                                                              "path":  "/"
+                                                          },
+                                                          {
+                                                              "type":  "clickTarget",
+                                                              "testId":  "add-to-cart-1"
+                                                          },
+                                                          {
+                                                              "type":  "waitForTargetVisible",
+                                                              "testId":  "cart-total"
+                                                          }
+                                                      ],
+                                            "assertion":  {
+                                                              "type":  "targetCurrencyEquals",
+                                                              "testId":  "cart-total",
+                                                              "expected":  0,
+                                                              "currency":  "USD"
+                                                          },
+                                            "rationale":  "When the cart subtotal is below the free-shipping threshold, the displayed Total shows only the merchandise subtotal instead of subtotal plus the visible shipping charge.",
+                                            "reportMapping":  [
+                                                                  {
+                                                                      "reportFact":  "Shipping displays .00 but Total displays .00.",
+                                                                      "definitionPath":  "assertion.expected"
+                                                                  }
+                                                              ]
+                                        },
+                         "definitionHash":  "43e9d7b89362b09e985583311bfa376a855b7e9d0fae0aaed6ba9b9291fbe2c0",
+                         "compilerVersion":  "1.0.0",
+                         "compiledTestHash":  "0bff3fd33fcc29d18e24dcb4ec3126c291fe7d0d8aadcffbf1faf957d2734498",
+                         "provider":  "legacy",
+                         "model":  "openai/gpt-oss-20b",
+                         "promptVersion":  "reproduction-v1",
+                         "classification":  "CANDIDATE_EXECUTION_ERROR",
+                         "failureKind":  "TARGET_UNREACHABLE",
+                         "diagnostics":  "MiniShop is not reachable at http://localhost:5174",
+                         "durationMs":  10318,
+                         "artifactPaths":  [
+                                               "f8c046fe-f61b-48bb-91db-3ef7852caa9c/attempt-2/model-output.txt",
+                                               "f8c046fe-f61b-48bb-91db-3ef7852caa9c-attempt-2/generated-test/reproduction.spec.ts"
+                                           ]
+                     }
+                 ],
+    "events":  [
+                   {
+                       "sequence":  1,
+                       "state":  "DISCOVERING_TARGET",
+                       "message":  "Started bounded target discovery",
+                       "createdAt":  "2026-10-13T18:46:05.163Z"
+                   },
+                   {
+                       "sequence":  2,
+                       "state":  "GENERATING_CANDIDATE",
+                       "message":  "Generating candidate attempt 1",
+                       "createdAt":  "2026-10-13T18:46:06.802Z"
+                   },
+                   {
+                       "sequence":  3,
+                       "state":  "CANDIDATE_INVALID",
+                       "message":  "Candidate 1 failed validation",
+                       "createdAt":  "2026-10-13T18:46:11.486Z"
+                   },
+                   {
+                       "sequence":  4,
+                       "state":  "GENERATING_CANDIDATE",
+                       "message":  "Generating candidate attempt 2",
+                       "createdAt":  "2026-10-13T18:46:11.624Z"
+                   },
+                   {
+                       "sequence":  5,
+                       "state":  "BLOCKED",
+                       "message":  "Target outage: MiniShop is not reachable at http://localhost:5174",
+                       "createdAt":  "2026-10-13T18:46:26.826Z"
+                   }
+               ],
+    "limits":  {
+                   "maxAttempts":  3,
+                   "maxSteps":  20,
+                   "maxRuntimeMs":  120000,
+                   "maxDefinitionBytes":  32000,
+                   "maxDiagnosticBytes":  16000
+               },
+    "createdAt":  "2026-10-13T18:46:05.162Z",
+    "updatedAt":  "2026-10-13T18:46:26.826Z",
+    "targetSnapshot":  {
+                           "sourceFingerprint":  "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289",
+                           "targetUrl":  "http://localhost:5174",
+                           "createdAt":  "2026-10-13T18:46:06.507Z"
+                       },
+    "discovery":  {
+                      "artifactPath":  "f8c046fe-f61b-48bb-91db-3ef7852caa9c/discovery/discovery.json",
+                      "inventoryDigest":  "17822468a35e921c7b66b92c24f728bea1f78d9cc91244bd9ca7ef361545e86b",
+                      "routes":  [
+                                     "/",
+                                     "/cart"
+                                 ],
+                      "capturedAt":  "2026-10-13T18:46:06.507Z"
+                  },
+    "stopReason":  "Target is unreachable",
+    "completedAt":  "2026-10-13T18:46:26.837Z"
+}

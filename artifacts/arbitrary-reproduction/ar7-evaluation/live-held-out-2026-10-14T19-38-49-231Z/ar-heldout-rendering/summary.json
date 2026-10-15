@@ -1,0 +1,19 @@
+{
+  "evaluationId": "ar-heldout-rendering",
+  "split": "held-out",
+  "category": "rendering",
+  "caseId": "case-1792006828897-paot5g0d",
+  "reproductionRunId": "a1afc45b-efd6-4166-a0db-0a8f26d930df",
+  "state": "BLOCKED",
+  "stopReason": "Generation provider failed",
+  "attempts": 0,
+  "classifications": [],
+  "responseShapes": [],
+  "validCandidate": false,
+  "executableCandidate": false,
+  "relevantReproduction": false,
+  "infrastructureError": false,
+  "unsupported": false,
+  "durationMs": 0,
+  "usage": []
+}

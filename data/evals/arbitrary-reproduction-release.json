@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "1.1",
+  "frozenAt": "2026-10-14T08:35:00.000Z",
+  "status": "FROZEN_FOR_FUTURE_EVALUATION",
+  "policy": {
+    "promptTuningAfterFreezeAllowed": false,
+    "referenceTestsVisibleToGeneration": false,
+    "referenceFixesVisibleToGeneration": false,
+    "notes": "This prospective split was frozen after AR4-AR6 implementation. Historical AR4 live runs are reported separately and are not relabeled as held-out results."
+  },
+  "cases": [
+    {
+      "id": "ar-dev-calculation", "split": "dev", "category": "calculation",
+      "report": { "title": "Cart total omits a visible shipping charge", "description": "The displayed total contains only merchandise even though a shipping charge is shown.", "steps": ["Open the shop page", "Add Keyboard to the cart", "Observe Shipping and Total"], "expected": "Shipping is $5.00, so Total should be $15.00.", "actual": "Shipping is $5.00 but Total is $10.00.", "startPath": "/", "context": "Fresh browser storage and an empty cart." }
+    },
+    {
+      "id": "ar-dev-state", "split": "dev", "category": "state",
+      "report": { "title": "Repeated add does not increase quantity", "description": "Adding the same product twice appears to leave a single unit in the cart.", "steps": ["Open the shop page", "Add Keyboard twice", "Observe the Keyboard quantity"], "expected": "Keyboard quantity should be 2.", "actual": "Keyboard quantity appears to remain 1.", "startPath": "/", "context": "Fresh browser storage and an empty cart." }
+    },
+    {
+      "id": "ar-heldout-deletion", "split": "held-out", "category": "deletion",
+      "report": { "title": "Removing Keyboard leaves the wrong cart line", "description": "Removing one product appears to retain it and discard the other product.", "steps": ["Open the shop page", "Add Keyboard", "Add Mouse Pad", "Remove Keyboard"], "expected": "Only Mouse Pad should remain in the cart.", "actual": "Keyboard remains and Mouse Pad disappears.", "startPath": "/", "context": "Fresh browser storage and an empty cart." }
+    },
+    {
+      "id": "ar-heldout-async", "split": "held-out", "category": "async",
+      "report": { "title": "Promo completion loses a concurrently added item", "description": "An item added while promo validation is pending disappears when validation completes.", "steps": ["Open the shop page", "Add Keyboard", "Enter SAVE20", "Apply the promo and immediately add Mouse Pad", "Wait for the promo result"], "expected": "Keyboard and Mouse Pad should both remain after the promo is applied.", "actual": "Mouse Pad disappears when the promo result arrives.", "startPath": "/", "context": "Fresh browser storage; promo validation is asynchronous." }
+    },
+    {
+      "id": "ar-heldout-rendering", "split": "held-out", "category": "rendering",
+      "report": { "title": "Cart badge counts product lines instead of units", "description": "The navigation badge appears to show unique products rather than total quantity.", "steps": ["Open the shop page", "Add Keyboard twice", "Observe the Cart navigation badge"], "expected": "The Cart badge should display 2.", "actual": "The Cart badge displays 1.", "startPath": "/", "context": "Fresh browser storage and an empty cart." }
+    },
+    {
+      "id": "ar-heldout-multifile", "split": "held-out", "category": "multi-file",
+      "report": { "title": "Free shipping threshold is not reflected in the order summary", "description": "An order at exactly $50 appears to retain a shipping fee in both calculation and display.", "steps": ["Open the shop page", "Add USB Hub", "Add Webcam", "Observe Shipping and Total"], "expected": "At a $50 subtotal, Shipping should be $0.00 and Total should be $50.00.", "actual": "Shipping shows $5.00 and the order total includes it.", "startPath": "/", "context": "Fresh browser storage; free shipping begins at $50." }
+    }
+  ],
+  "datasetHash": "d180534a4320c993283ffa07e4350ef20431eda137c1361f50ea4316591feba3"
+}

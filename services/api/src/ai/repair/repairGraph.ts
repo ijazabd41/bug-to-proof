@@ -3,7 +3,7 @@ import path from "path";
 import http from "http";
 import { Annotation, StateGraph, START, END, interrupt } from "@langchain/langgraph";
 import type { TestRun } from "@bug-to-proof/shared-types";
-import { runTest } from "../../runner/playwrightRunner";
+import { generatedTestFingerprint, runTest } from "../../runner/playwrightRunner";
 import { testFingerprint } from "../../runner/integrity";
 import type {
   RepairRunRecord,
@@ -51,6 +51,7 @@ export const RepairGraphAnnotation = Annotation.Root({
   caseTitle: Annotation<string>(),
   caseDescription: Annotation<string>(),
   reproductionTestFile: Annotation<string>(),
+  reproductionTestRoot: Annotation<string | undefined>(),
   testFingerprint: Annotation<string>(),
   config: Annotation<RepairRunConfig | undefined>(),
   deadlineMs: Annotation<number | null | undefined>(),
@@ -217,6 +218,7 @@ export function buildRepairGraph(dependencies: Partial<RepairGraphDependencies> 
         targetSnapshotDir: ws.workspaceDir,
         testFingerprint: state.testFingerprint,
         reproductionTestFile: state.reproductionTestFile,
+        reproductionTestRoot: state.reproductionTestRoot,
         requiredChecks: existingRecord?.requiredChecks ?? [],
         events: [...(existingRecord?.events ?? []), initialEvent],
         createdAt: existingRecord?.createdAt ?? new Date().toISOString(),
@@ -248,6 +250,7 @@ export function buildRepairGraph(dependencies: Partial<RepairGraphDependencies> 
         targetUrl: state.appUrl!,
         artifactDir: baselineArtifactDir,
         abortSignal: activeRes?.abortController.signal,
+        ...(state.reproductionTestRoot ? { generatedTestRoot: state.reproductionTestRoot } : {}),
       });
       const tBaselineMs = Date.now() - tStart;
 
@@ -293,6 +296,7 @@ export function buildRepairGraph(dependencies: Partial<RepairGraphDependencies> 
       const baseGate = validateBaselineGates({
         caseId: state.caseId,
         reproductionTestFile: state.reproductionTestFile,
+        reproductionTestRoot: state.reproductionTestRoot,
         testFingerprint: state.testFingerprint,
         baselineRun,
         baselineArtifactDir,
@@ -509,6 +513,7 @@ export function buildRepairGraph(dependencies: Partial<RepairGraphDependencies> 
       const baseGate = validateBaselineGates({
         caseId: state.caseId,
         reproductionTestFile: state.reproductionTestFile,
+        reproductionTestRoot: state.reproductionTestRoot,
         testFingerprint: state.testFingerprint,
         baselineRun: state.baselineRun,
         baselineArtifactDir,
@@ -521,7 +526,7 @@ export function buildRepairGraph(dependencies: Partial<RepairGraphDependencies> 
       }
 
       // Verify reproduction test fingerprint against current disk test
-      const currentTestFp = testFingerprint(state.reproductionTestFile);
+      const currentTestFp = state.reproductionTestRoot ? generatedTestFingerprint(state.reproductionTestFile) : testFingerprint(state.reproductionTestFile);
       if (currentTestFp !== state.testFingerprint) {
         throw new Error("Reproduction test inputs mutated since run creation; patch application rejected");
       }
@@ -617,6 +622,7 @@ export function buildRepairGraph(dependencies: Partial<RepairGraphDependencies> 
         targetUrl: state.appUrl!,
         artifactDir: verificationArtifactDir,
         abortSignal: activeRes?.abortController.signal,
+        ...(state.reproductionTestRoot ? { generatedTestRoot: state.reproductionTestRoot } : {}),
       });
       const tPostPatchMs = Date.now() - tStart;
 
@@ -760,6 +766,7 @@ export function buildRepairGraph(dependencies: Partial<RepairGraphDependencies> 
         const gateCheck = validateVerificationGates({
           caseId: state.caseId,
           reproductionTestFile: state.reproductionTestFile,
+          reproductionTestRoot: state.reproductionTestRoot,
           testFingerprint: state.testFingerprint,
           baselineRun: state.baselineRun,
           postPatchRun: state.postPatchRun,

@@ -4,6 +4,7 @@ import { randomUUID } from "crypto";
 import { Command } from "@langchain/langgraph";
 import { readCase } from "../../storage/caseStore";
 import { testFingerprint } from "../../runner/integrity";
+import { generatedTestFingerprint } from "../../runner/playwrightRunner";
 import { ARTIFACTS_DIR, WORKSPACE_ROOT } from "../../utils/paths";
 import type {
   RepairRunRecord,
@@ -53,7 +54,8 @@ export function createRepairRunRecord(
 
   const runId = `run-${randomUUID()}`;
   const reproductionTestFile = bugCase.reproduction.testFile;
-  const fp = testFingerprint(reproductionTestFile);
+  const reproductionTestRoot = bugCase.reproduction.testRoot;
+  const fp = reproductionTestRoot ? generatedTestFingerprint(reproductionTestFile) : testFingerprint(reproductionTestFile);
 
   let reproductionTestContent = "";
   try {
@@ -67,8 +69,10 @@ export function createRepairRunRecord(
     caseSnapshot: JSON.parse(JSON.stringify(bugCase)),
     reproductionTest: {
       filePath: reproductionTestFile,
+      root: reproductionTestRoot,
       content: reproductionTestContent,
       fingerprint: fp,
+      provenance: bugCase.reproduction.generatedTest,
     },
   };
 
@@ -83,6 +87,7 @@ export function createRepairRunRecord(
     originalSourceFingerprint: "",
     targetSnapshotDir: "",
     reproductionTestFile,
+    reproductionTestRoot,
     testFingerprint: fp,
     inputs,
     pricingConfig: config?.pricingConfig,
@@ -126,7 +131,8 @@ export async function executeRepairRun(
   }
 
   const reproductionTestFile = record.reproductionTestFile || bugCase.reproduction?.testFile || "";
-  const fp = record.testFingerprint || testFingerprint(reproductionTestFile);
+  const reproductionTestRoot = record.reproductionTestRoot || bugCase.reproduction?.testRoot;
+  const fp = record.testFingerprint || (reproductionTestRoot ? generatedTestFingerprint(reproductionTestFile) : testFingerprint(reproductionTestFile));
   const startTime = Date.now();
   const deadlineMs = config?.timeoutMs ? startTime + config.timeoutMs : null;
 
@@ -144,6 +150,7 @@ export async function executeRepairRun(
         caseTitle: bugCase.title,
         caseDescription: bugCase.description,
         reproductionTestFile,
+        reproductionTestRoot,
         testFingerprint: fp,
         config: config ?? { mode: record.mode, maxAttempts: record.maxAttempts },
         deadlineMs,

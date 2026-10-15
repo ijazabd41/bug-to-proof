@@ -1,0 +1,334 @@
+{
+  "schemaVersion": "1.0",
+  "sourceFingerprint": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289",
+  "routes": [
+    "/",
+    "/cart"
+  ],
+  "controls": [
+    {
+      "role": "button",
+      "name": "Add to Cart",
+      "sourcePath": "src/components/ProductCard.tsx",
+      "context": {
+        "kind": "product",
+        "productId": 1,
+        "productName": "Keyboard"
+      }
+    },
+    {
+      "role": "button",
+      "name": "Add to Cart",
+      "sourcePath": "src/components/ProductCard.tsx",
+      "context": {
+        "kind": "product",
+        "productId": 2,
+        "productName": "Mouse Pad"
+      }
+    },
+    {
+      "role": "button",
+      "name": "Add to Cart",
+      "sourcePath": "src/components/ProductCard.tsx",
+      "context": {
+        "kind": "product",
+        "productId": 3,
+        "productName": "USB Hub"
+      }
+    },
+    {
+      "role": "button",
+      "name": "Add to Cart",
+      "sourcePath": "src/components/ProductCard.tsx",
+      "context": {
+        "kind": "product",
+        "productId": 4,
+        "productName": "Webcam"
+      }
+    },
+    {
+      "role": "button",
+      "name": "Apply",
+      "sourcePath": "src/components/Cart.tsx"
+    },
+    {
+      "role": "button",
+      "name": "Checkout",
+      "sourcePath": "src/components/Cart.tsx"
+    },
+    {
+      "role": "button",
+      "name": "Checkout",
+      "sourcePath": "src/pages/CartPage.tsx"
+    },
+    {
+      "role": "button",
+      "name": "Remove item",
+      "sourcePath": "src/components/CartItem.tsx"
+    },
+    {
+      "role": "link",
+      "name": "← Back to Shop",
+      "sourcePath": "src/pages/CartPage.tsx"
+    },
+    {
+      "role": "link",
+      "name": "🛒 MiniShop",
+      "sourcePath": "src/App.tsx"
+    },
+    {
+      "role": "link",
+      "name": "Cart",
+      "sourcePath": "src/App.tsx"
+    },
+    {
+      "role": "textbox",
+      "name": "Promo code",
+      "sourcePath": "src/components/Cart.tsx"
+    }
+  ],
+  "headings": [
+    {
+      "level": 1,
+      "text": "🛒 MiniShop",
+      "sourcePath": "src/App.tsx"
+    },
+    {
+      "level": 2,
+      "text": "Cart",
+      "sourcePath": "src/components/Cart.tsx"
+    },
+    {
+      "level": 2,
+      "text": "Products",
+      "sourcePath": "src/components/ProductList.tsx"
+    },
+    {
+      "level": 2,
+      "text": "Your Cart",
+      "sourcePath": "src/pages/CartPage.tsx"
+    }
+  ],
+  "targets": [
+    {
+      "testId": "add-to-cart-1",
+      "sourcePath": "src/components/ProductCard.tsx",
+      "context": {
+        "kind": "product",
+        "productId": 1,
+        "productName": "Keyboard"
+      }
+    },
+    {
+      "testId": "add-to-cart-2",
+      "sourcePath": "src/components/ProductCard.tsx",
+      "context": {
+        "kind": "product",
+        "productId": 2,
+        "productName": "Mouse Pad"
+      }
+    },
+    {
+      "testId": "add-to-cart-3",
+      "sourcePath": "src/components/ProductCard.tsx",
+      "context": {
+        "kind": "product",
+        "productId": 3,
+        "productName": "USB Hub"
+      }
+    },
+    {
+      "testId": "add-to-cart-4",
+      "sourcePath": "src/components/ProductCard.tsx",
+      "context": {
+        "kind": "product",
+        "productId": 4,
+        "productName": "Webcam"
+      }
+    },
+    {
+      "testId": "apply-promo-button",
+      "sourcePath": "src/components/Cart.tsx"
+    },
+    {
+      "testId": "back-to-shop",
+      "sourcePath": "src/pages/CartPage.tsx"
+    },
+    {
+      "testId": "cart-item-1",
+      "sourcePath": "src/components/CartItem.tsx",
+      "context": {
+        "kind": "product",
+        "productId": 1,
+        "productName": "Keyboard"
+      }
+    },
+    {
+      "testId": "cart-item-2",
+      "sourcePath": "src/components/CartItem.tsx",
+      "context": {
+        "kind": "product",
+        "productId": 2,
+        "productName": "Mouse Pad"
+      }
+    },
+    {
+      "testId": "cart-item-3",
+      "sourcePath": "src/components/CartItem.tsx",
+      "context": {
+        "kind": "product",
+        "productId": 3,
+        "productName": "USB Hub"
+      }
+    },
+    {
+      "testId": "cart-item-4",
+      "sourcePath": "src/components/CartItem.tsx",
+      "context": {
+        "kind": "product",
+        "productId": 4,
+        "productName": "Webcam"
+      }
+    },
+    {
+      "testId": "cart-item-quantity-1",
+      "sourcePath": "src/components/CartItem.tsx",
+      "context": {
+        "kind": "product",
+        "productId": 1,
+        "productName": "Keyboard"
+      }
+    },
+    {
+      "testId": "cart-item-quantity-2",
+      "sourcePath": "src/components/CartItem.tsx",
+      "context": {
+        "kind": "product",
+        "productId": 2,
+        "productName": "Mouse Pad"
+      }
+    },
+    {
+      "testId": "cart-item-quantity-3",
+      "sourcePath": "src/components/CartItem.tsx",
+      "context": {
+        "kind": "product",
+        "productId": 3,
+        "productName": "USB Hub"
+      }
+    },
+    {
+      "testId": "cart-item-quantity-4",
+      "sourcePath": "src/components/CartItem.tsx",
+      "context": {
+        "kind": "product",
+        "productId": 4,
+        "productName": "Webcam"
+      }
+    },
+    {
+      "testId": "cart-total",
+      "sourcePath": "src/components/Cart.tsx"
+    },
+    {
+      "testId": "cart-total",
+      "sourcePath": "src/pages/CartPage.tsx"
+    },
+    {
+      "testId": "checkout-button",
+      "sourcePath": "src/components/Cart.tsx"
+    },
+    {
+      "testId": "checkout-button",
+      "sourcePath": "src/pages/CartPage.tsx"
+    },
+    {
+      "testId": "nav-cart-link",
+      "sourcePath": "src/App.tsx"
+    },
+    {
+      "testId": "promo-input",
+      "sourcePath": "src/components/Cart.tsx"
+    },
+    {
+      "testId": "remove-from-cart-1",
+      "sourcePath": "src/components/CartItem.tsx",
+      "context": {
+        "kind": "product",
+        "productId": 1,
+        "productName": "Keyboard"
+      }
+    },
+    {
+      "testId": "remove-from-cart-2",
+      "sourcePath": "src/components/CartItem.tsx",
+      "context": {
+        "kind": "product",
+        "productId": 2,
+        "productName": "Mouse Pad"
+      }
+    },
+    {
+      "testId": "remove-from-cart-3",
+      "sourcePath": "src/components/CartItem.tsx",
+      "context": {
+        "kind": "product",
+        "productId": 3,
+        "productName": "USB Hub"
+      }
+    },
+    {
+      "testId": "remove-from-cart-4",
+      "sourcePath": "src/components/CartItem.tsx",
+      "context": {
+        "kind": "product",
+        "productId": 4,
+        "productName": "Webcam"
+      }
+    },
+    {
+      "testId": "shipping-fee",
+      "sourcePath": "src/components/Cart.tsx"
+    }
+  ],
+  "fixtures": {
+    "products": [
+      {
+        "id": 1,
+        "name": "Keyboard",
+        "price": 10
+      },
+      {
+        "id": 2,
+        "name": "Mouse Pad",
+        "price": 20
+      },
+      {
+        "id": 3,
+        "name": "USB Hub",
+        "price": 15
+      },
+      {
+        "id": 4,
+        "name": "Webcam",
+        "price": 35
+      }
+    ]
+  },
+  "sourceFiles": [
+    "src/App.tsx",
+    "src/components/Cart.tsx",
+    "src/components/CartItem.tsx",
+    "src/components/ProductCard.tsx",
+    "src/components/ProductList.tsx",
+    "src/data/products.ts",
+    "src/main.tsx",
+    "src/pages/CartPage.tsx",
+    "src/pages/ShopPage.tsx",
+    "src/setupTests.ts",
+    "src/store/cartStore.ts",
+    "src/types/index.ts"
+  ],
+  "inventoryDigest": "17822468a35e921c7b66b92c24f728bea1f78d9cc91244bd9ca7ef361545e86b",
+  "capturedAt": "2026-10-13T18:56:53.717Z"
+}

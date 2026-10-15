@@ -1,0 +1,163 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\bug-to-proof\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "D:\\bug-to-proof\\artifacts\\reproduction-runs\\generated\\78745fe7-03b0-4e64-9ccb-2e36d6e7bfce-attempt-1\\generated-test\\playwright.generated.config.cjs",
+      "artifacts/reproduction-runs/generated/78745fe7-03b0-4e64-9ccb-2e36d6e7bfce-attempt-1/generated-test/reproduction.spec.ts",
+      "--reporter=json",
+      "--output",
+      "D:\\bug-to-proof\\artifacts\\reproduction-runs\\78745fe7-03b0-4e64-9ccb-2e36d6e7bfce-attempt-1\\evidence"
+    ],
+    "configFile": "D:\\bug-to-proof\\artifacts\\reproduction-runs\\generated\\78745fe7-03b0-4e64-9ccb-2e36d6e7bfce-attempt-1\\generated-test\\playwright.generated.config.cjs",
+    "rootDir": "D:/bug-to-proof/artifacts/reproduction-runs/generated/78745fe7-03b0-4e64-9ccb-2e36d6e7bfce-attempt-1/generated-test",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/bug-to-proof/artifacts/reproduction-runs/78745fe7-03b0-4e64-9ccb-2e36d6e7bfce-attempt-1/evidence",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "D:/bug-to-proof/artifacts/reproduction-runs/generated/78745fe7-03b0-4e64-9ccb-2e36d6e7bfce-attempt-1/generated-test",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "reproduction.spec.ts",
+      "file": "reproduction.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "btp-78745fe7-03b0-4e64-9ccb-2e36d6e7bfce-attempt-1-v1-c7bcf8b3f057",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 2097,
+                  "error": {
+                    "message": "Error: BTP_ASSERTION: targetCurrencyEquals\nExpected: 0\nReceived: 10\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m10\u001b[39m",
+                    "stack": "Error: BTP_ASSERTION: targetCurrencyEquals\nExpected: 0\nReceived: 10\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m10\u001b[39m\n    at assertWithEvidence (D:\\bug-to-proof\\artifacts\\reproduction-runs\\generated\\78745fe7-03b0-4e64-9ccb-2e36d6e7bfce-attempt-1\\generated-test\\reproduction.spec.ts:11:48)\n    at D:\\bug-to-proof\\artifacts\\reproduction-runs\\generated\\78745fe7-03b0-4e64-9ccb-2e36d6e7bfce-attempt-1\\generated-test\\reproduction.spec.ts:31:642",
+                    "location": {
+                      "file": "D:\\bug-to-proof\\artifacts\\reproduction-runs\\generated\\78745fe7-03b0-4e64-9ccb-2e36d6e7bfce-attempt-1\\generated-test\\reproduction.spec.ts",
+                      "column": 48,
+                      "line": 11
+                    },
+                    "snippet": "   9 | async function assertWithEvidence(testInfo: any, label: string, expected: unknown, received: unknown, check: () => void | Promise<void>) {\n  10 |   await testInfo.attach(\"btp-assertion\", { body: JSON.stringify({ actual: String(received), expected: String(expected), label }), contentType: \"application/json\" });\n> 11 |   try { await check(); } catch (error) { throw new Error(`BTP_ASSERTION: ${label}\\nExpected: ${JSON.stringify(expected)}\\nReceived: ${JSON.stringify(received)}\\n${error instanceof Error ? error.message : String(error)}`); }\n     |                                                ^\n  12 | }\n  13 |\n  14 | test(\"btp-78745fe7-03b0-4e64-9ccb-2e36d6e7bfce-attempt-1-v1-c7bcf8b3f057\", async ({ page }, testInfo) => {"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\bug-to-proof\\artifacts\\reproduction-runs\\generated\\78745fe7-03b0-4e64-9ccb-2e36d6e7bfce-attempt-1\\generated-test\\reproduction.spec.ts",
+                        "column": 48,
+                        "line": 11
+                      },
+                      "message": "Error: BTP_ASSERTION: targetCurrencyEquals\nExpected: 0\nReceived: 10\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m10\u001b[39m\n\n   9 | async function assertWithEvidence(testInfo: any, label: string, expected: unknown, received: unknown, check: () => void | Promise<void>) {\n  10 |   await testInfo.attach(\"btp-assertion\", { body: JSON.stringify({ actual: String(received), expected: String(expected), label }), contentType: \"application/json\" });\n> 11 |   try { await check(); } catch (error) { throw new Error(`BTP_ASSERTION: ${label}\\nExpected: ${JSON.stringify(expected)}\\nReceived: ${JSON.stringify(received)}\\n${error instanceof Error ? error.message : String(error)}`); }\n     |                                                ^\n  12 | }\n  13 |\n  14 | test(\"btp-78745fe7-03b0-4e64-9ccb-2e36d6e7bfce-attempt-1-v1-c7bcf8b3f057\", async ({ page }, testInfo) => {\n    at assertWithEvidence (D:\\bug-to-proof\\artifacts\\reproduction-runs\\generated\\78745fe7-03b0-4e64-9ccb-2e36d6e7bfce-attempt-1\\generated-test\\reproduction.spec.ts:11:48)\n    at D:\\bug-to-proof\\artifacts\\reproduction-runs\\generated\\78745fe7-03b0-4e64-9ccb-2e36d6e7bfce-attempt-1\\generated-test\\reproduction.spec.ts:31:642"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-13T18:56:36.618Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "btp-assertion",
+                      "contentType": "application/json",
+                      "body": "eyJhY3R1YWwiOiIxMCIsImV4cGVjdGVkIjoiMCIsImxhYmVsIjoidGFyZ2V0Q3VycmVuY3lFcXVhbHMifQ=="
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\bug-to-proof\\artifacts\\reproduction-runs\\78745fe7-03b0-4e64-9ccb-2e36d6e7bfce-attempt-1\\evidence\\reproduction-btp-78745fe7--8df38-e-attempt-1-v1-c7bcf8b3f057-chromium\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\bug-to-proof\\artifacts\\reproduction-runs\\78745fe7-03b0-4e64-9ccb-2e36d6e7bfce-attempt-1\\evidence\\reproduction-btp-78745fe7--8df38-e-attempt-1-v1-c7bcf8b3f057-chromium\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\bug-to-proof\\artifacts\\reproduction-runs\\78745fe7-03b0-4e64-9ccb-2e36d6e7bfce-attempt-1\\evidence\\reproduction-btp-78745fe7--8df38-e-attempt-1-v1-c7bcf8b3f057-chromium\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\bug-to-proof\\artifacts\\reproduction-runs\\generated\\78745fe7-03b0-4e64-9ccb-2e36d6e7bfce-attempt-1\\generated-test\\reproduction.spec.ts",
+                    "column": 48,
+                    "line": 11
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "ff0f9736443589895b2b-1652870af38793df160c",
+          "file": "reproduction.spec.ts",
+          "line": 14,
+          "column": 5
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-13T18:56:34.538Z",
+    "duration": 5035.052,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

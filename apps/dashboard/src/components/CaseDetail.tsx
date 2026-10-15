@@ -7,6 +7,8 @@ import { BeforeAfterComparison } from "./BeforeAfterComparison";
 import { AIAssistant } from "./AIAssistant";
 import { EvidencePanel } from "./EvidencePanel";
 import { Workflow } from "./Workflow";
+import { ReportClarification } from "./ReportClarification";
+import type { ReproductionRunRecordSummary } from "../types/reproduction";
 
 interface CaseDetailProps {
   bugCase: BugCase;
@@ -15,6 +17,16 @@ interface CaseDetailProps {
 
 const POLLING_STATUSES = new Set(["REPRODUCING", "VERIFYING"]);
 const DEMO_CASE_ID = "case-001";
+const REPRODUCTION_STATE_STYLE: Record<string, { background: string; color: string }> = {
+  DISCOVERING_TARGET: { background: "#e0f2fe", color: "#0369a1" },
+  GENERATING_CANDIDATE: { background: "#dbeafe", color: "#1d4ed8" },
+  CANDIDATE_INVALID: { background: "#ffedd5", color: "#9a3412" },
+  CANDIDATE_EXECUTION_ERROR: { background: "#fee2e2", color: "#991b1b" },
+  BASELINE_PASSED: { background: "#dcfce7", color: "#166534" },
+  BLOCKED: { background: "#f3e8ff", color: "#7e22ce" },
+  CANCELLED: { background: "#e5e7eb", color: "#374151" },
+  AWAITING_TEST_REVIEW: { background: "#fef3c7", color: "#92400e" },
+};
 
 export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
   const [actionError, setActionError] = useState<string | null>(null);
@@ -22,6 +34,83 @@ export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
   const [pollingError, setPollingError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [resetting, setResetting] = useState(false);
+  const [reproductionRun, setReproductionRun] = useState<ReproductionRunRecordSummary | null>(null);
+  const [reproductionLoading, setReproductionLoading] = useState(false);
+  const [reproductionError, setReproductionError] = useState<string | null>(null);
+  const [reviewLoading, setReviewLoading] = useState<"APPROVE" | "REJECT" | null>(null);
+  const [reviewerNotes, setReviewerNotes] = useState("");
+  const hasTrustedReproductionTest = Boolean(bugCase.reproduction?.testFile?.trim());
+
+  useEffect(() => {
+    let cancelled = false;
+    setReproductionRun(null);
+    setReproductionError(null);
+    if (!hasTrustedReproductionTest && bugCase.reportCompleteness?.complete) {
+      void api.listReproductionRuns(bugCase.id).then(runs => {
+        if (!cancelled) setReproductionRun(runs?.[0] ?? null);
+      }).catch(error => {
+        if (!cancelled) setReproductionError(error instanceof Error ? error.message : String(error));
+      });
+    }
+    return () => { cancelled = true; };
+  }, [bugCase.id, hasTrustedReproductionTest, bugCase.reportCompleteness?.complete]);
+
+  useEffect(() => {
+    if (!reproductionRun) return;
+    const active = ["DISCOVERING_TARGET", "GENERATING_CANDIDATE"].includes(reproductionRun.state);
+    if (!active) return;
+    const interval = setInterval(async () => {
+      try {
+        const fresh = await api.getReproductionRun(reproductionRun.reproductionRunId);
+        if (fresh) { setReproductionRun(fresh); setReproductionError(null); }
+      } catch (error) {
+        setReproductionError(error instanceof Error ? error.message : String(error));
+      }
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [bugCase.id, reproductionRun?.reproductionRunId, reproductionRun?.state]);
+
+  const handleStartReproduction = async () => {
+    setReproductionLoading(true);
+    setReproductionError(null);
+    try {
+      const res = await api.startReproductionRun(bugCase.id);
+      if (res?.reproductionRunId) {
+        const fresh = await api.getReproductionRun(res.reproductionRunId);
+        if (fresh) setReproductionRun(fresh);
+      }
+    } catch (err) {
+      setReproductionError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setReproductionLoading(false);
+    }
+  };
+
+  const handleCancelReproduction = async () => {
+    if (!reproductionRun) return;
+    try {
+      await api.cancelReproductionRun(reproductionRun.reproductionRunId);
+      const fresh = await api.getReproductionRun(reproductionRun.reproductionRunId);
+      if (fresh) setReproductionRun(fresh);
+    } catch (err) {
+      setReproductionError(err instanceof Error ? err.message : String(err));
+    }
+  };
+
+  const handleReviewReproduction = async (decision: "APPROVE" | "REJECT") => {
+    if (!reproductionRun) return;
+    const candidate = [...(reproductionRun.attempts ?? [])].reverse().find(attempt => attempt.classification === "ASSERTION_FAILED");
+    if (!candidate?.definitionHash || !candidate.compiledTestHash) { setReproductionError("The reviewable candidate hashes are unavailable."); return; }
+    setReviewLoading(decision); setReproductionError(null);
+    try {
+      const reviewed = await api.reviewReproductionRun(reproductionRun.reproductionRunId, { decision,
+        definitionHash: candidate.definitionHash, compiledTestHash: candidate.compiledTestHash,
+        acceptedBy: "dashboard-reviewer", reviewerNotes: reviewerNotes.trim() || undefined });
+      setReproductionRun(reviewed);
+      const fresh = await api.getCase(bugCase.id); onUpdate(fresh);
+    } catch (error) { setReproductionError(error instanceof Error ? error.message : String(error)); }
+    finally { setReviewLoading(null); }
+  };
 
   // Use a ref for polling so we don't stale-close over the current case id
   const pollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -516,8 +605,80 @@ export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
             </p>
           )}
 
-          {/* REPORTED: offer to mark as ready before running */}
-          {bugCase.status === "REPORTED" && (
+          {!hasTrustedReproductionTest && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              {bugCase.reportCompleteness && !bugCase.reportCompleteness.complete ? (
+                <>
+                  <div role="status" style={{ background: "#fff7ed", border: "1px solid #fed7aa", borderRadius: 6, padding: "10px 14px", color: "#9a3412", fontSize: 13 }}>
+                    More report details are required: {bugCase.reportCompleteness.missingFields.join(", ")}.
+                  </div>
+                  <ReportClarification bugCase={bugCase} onUpdate={onUpdate} />
+                </>
+              ) : (
+                <>
+                  {reproductionRun && (
+                    <div style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 8, padding: "14px 16px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                        <span style={{ fontSize: 12, fontWeight: 700, color: "#475569" }}>
+                          Reproduction Run: <code style={{ fontSize: 11 }}>{reproductionRun.reproductionRunId}</code>
+                        </span>
+                        <span style={{ fontSize: 12, fontWeight: 600, padding: "2px 8px", borderRadius: 4, ...(REPRODUCTION_STATE_STYLE[reproductionRun.state] ?? { background: "#e2e8f0", color: "#334155" }) }}>
+                          {reproductionRun.state}
+                        </span>
+                      </div>
+                      <p style={{ fontSize: 13, color: "#334155", marginBottom: 6 }}>
+                        {reproductionRun.events?.[reproductionRun.events.length - 1]?.message || reproductionRun.stopReason || "Orchestrating reproduction generation…"}
+                      </p>
+                      {reproductionRun.attempts?.length > 0 && (
+                        <p style={{ fontSize: 12, color: "#64748b" }}>
+                          Attempts: {reproductionRun.attempts.length}
+                          {reproductionRun.attempts[reproductionRun.attempts.length - 1]?.diagnostics && ` — ${reproductionRun.attempts[reproductionRun.attempts.length - 1]?.diagnostics}`}
+                        </p>
+                      )}
+                      {["DISCOVERING_TARGET", "GENERATING_CANDIDATE"].includes(reproductionRun.state) && (
+                        <button
+                          onClick={handleCancelReproduction}
+                          style={{ marginTop: 8, padding: "4px 10px", fontSize: 12, borderRadius: 4, border: "1px solid #cbd5e1", background: "#fff", cursor: "pointer", color: "#b91c1c" }}
+                        >
+                          Cancel Generation
+                        </button>
+                      )}
+                      {reproductionRun.state === "AWAITING_TEST_REVIEW" && (
+                        <div style={{ display: "grid", gap: 8, marginTop: 10 }}>
+                          <p style={{ fontSize: 12, color: "#854d0e" }}>Review the report mapping and assertion evidence. Approval is bound to the displayed definition and compiled-test hashes, then reruns frozen bytes on unchanged source.</p>
+                          <code style={{ fontSize: 10, color: "#64748b", overflowWrap: "anywhere" }}>Definition: {reproductionRun.attempts[reproductionRun.attempts.length - 1]?.definitionHash}<br />Compiled test: {reproductionRun.attempts[reproductionRun.attempts.length - 1]?.compiledTestHash}</code>
+                          <textarea aria-label="Reviewer notes" value={reviewerNotes} onChange={event => setReviewerNotes(event.target.value)} maxLength={2000} placeholder="Optional review notes" style={{ minHeight: 58, padding: 8, border: "1px solid #cbd5e1", borderRadius: 5 }} />
+                          <div style={{ display: "flex", gap: 8 }}>
+                            <button disabled={reviewLoading !== null} onClick={() => handleReviewReproduction("APPROVE")} style={btnStyle("#166534", reviewLoading !== null)}>{reviewLoading === "APPROVE" ? "Confirming…" : "Approve & Confirm Baseline"}</button>
+                            <button disabled={reviewLoading !== null} onClick={() => handleReviewReproduction("REJECT")} style={btnStyle("#b91c1c", reviewLoading !== null)}>{reviewLoading === "REJECT" ? "Rejecting…" : "Reject Candidate"}</button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {reproductionError && (
+                    <p role="alert" style={{ color: "#b91c1c", fontSize: 13 }}>
+                      {reproductionError}
+                    </p>
+                  )}
+
+                  {(!reproductionRun || !["DISCOVERING_TARGET", "GENERATING_CANDIDATE"].includes(reproductionRun.state)) && (
+                    <button
+                      disabled={reproductionLoading}
+                      onClick={handleStartReproduction}
+                      style={btnStyle("#2563eb", reproductionLoading)}
+                    >
+                      {reproductionLoading ? "Starting…" : "▶ Generate Reproduction"}
+                    </button>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+
+          {/* REPORTED configured cases may start the existing runner. */}
+          {bugCase.status === "REPORTED" && hasTrustedReproductionTest && (
             <button
               disabled={actionLoading}
               onClick={() =>
@@ -532,7 +693,7 @@ export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
           )}
 
           {/* READY_TO_REPRODUCE: run reproduction */}
-          {bugCase.status === "READY_TO_REPRODUCE" && (
+          {bugCase.status === "READY_TO_REPRODUCE" && hasTrustedReproductionTest && (
             <button
               disabled={actionLoading}
               onClick={() =>
@@ -548,7 +709,7 @@ export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
           )}
 
           {/* REPRODUCED: re-run reproduction (the runner accepts re-runs) */}
-          {bugCase.status === "REPRODUCED" && (
+          {bugCase.status === "REPRODUCED" && hasTrustedReproductionTest && (
             <button
               disabled={actionLoading}
               onClick={() =>
@@ -564,7 +725,7 @@ export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
           )}
 
           {/* REPRODUCTION_FAILED: allow retry via READY_TO_REPRODUCE */}
-          {bugCase.status === "REPRODUCTION_FAILED" && (
+          {bugCase.status === "REPRODUCTION_FAILED" && hasTrustedReproductionTest && (
             <button
               disabled={actionLoading}
               onClick={() =>

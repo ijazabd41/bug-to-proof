@@ -1,0 +1,11 @@
+﻿{
+    "category":  "navigation",
+    "caseId":  "case-1791917827903-dh7fk4p5",
+    "reproductionRunId":  "7969bb48-1d36-4114-8883-35a88b812516",
+    "state":  "BASELINE_PASSED",
+    "stopReason":  "Candidate baseline passed without reproducing the bug",
+    "classifications":  [
+                            "BASELINE_PASSED"
+                        ],
+    "evidenceDirectory":  "D:\\bug-to-proof\\artifacts\\arbitrary-reproduction\\ar4-generation-execution\\trusted-target-runtime-retries\\navigation-case-1791917827903-dh7fk4p5-7969bb48-1d36-4114-8883-35a88b812516"
+}

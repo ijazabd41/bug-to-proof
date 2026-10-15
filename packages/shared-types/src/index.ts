@@ -81,7 +81,33 @@ export interface Reproduction {
   actual: string;
   /** Path to the Playwright spec file, e.g. "tests/playwright/cases/case-001-cart-total.spec.ts" */
   testFile: string;
+  /** Explicit containment root for a compiler-owned accepted test. Omitted for configured benchmark tests. */
+  testRoot?: string;
+  /** Immutable provenance for a reviewed compiler-generated reproduction. */
+  generatedTest?: {
+    reproductionRunId: string;
+    definitionHash: string;
+    compiledTestHash: string;
+    sourceFingerprint: string;
+    acceptedAt: string;
+    acceptedBy: string;
+  };
   lastRun: TestRun | null;
+}
+
+export interface BugReportDetails {
+  schemaVersion: "1.0";
+  steps: string[];
+  expected: string;
+  actual: string;
+  /** Application-relative path such as "/cart"; empty when unspecified. */
+  startPath: string;
+  context: string;
+}
+
+export interface ReportCompleteness {
+  complete: boolean;
+  missingFields: Array<"steps" | "expected" | "actual">;
 }
 
 // ── Patch ─────────────────────────────────────────────────────────────────────
@@ -123,6 +149,10 @@ export interface BugCase {
   id: string;
   title: string;
   description: string;
+  /** Optional on legacy records; normalized by the API when read. */
+  report?: BugReportDetails;
+  /** Derived by the API from report; optional on legacy on-disk records. */
+  reportCompleteness?: ReportCompleteness;
   status: CaseStatus;
   /** ISO 8601 */
   createdAt: string;

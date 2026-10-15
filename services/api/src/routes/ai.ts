@@ -170,7 +170,11 @@ aiRouter.post("/cases/:id/repair-runs", async (req, res, next) => {
     return;
   }
   if (!bugCase.reproduction?.testFile) {
-    res.status(400).json({ error: "Case does not have a configured reproduction test" });
+    res.status(400).json({
+      error: "Case does not have a configured reproduction test",
+      code: "REPRODUCTION_TEST_REQUIRED",
+      details: "Generate, review, and confirm a reproduction candidate before starting repair",
+    });
     return;
   }
   if (["REPRODUCING", "VERIFYING"].includes(bugCase.status)) {

@@ -1,0 +1,46 @@
+{
+  "id": "case-1791834872639-wdq7dsy2",
+  "title": "Cart total omits the shipping charge after adding a keyboard",
+  "description": "The visible Shipping charge is not included in the displayed Total for a cart below the free-shipping threshold.",
+  "report": {
+    "schemaVersion": "1.0",
+    "steps": [
+      "Open the shop page",
+      "Add Keyboard to the cart",
+      "Compare the displayed Shipping and Total values"
+    ],
+    "expected": "For a .00 Keyboard plus .00 shipping, Total should be .00.",
+    "actual": "The page displays .00 shipping but Total remains .00.",
+    "startPath": "/",
+    "context": "Fresh browser storage and an initially empty cart."
+  },
+  "reportCompleteness": {
+    "complete": true,
+    "missingFields": []
+  },
+  "status": "REPORTED",
+  "createdAt": "2026-10-12T19:54:32.639Z",
+  "updatedAt": "2026-10-12T19:54:34.886Z",
+  "reproduction": {
+    "preconditions": [
+      "User has a shopping cart with items added",
+      "Cart total is below the free‑shipping threshold",
+      "Shipping charge is displayed separately on the cart page"
+    ],
+    "steps": [
+      "1. Add items to the cart such that the subtotal is below the free‑shipping threshold.",
+      "2. Navigate to the cart or checkout page.",
+      "3. Verify that the shipping charge is shown as a separate line item.",
+      "4. Observe the displayed total amount.",
+      "5. Confirm that the shipping charge is not added to the total."
+    ],
+    "expected": "The total displayed should include the shipping charge, resulting in a higher total amount.",
+    "actual": "The total displayed excludes the shipping charge, showing only the item subtotal.",
+    "testFile": "",
+    "lastRun": null
+  },
+  "patch": null,
+  "verification": null,
+  "evidence": [],
+  "rootCauseExplanation": null
+}

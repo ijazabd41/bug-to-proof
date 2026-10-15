@@ -28,7 +28,19 @@ export function CasesPage() {
   });
   const filtersActive = normalizedQuery.length > 0 || status !== "ALL";
   return <div>
-    <div className="page-heading"><div><span className="eyebrow">FROM REPORT TO RESOLUTION</span><h1>Bug cases<span className="heading-dot">.</span></h1><p>Reproduce the failure. Review the fix. Keep the proof.</p></div><a href="#bug-title" className="button primary"><Icon name="plus" />Report a bug</a></div>
+    <section className="cases-hero" aria-labelledby="cases-title">
+      <img className="cases-hero-image" src="/bug-to-proof-hero.png" alt="A four-stage workflow showing a bug report reproduced as a failing test, reviewed as a code patch, and verified with evidence" />
+      <div className="cases-hero-shade" />
+      <div className="cases-hero-content">
+        <span className="eyebrow">FROM REPORT TO RECORDED PROOF</span>
+        <h1 id="cases-title">Make every fix<br /><span>provable.</span></h1>
+        <p>Reproduce the failure, review the smallest patch, and verify the same test with tamper-evident evidence.</p>
+        <div className="cases-hero-actions">
+          <a href="#bug-title" className="button hero-primary"><Icon name="plus" />Report a bug</a>
+          <span className="hero-assurance"><Icon name="proof" />Proof over promises</span>
+        </div>
+      </div>
+    </section>
     <div className="overview-grid"><div className="cases-column"><Workflow />
       <section className="panel cases-panel" aria-labelledby="case-list-title"><div className="panel-heading"><h2 id="case-list-title">Your cases</h2><span className="count-chip">{loading ? "Loading…" : error ? "Unavailable" : `${visibleCases.length} of ${cases.length}`}</span></div>
         <div className="case-filters" role="search">

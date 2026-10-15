@@ -1,0 +1,112 @@
+{
+  "schemaVersion": "1.0",
+  "generatedAt": "2026-10-14T19:40:53.204Z",
+  "datasetHash": "d180534a4320c993283ffa07e4350ef20431eda137c1361f50ea4316591feba3",
+  "frozenAt": "2026-10-14T08:35:00.000Z",
+  "split": "held-out",
+  "denominator": 4,
+  "metrics": {
+    "validCandidates": 2,
+    "executableCandidates": 1,
+    "relevantReproductions": 0,
+    "infrastructureErrors": 2,
+    "unsupported": 0
+  },
+  "results": [
+    {
+      "evaluationId": "ar-heldout-async",
+      "split": "held-out",
+      "category": "async",
+      "caseId": "case-1792006748145-jjf3dygv",
+      "reproductionRunId": "24458c90-dbe6-4f07-be5f-d73d9644e49b",
+      "state": "CANDIDATE_EXECUTION_ERROR",
+      "stopReason": "Candidate attempt limit (3) reached",
+      "attempts": 3,
+      "classifications": [
+        "CANDIDATE_EXECUTION_ERROR",
+        "CANDIDATE_INVALID",
+        "CANDIDATE_EXECUTION_ERROR"
+      ],
+      "responseShapes": [
+        null,
+        "choices_array:first_choice_object:message_object:content_string_empty",
+        null
+      ],
+      "validCandidate": true,
+      "executableCandidate": false,
+      "relevantReproduction": false,
+      "infrastructureError": false,
+      "unsupported": false,
+      "durationMs": 79102,
+      "usage": [
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "evaluationId": "ar-heldout-deletion",
+      "split": "held-out",
+      "category": "deletion",
+      "caseId": "case-1792006729858-7o7i1hz2",
+      "reproductionRunId": "3f8ead4b-000c-4826-a344-0e0fe12c2b4e",
+      "state": "BASELINE_PASSED",
+      "stopReason": "Candidate baseline passed without reproducing the bug",
+      "attempts": 1,
+      "classifications": [
+        "BASELINE_PASSED"
+      ],
+      "responseShapes": [
+        null
+      ],
+      "validCandidate": true,
+      "executableCandidate": true,
+      "relevantReproduction": false,
+      "infrastructureError": false,
+      "unsupported": false,
+      "durationMs": 17583,
+      "usage": [
+        null
+      ]
+    },
+    {
+      "evaluationId": "ar-heldout-multifile",
+      "split": "held-out",
+      "category": "multifile",
+      "caseId": "case-1792006841078-3vuizgbs",
+      "reproductionRunId": "49d633c6-d35b-44e1-9045-8fb214c07710",
+      "state": "BLOCKED",
+      "stopReason": "Generation provider failed",
+      "attempts": 0,
+      "classifications": [],
+      "responseShapes": [],
+      "validCandidate": false,
+      "executableCandidate": false,
+      "relevantReproduction": false,
+      "infrastructureError": true,
+      "unsupported": false,
+      "durationMs": 10566,
+      "usage": []
+    },
+    {
+      "evaluationId": "ar-heldout-rendering",
+      "split": "held-out",
+      "category": "rendering",
+      "caseId": "case-1792006828897-paot5g0d",
+      "reproductionRunId": "a1afc45b-efd6-4166-a0db-0a8f26d930df",
+      "state": "BLOCKED",
+      "stopReason": "Generation provider failed",
+      "attempts": 0,
+      "classifications": [],
+      "responseShapes": [],
+      "validCandidate": false,
+      "executableCandidate": false,
+      "relevantReproduction": false,
+      "infrastructureError": true,
+      "unsupported": false,
+      "durationMs": 10602,
+      "usage": []
+    }
+  ],
+  "reconciledAt": "2026-10-14T19:47:51.045Z"
+}

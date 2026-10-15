@@ -1,0 +1,67 @@
+﻿{
+    "schemaVersion":  "1.0",
+    "reproductionRunId":  "7522fc80-651a-4cb5-908f-03f760f27a7b",
+    "caseId":  "case-1791834474465-v5af5tqm",
+    "state":  "BLOCKED",
+    "reportSnapshot":  {
+                           "title":  "Cart total omits the shipping charge",
+                           "description":  "When the cart subtotal is below the free-shipping threshold, the displayed Total shows only the merchandise subtotal instead of subtotal plus the visible shipping charge.",
+                           "steps":  [
+                                         "Open the shop page",
+                                         "Add Keyboard to the cart",
+                                         "Observe the Shipping and Total values"
+                                     ],
+                           "expected":  "With a .00 Keyboard and .00 shipping, Total should display .00.",
+                           "actual":  "Shipping displays .00 but Total displays .00.",
+                           "startPath":  "/",
+                           "context":  "Fresh browser storage and an initially empty cart."
+                       },
+    "attempts":  [
+
+                 ],
+    "events":  [
+                   {
+                       "sequence":  1,
+                       "state":  "DISCOVERING_TARGET",
+                       "message":  "Started bounded target discovery",
+                       "createdAt":  "2026-10-12T19:47:54.578Z"
+                   },
+                   {
+                       "sequence":  2,
+                       "state":  "GENERATING_CANDIDATE",
+                       "message":  "Generating candidate attempt 1",
+                       "createdAt":  "2026-10-12T19:47:54.684Z"
+                   },
+                   {
+                       "sequence":  3,
+                       "state":  "BLOCKED",
+                       "message":  "Reproduction generation provider returned an empty response",
+                       "createdAt":  "2026-10-12T19:48:05.229Z"
+                   }
+               ],
+    "limits":  {
+                   "maxAttempts":  3,
+                   "maxSteps":  20,
+                   "maxRuntimeMs":  120000,
+                   "maxDefinitionBytes":  32000,
+                   "maxDiagnosticBytes":  16000
+               },
+    "createdAt":  "2026-10-12T19:47:54.577Z",
+    "updatedAt":  "2026-10-12T19:48:05.229Z",
+    "targetSnapshot":  {
+                           "sourceFingerprint":  "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289",
+                           "targetUrl":  "http://localhost:5174",
+                           "createdAt":  "2026-10-12T19:47:54.680Z"
+                       },
+    "discovery":  {
+                      "artifactPath":  "7522fc80-651a-4cb5-908f-03f760f27a7b/discovery/discovery.json",
+                      "inventoryDigest":  "2f7855d90514749e47c0c4c59e9dbfbd19ffbacee0548df05e5b3953e7f48489",
+                      "routes":  [
+                                     "/",
+                                     "/cart"
+                                 ],
+                      "capturedAt":  "2026-10-12T19:47:54.680Z"
+                  },
+    "stopReason":  "Generation provider failed",
+    "completedAt":  "2026-10-12T19:48:05.233Z"
+}

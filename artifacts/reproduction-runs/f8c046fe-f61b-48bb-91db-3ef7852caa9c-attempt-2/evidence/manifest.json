@@ -1,0 +1,13 @@
+{
+  "passed": false,
+  "outcome": "INFRASTRUCTURE_ERROR",
+  "expected": "",
+  "actual": "MiniShop is not reachable at http://localhost:5174",
+  "durationMs": 10318,
+  "runId": "f8c046fe-f61b-48bb-91db-3ef7852caa9c-attempt-2",
+  "testFingerprint": "e1e7b9dae4c7ee9e19c3e29e9f35c30c171e6ee4b5a1701d28a2ddfd3e486ee7",
+  "testIds": [],
+  "artifactPaths": {},
+  "rawOutput": "AbortError: This operation was aborted",
+  "failureKind": "TARGET_UNREACHABLE"
+}

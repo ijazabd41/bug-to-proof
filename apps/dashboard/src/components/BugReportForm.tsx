@@ -9,6 +9,8 @@ export function BugReportForm({ onCreated }: { onCreated: (c: BugCase) => void }
   const [steps, setSteps] = useState("");
   const [expected, setExpected] = useState("");
   const [actual, setActual] = useState("");
+  const [startPath, setStartPath] = useState("");
+  const [context, setContext] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const titleRef = useRef<HTMLInputElement>(null);
@@ -19,9 +21,15 @@ export function BugReportForm({ onCreated }: { onCreated: (c: BugCase) => void }
     if (!description.trim()) { setError("Description is required."); return; }
     setSubmitting(true);
     try {
-      // Preserve report context as text; reproduction evidence belongs to the runner.
-      const context = [description.trim(), steps.trim() && `Steps to reproduce:\n${steps.trim()}`, expected.trim() && `Expected behavior:\n${expected.trim()}`, actual.trim() && `Actual behavior:\n${actual.trim()}`].filter(Boolean).join("\n\n");
-      const created = await api.createCase({ title: title.trim(), description: context });
+      const created = await api.createCase({
+        title: title.trim(),
+        description: description.trim(),
+        steps: steps.split(/\r?\n/).map(step => step.trim()).filter(Boolean),
+        expected: expected.trim(),
+        actual: actual.trim(),
+        startPath: startPath.trim(),
+        context: context.trim(),
+      });
       onCreated(created); navigate(`/cases/${created.id}`);
     } catch (err) { setError(err instanceof Error ? err.message : "Failed to create case"); }
     finally { setSubmitting(false); }
@@ -38,6 +46,7 @@ export function BugReportForm({ onCreated }: { onCreated: (c: BugCase) => void }
       <label htmlFor="bug-steps">Reproduction steps <span className="optional">Optional</span></label>
       <textarea id="bug-steps" value={steps} onChange={e => setSteps(e.target.value)} placeholder={"1. Open the cart\n2. Add two products\n3. Check the total"} rows={3} disabled={submitting} />
       <div className="form-pair"><div><label htmlFor="bug-expected">Expected behavior</label><textarea id="bug-expected" value={expected} onChange={e => setExpected(e.target.value)} placeholder="What should happen?" rows={3} disabled={submitting} /></div><div><label htmlFor="bug-actual">Actual behavior</label><textarea id="bug-actual" value={actual} onChange={e => setActual(e.target.value)} placeholder="What happened instead?" rows={3} disabled={submitting} /></div></div>
+      <div className="form-pair"><div><label htmlFor="bug-start-path">Starting path <span className="optional">Optional</span></label><input id="bug-start-path" value={startPath} onChange={e => setStartPath(e.target.value)} placeholder="/cart" disabled={submitting} /></div><div><label htmlFor="bug-context">Additional context <span className="optional">Optional</span></label><textarea id="bug-context" value={context} onChange={e => setContext(e.target.value)} placeholder="Browser, account state, or other relevant context" rows={2} disabled={submitting} /></div></div>
       <button className="button primary create-case" type="submit" disabled={submitting}><Icon name="plus" />{submitting ? "Creating case…" : "Create case"}</button>
       <p className="form-note">A report starts the investigation. Recorded tests establish the result.</p>
     </form>

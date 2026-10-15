@@ -1,0 +1,199 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\bug-to-proof\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "tests/playwright/playwright.config.ts",
+      "tests/playwright/cases/case-001-cart-total.spec.ts",
+      "--reporter=json",
+      "--output",
+      "D:\\bug-to-proof\\artifacts\\portfolio-cart\\before\\afb9f5d9-39b7-435a-acb4-7e99716b4ffc"
+    ],
+    "configFile": "D:\\bug-to-proof\\tests\\playwright\\playwright.config.ts",
+    "rootDir": "D:/bug-to-proof/tests/playwright/cases",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/bug-to-proof/artifacts/portfolio-cart/before/afb9f5d9-39b7-435a-acb4-7e99716b4ffc",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "D:/bug-to-proof/tests/playwright/cases",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "case-001-cart-total.spec.ts",
+      "file": "case-001-cart-total.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Case 001 — Cart total calculation",
+          "file": "case-001-cart-total.spec.ts",
+          "line": 27,
+          "column": 6,
+          "specs": [
+            {
+              "title": "cart total should equal sum of all item prices",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\ijaza\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1243\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\ijaza\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1243\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\ijaza\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1243\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-12T04:36:14.264Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\bug-to-proof\\artifacts\\portfolio-cart\\before\\afb9f5d9-39b7-435a-acb4-7e99716b4ffc\\case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\bug-to-proof\\artifacts\\portfolio-cart\\before\\afb9f5d9-39b7-435a-acb4-7e99716b4ffc\\case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "b9baa70e2169da733ccd-7e13775ecb5577495b6f",
+              "file": "case-001-cart-total.spec.ts",
+              "line": 28,
+              "column": 7
+            },
+            {
+              "title": "cart total should update when items are added incrementally",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 9,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\ijaza\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1243\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\ijaza\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1243\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\ijaza\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1243\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-12T04:36:15.865Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\bug-to-proof\\artifacts\\portfolio-cart\\before\\afb9f5d9-39b7-435a-acb4-7e99716b4ffc\\case-001-cart-total-Case-0-46116-ems-are-added-incrementally-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\bug-to-proof\\artifacts\\portfolio-cart\\before\\afb9f5d9-39b7-435a-acb4-7e99716b4ffc\\case-001-cart-total-Case-0-46116-ems-are-added-incrementally-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "b9baa70e2169da733ccd-a4e3994fa2a77a3559ae",
+              "file": "case-001-cart-total.spec.ts",
+              "line": 48,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-12T04:36:12.752Z",
+    "duration": 3363.0420000000004,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

@@ -37,6 +37,43 @@ describe("Cases API Validation & Hardening", () => {
   });
 
   describe("POST /api/cases (creation schema)", () => {
+    it("stores structured report fields without concatenating them into description", async () => {
+      const res = await request(app).post("/api/cases").send({
+        title: "Cart total is wrong",
+        description: "The total excludes later products",
+        steps: ["Open the cart", "Add two products"],
+        expected: "Both prices are included",
+        actual: "Only the first price is included",
+        startPath: "/cart",
+        context: "Signed-in desktop user",
+      });
+
+      expect(res.status).toBe(201);
+      expect(res.body.description).toBe("The total excludes later products");
+      expect(res.body.report).toEqual({
+        schemaVersion: "1.0",
+        steps: ["Open the cart", "Add two products"],
+        expected: "Both prices are included",
+        actual: "Only the first price is included",
+        startPath: "/cart",
+        context: "Signed-in desktop user",
+      });
+      expect(res.body.reportCompleteness).toEqual({ complete: true, missingFields: [] });
+    });
+
+    it("creates incomplete reports honestly and lists missing details", async () => {
+      const res = await request(app).post("/api/cases").send({
+        title: "Ambiguous issue",
+        description: "The cart looks wrong",
+      });
+
+      expect(res.status).toBe(201);
+      expect(res.body.reportCompleteness).toEqual({
+        complete: false,
+        missingFields: ["steps", "expected", "actual"],
+      });
+    });
+
     it("rejects creation with missing title", async () => {
       const res = await request(app).post("/api/cases").send({ description: "Some description" });
       expect(res.status).toBe(400);
@@ -87,6 +124,30 @@ describe("Cases API Validation & Hardening", () => {
   });
 
   describe("PATCH /api/cases/:id (update schema)", () => {
+    it("updates report completeness after clarification", async () => {
+      mockStore["case-001"].report = { schemaVersion: "1.0", steps: [], expected: "", actual: "", startPath: "", context: "" };
+      const res = await request(app).patch("/api/cases/case-001").send({
+        report: {
+          schemaVersion: "1.0",
+          steps: ["Open cart", "Add two products"],
+          expected: "Both prices appear",
+          actual: "One price appears",
+          startPath: "/cart",
+          context: "",
+        },
+      });
+      expect(res.status).toBe(200);
+      expect(res.body.reportCompleteness).toEqual({ complete: true, missingFields: [] });
+    });
+
+    it("rejects external report starting paths", async () => {
+      const res = await request(app).patch("/api/cases/case-001").send({
+        report: { schemaVersion: "1.0", steps: [], expected: "", actual: "", startPath: "https://example.com", context: "" },
+      });
+      expect(res.status).toBe(400);
+      expect(res.body.error).toMatch(/application-relative path/i);
+    });
+
     it("rejects malformed reproduction.steps (not an array)", async () => {
       const res = await request(app).patch("/api/cases/case-001").send({
         reproduction: { steps: "just a string instead of array" },

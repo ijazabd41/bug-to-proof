@@ -1,0 +1,143 @@
+﻿{
+    "schemaVersion":  "1.0",
+    "reproductionRunId":  "3cbd3559-afdf-4ef0-a220-1fe78c0afaf9",
+    "caseId":  "case-1791841749095-0lqn3ztn",
+    "state":  "CANDIDATE_INVALID",
+    "reportSnapshot":  {
+                           "title":  "Cart total omits the shipping charge",
+                           "description":  "When the cart subtotal is below the free-shipping threshold, the displayed Total shows only the merchandise subtotal instead of subtotal plus the visible shipping charge.",
+                           "steps":  [
+                                         "Open the shop page",
+                                         "Add Keyboard to the cart",
+                                         "Observe the Shipping and Total values"
+                                     ],
+                           "expected":  "With a .00 Keyboard and .00 shipping, Total should display .00.",
+                           "actual":  "Shipping displays .00 but Total displays .00.",
+                           "startPath":  "/",
+                           "context":  "Fresh browser storage and an initially empty cart."
+                       },
+    "attempts":  [
+                     {
+                         "attempt":  1,
+                         "attemptExecutionId":  "3cbd3559-afdf-4ef0-a220-1fe78c0afaf9-attempt-1",
+                         "provider":  "legacy",
+                         "model":  "openai/gpt-oss-20b",
+                         "promptVersion":  "reproduction-v1",
+                         "responseShape":  "choices_array:first_choice_object:message_object:content_string_nonempty",
+                         "classification":  "CANDIDATE_INVALID",
+                         "diagnostics":  "assertion must be an object with a type",
+                         "validationFindings":  [
+                                                    "assertion must be an object with a type"
+                                                ],
+                         "durationMs":  2973,
+                         "artifactPaths":  [
+                                               "3cbd3559-afdf-4ef0-a220-1fe78c0afaf9/attempt-1/model-output.txt"
+                                           ]
+                     },
+                     {
+                         "attempt":  2,
+                         "attemptExecutionId":  "3cbd3559-afdf-4ef0-a220-1fe78c0afaf9-attempt-2",
+                         "provider":  "legacy",
+                         "model":  "openai/gpt-oss-20b",
+                         "promptVersion":  "reproduction-v1",
+                         "responseShape":  "choices_array:first_choice_object:message_object:content_string_nonempty",
+                         "classification":  "CANDIDATE_INVALID",
+                         "diagnostics":  "steps.2 is absent from the frozen accessible inventory; steps.3 is absent from the frozen accessible inventory; assertion is absent from the frozen accessible inventory",
+                         "validationFindings":  [
+                                                    "steps.2 is absent from the frozen accessible inventory",
+                                                    "steps.3 is absent from the frozen accessible inventory",
+                                                    "assertion is absent from the frozen accessible inventory"
+                                                ],
+                         "durationMs":  2270,
+                         "artifactPaths":  [
+                                               "3cbd3559-afdf-4ef0-a220-1fe78c0afaf9/attempt-2/model-output.txt"
+                                           ]
+                     },
+                     {
+                         "attempt":  3,
+                         "attemptExecutionId":  "3cbd3559-afdf-4ef0-a220-1fe78c0afaf9-attempt-3",
+                         "provider":  "legacy",
+                         "model":  "openai/gpt-oss-20b",
+                         "promptVersion":  "reproduction-v1",
+                         "responseShape":  "choices_array:first_choice_object:message_object:content_string_empty",
+                         "classification":  "CANDIDATE_INVALID",
+                         "diagnostics":  "Provider response contained no usable text (choices_array:first_choice_object:message_object:content_string_empty)",
+                         "validationFindings":  [
+                                                    "definition is not valid JSON"
+                                                ],
+                         "durationMs":  2800,
+                         "artifactPaths":  [
+                                               "3cbd3559-afdf-4ef0-a220-1fe78c0afaf9/attempt-3/model-output.txt"
+                                           ]
+                     }
+                 ],
+    "events":  [
+                   {
+                       "sequence":  1,
+                       "state":  "DISCOVERING_TARGET",
+                       "message":  "Started bounded target discovery",
+                       "createdAt":  "2026-10-12T21:49:21.474Z"
+                   },
+                   {
+                       "sequence":  2,
+                       "state":  "GENERATING_CANDIDATE",
+                       "message":  "Generating candidate attempt 1",
+                       "createdAt":  "2026-10-12T21:49:21.726Z"
+                   },
+                   {
+                       "sequence":  3,
+                       "state":  "CANDIDATE_INVALID",
+                       "message":  "Candidate 1 failed validation",
+                       "createdAt":  "2026-10-12T21:49:24.703Z"
+                   },
+                   {
+                       "sequence":  4,
+                       "state":  "GENERATING_CANDIDATE",
+                       "message":  "Generating candidate attempt 2",
+                       "createdAt":  "2026-10-12T21:49:24.707Z"
+                   },
+                   {
+                       "sequence":  5,
+                       "state":  "CANDIDATE_INVALID",
+                       "message":  "Candidate 2 failed validation",
+                       "createdAt":  "2026-10-12T21:49:26.985Z"
+                   },
+                   {
+                       "sequence":  6,
+                       "state":  "GENERATING_CANDIDATE",
+                       "message":  "Generating candidate attempt 3",
+                       "createdAt":  "2026-10-12T21:49:26.989Z"
+                   },
+                   {
+                       "sequence":  7,
+                       "state":  "CANDIDATE_INVALID",
+                       "message":  "Candidate 3 failed validation",
+                       "createdAt":  "2026-10-12T21:49:29.793Z"
+                   }
+               ],
+    "limits":  {
+                   "maxAttempts":  3,
+                   "maxSteps":  20,
+                   "maxRuntimeMs":  120000,
+                   "maxDefinitionBytes":  32000,
+                   "maxDiagnosticBytes":  16000
+               },
+    "createdAt":  "2026-10-12T21:49:21.473Z",
+    "updatedAt":  "2026-10-12T21:49:29.793Z",
+    "targetSnapshot":  {
+                           "sourceFingerprint":  "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289",
+                           "targetUrl":  "http://localhost:5174",
+                           "createdAt":  "2026-10-12T21:49:21.714Z"
+                       },
+    "discovery":  {
+                      "artifactPath":  "3cbd3559-afdf-4ef0-a220-1fe78c0afaf9/discovery/discovery.json",
+                      "inventoryDigest":  "c75ad62cef66d555c0d81d1ec3f5b366386073017f4d23625afffa13d041be83",
+                      "routes":  [
+                                     "/",
+                                     "/cart"
+                                 ],
+                      "capturedAt":  "2026-10-12T21:49:21.714Z"
+                  },
+    "completedAt":  "2026-10-12T21:49:29.813Z",
+    "stopReason":  "Candidate attempt limit (3) reached"
+}

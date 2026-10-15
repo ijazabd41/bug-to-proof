@@ -3,6 +3,7 @@ import path from "path";
 import fs from "fs";
 import {
   createAndStartRepairRun,
+  createRepairRunRecord,
   reviewAndApplyRepairRun,
   cancelRepairRun,
   RepairDependencies,
@@ -12,6 +13,7 @@ import { writeCase, deleteCase } from "../../storage/caseStore";
 import type { BugCase } from "@bug-to-proof/shared-types";
 import { ARTIFACTS_DIR } from "../../utils/paths";
 import type { RunResult } from "../../runner/playwrightRunner";
+import { trustedGeneratedPlaywrightConfig } from "../../runner/playwrightRunner";
 import type { RequiredCheckResult } from "./contracts";
 
 import { testFingerprint } from "../../runner/integrity";
@@ -72,9 +74,11 @@ const createMockChecks = (allPassed = true): RequiredCheckResult[] => [
 describe("Dynamic AI Repair Service Lifecycle", () => {
   let testCaseId: string;
   let createdRunId: string | null = null;
+  let acceptedTestDir: string | null = null;
 
   beforeEach(() => {
     createdRunId = null;
+    acceptedTestDir = null;
     testCaseId = `case-dyn-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
     const testCase: BugCase = {
       id: testCaseId,
@@ -120,7 +124,56 @@ describe("Dynamic AI Repair Service Lifecycle", () => {
     } catch {
       // ignore
     }
+    if (acceptedTestDir && fs.existsSync(acceptedTestDir)) fs.rmSync(acceptedTestDir, { recursive: true, force: true });
   });
+
+  it("captures accepted generated-test containment and provenance as immutable repair inputs", () => {
+    acceptedTestDir = path.join(ARTIFACTS_DIR, "reproduction-runs", "accepted", `test-${Date.now()}`);
+    fs.mkdirSync(acceptedTestDir, { recursive: true });
+    const testFile = path.join(acceptedTestDir, "reproduction.spec.ts");
+    fs.writeFileSync(testFile, 'import { test, expect } from "@playwright/test"; test("accepted dynamic reproduction", async () => expect(1).toBe(2));');
+    trustedGeneratedPlaywrightConfig(acceptedTestDir);
+    const bugCase = JSON.parse(fs.readFileSync(path.join(process.cwd(), "data", "cases", `${testCaseId}.json`), "utf8")) as BugCase;
+    bugCase.reproduction = { ...bugCase.reproduction!, testFile, testRoot: path.join(ARTIFACTS_DIR, "reproduction-runs", "accepted"),
+      generatedTest: { reproductionRunId: "generated-run", definitionHash: "a".repeat(64), compiledTestHash: "b".repeat(64),
+        sourceFingerprint: "c".repeat(64), acceptedAt: "2026-10-14T00:00:00.000Z", acceptedBy: "reviewer" } };
+    writeCase(bugCase);
+    const record = createRepairRunRecord(testCaseId, { mode: "simulated" }); createdRunId = record.runId;
+    expect(record.reproductionTestRoot).toBe(bugCase.reproduction.testRoot);
+    expect(record.inputs?.reproductionTest).toMatchObject({ filePath: testFile, root: bugCase.reproduction.testRoot,
+      provenance: { reproductionRunId: "generated-run", compiledTestHash: "b".repeat(64) } });
+    expect(record.inputs?.reproductionTest.content).toContain("accepted dynamic reproduction");
+  });
+
+  it("preserves the identical accepted generated-test root and fingerprint before and after a reviewed patch", async () => {
+    acceptedTestDir = path.join(ARTIFACTS_DIR, "reproduction-runs", "accepted", `cycle-${Date.now()}`);
+    fs.mkdirSync(acceptedTestDir, { recursive: true });
+    const testFile = path.join(acceptedTestDir, "reproduction.spec.ts");
+    fs.writeFileSync(testFile, 'import { test, expect } from "@playwright/test"; test("accepted dynamic reproduction", async () => expect(1).toBe(2));');
+    trustedGeneratedPlaywrightConfig(acceptedTestDir);
+    const acceptedRoot = path.join(ARTIFACTS_DIR, "reproduction-runs", "accepted");
+    const fingerprint = (await import("../../runner/playwrightRunner")).generatedTestFingerprint(testFile);
+    const bugCase = JSON.parse(fs.readFileSync(path.join(process.cwd(), "data", "cases", `${testCaseId}.json`), "utf8")) as BugCase;
+    bugCase.reproduction = { ...bugCase.reproduction!, testFile, testRoot: acceptedRoot,
+      generatedTest: { reproductionRunId: "generated-cycle", definitionHash: "a".repeat(64), compiledTestHash: "b".repeat(64),
+        sourceFingerprint: "c".repeat(64), acceptedAt: "2026-10-14T00:00:00.000Z", acceptedBy: "reviewer" } };
+    writeCase(bugCase);
+    const roots: Array<string | undefined> = [];
+    const mockDeps: Partial<RepairDependencies> = {
+      startApp: async () => ({ port: 5199, url: "http://localhost:5199", process: {} as any }), stopApp: async () => {},
+      run: async (_caseId, _file, phase, options) => { roots.push(options?.generatedTestRoot); return { ...createMockRunResult(phase === "before" ? "ASSERTION_FAILED" : "PASSED", testCaseId, fingerprint), testIds: ["reproduction.spec.ts:accepted dynamic reproduction:chromium"] }; },
+      checks: async () => createMockChecks(true),
+    };
+    const run = await createAndStartRepairRun(testCaseId, { mode: "simulated", simulatedProposal: { diagnosis: "Comment clarifies reset",
+      rationale: "Add a bounded source comment", edits: [{ relativePath: "src/store/cartStore.ts", oldContent: "  clearCart: () => set({ items: [] }),",
+        newContent: "  clearCart: () => set({ items: [] }), // reset items" }] } }, mockDeps);
+    createdRunId = run.runId; expect(run.state).toBe("AWAITING_REVIEW");
+    const verified = await reviewAndApplyRepairRun(run.runId, { proposalId: run.proposal!.proposalId, proposalHash: run.proposal!.proposalHash, decision: "APPROVED" }, mockDeps);
+    expect(verified.state, verified.stopReason).toBe("VERIFIED");
+    expect(verified.baselineRun?.testFingerprint).toBe(fingerprint); expect(verified.postPatchRun?.testFingerprint).toBe(fingerprint);
+    expect(roots).toEqual([acceptedRoot, acceptedRoot]);
+    expect(verified.inputs?.reproductionTest.provenance?.reproductionRunId).toBe("generated-cycle");
+  }, 30_000);
 
   it("handles non-existent or invalid cases gracefully", async () => {
     await expect(createAndStartRepairRun("non-existent-case")).rejects.toThrow("Case not found");

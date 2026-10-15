@@ -54,6 +54,27 @@ describe("AI Dynamic Repair API Routes", () => {
     expect(resInvalid.status).toBe(400);
   });
 
+  it("refuses dynamic repair for a newly created case without a trusted reproduction test", async () => {
+    const testlessId = "case-api-test-testless";
+    writeCase({
+      ...structuredClone((await request(app).get(`/api/cases/${testCaseId}`)).body),
+      id: testlessId,
+      status: "REPORTED",
+      reproduction: { preconditions: [], steps: [], expected: "", actual: "", testFile: "", lastRun: null },
+    });
+
+    try {
+      const res = await request(app).post(`/api/ai/cases/${testlessId}/repair-runs`);
+      expect(res.status).toBe(400);
+      expect(res.body).toMatchObject({
+        error: "Case does not have a configured reproduction test",
+        code: "REPRODUCTION_TEST_REQUIRED",
+      });
+    } finally {
+      deleteCase(testlessId);
+    }
+  });
+
   it("POST /api/ai/repair-runs/:runId/review validates required fields", async () => {
     const res = await request(app)
       .post("/api/ai/repair-runs/any-run/review")

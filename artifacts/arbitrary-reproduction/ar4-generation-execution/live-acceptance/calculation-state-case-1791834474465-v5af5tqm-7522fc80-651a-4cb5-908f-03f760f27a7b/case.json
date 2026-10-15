@@ -1,0 +1,44 @@
+﻿{
+    "id":  "case-1791834474465-v5af5tqm",
+    "title":  "Cart total omits the shipping charge",
+    "description":  "When the cart subtotal is below the free-shipping threshold, the displayed Total shows only the merchandise subtotal instead of subtotal plus the visible shipping charge.",
+    "report":  {
+                   "schemaVersion":  "1.0",
+                   "steps":  [
+                                 "Open the shop page",
+                                 "Add Keyboard to the cart",
+                                 "Observe the Shipping and Total values"
+                             ],
+                   "expected":  "With a .00 Keyboard and .00 shipping, Total should display .00.",
+                   "actual":  "Shipping displays .00 but Total displays .00.",
+                   "startPath":  "/",
+                   "context":  "Fresh browser storage and an initially empty cart."
+               },
+    "reportCompleteness":  {
+                               "complete":  true,
+                               "missingFields":  [
+
+                                                 ]
+                           },
+    "status":  "REPORTED",
+    "createdAt":  "2026-10-12T19:47:54.465Z",
+    "updatedAt":  "2026-10-12T19:47:54.465Z",
+    "reproduction":  {
+                         "preconditions":  [
+
+                                           ],
+                         "steps":  [
+                                       "When the cart subtotal is below the free-shipping threshold, the displayed Total shows only the merchandise subtotal instead of subtotal plus the visible shipping charge."
+                                   ],
+                         "expected":  "",
+                         "actual":  "",
+                         "testFile":  "",
+                         "lastRun":  null
+                     },
+    "patch":  null,
+    "verification":  null,
+    "evidence":  [
+
+                 ],
+    "rootCauseExplanation":  null
+}

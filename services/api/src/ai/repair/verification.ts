@@ -246,11 +246,13 @@ export async function runRequiredChecks(
 
 import type { TestRun } from "@bug-to-proof/shared-types";
 import { testFingerprint, digest } from "../../runner/integrity";
+import { generatedTestFingerprint } from "../../runner/playwrightRunner";
 import { classifyReport } from "../../runner/classification";
 
 export interface BaselineGateInputs {
   caseId: string;
   reproductionTestFile: string;
+  reproductionTestRoot?: string;
   testFingerprint: string;
   baselineRun: TestRun | null | undefined;
   baselineArtifactDir?: string;
@@ -260,6 +262,7 @@ export interface BaselineGateInputs {
 export interface VerificationGateInputs {
   caseId: string;
   reproductionTestFile: string;
+  reproductionTestRoot?: string;
   testFingerprint: string;
   baselineRun: TestRun | null | undefined;
   postPatchRun: TestRun | null | undefined;
@@ -361,7 +364,7 @@ export function validateBaselineGates(inputs: BaselineGateInputs): VerificationG
   // Reproduction test fingerprint validation
   let currentTestFp = "";
   try {
-    currentTestFp = testFingerprint(inputs.reproductionTestFile);
+    currentTestFp = inputs.reproductionTestRoot ? generatedTestFingerprint(inputs.reproductionTestFile) : testFingerprint(inputs.reproductionTestFile);
   } catch (err: any) {
     violations.push(`Failed to compute current reproduction test fingerprint: ${err.message}`);
   }
@@ -403,6 +406,7 @@ export function validateVerificationGates(inputs: VerificationGateInputs): Verif
   const baseCheck = validateBaselineGates({
     caseId: inputs.caseId,
     reproductionTestFile: inputs.reproductionTestFile,
+    reproductionTestRoot: inputs.reproductionTestRoot,
     testFingerprint: inputs.testFingerprint,
     baselineRun: inputs.baselineRun,
     baselineArtifactDir: inputs.baselineArtifactDir,
@@ -520,7 +524,7 @@ export function validateVerificationGates(inputs: VerificationGateInputs): Verif
   // 4. Matching baseline, current, and post-patch test inputs (fingerprints)
   let currentTestFp = "";
   try {
-    currentTestFp = testFingerprint(inputs.reproductionTestFile);
+    currentTestFp = inputs.reproductionTestRoot ? generatedTestFingerprint(inputs.reproductionTestFile) : testFingerprint(inputs.reproductionTestFile);
   } catch (err: any) {
     violations.push(`Failed to compute current reproduction test fingerprint: ${err.message}`);
   }

@@ -41,6 +41,20 @@ svg { flex-shrink: 0; }
 .workspace-bar > span { display: flex; align-items: center; gap: 9px; }
 .workspace-bar svg { width: 16px; height: 16px; color: #84929c; }
 .main-content { max-width: 1640px; padding: 38px 36px 60px; margin: auto; }
+.cases-hero { position: relative; min-height: clamp(310px, 31vw, 470px); margin-bottom: 28px; overflow: hidden; border-radius: 14px; background: #071c2d; box-shadow: 0 18px 45px #1223331f; isolation: isolate; }
+.cases-hero::after { content: ""; position: absolute; inset: 0; z-index: 1; border: 1px solid #ffffff1c; border-radius: inherit; pointer-events: none; }
+.cases-hero-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.cases-hero-shade { position: absolute; inset: 0; background: linear-gradient(90deg, #071b2cf7 0%, #071b2ce8 31%, #071b2c70 51%, #071b2c05 72%); }
+.cases-hero-content { position: relative; z-index: 2; display: flex; flex-direction: column; justify-content: center; width: min(47%, 590px); min-height: inherit; padding: clamp(34px, 5vw, 72px); color: #f5fbfc; }
+.cases-hero .eyebrow { color: #62d8ca; margin-bottom: 16px; }
+.cases-hero h1 { margin: 0; font-size: clamp(38px, 4.4vw, 68px); line-height: .98; letter-spacing: -2.8px; }
+.cases-hero h1 span { color: #65e0d1; }
+.cases-hero p { max-width: 520px; margin: 22px 0 26px; color: #c3d2dc; font-size: clamp(13px, 1.2vw, 16px); line-height: 1.7; }
+.cases-hero-actions { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.button.hero-primary { border: 1px solid #5ee0d0; background: #49cbbb; color: #082431; padding: 12px 18px; box-shadow: 0 6px 24px #21d5c334; }
+.button.hero-primary:hover { background: #6ee8d9; transform: translateY(-1px); }
+.hero-assurance { display: inline-flex; align-items: center; gap: 8px; color: #b7cad4; font-size: 11px; font-weight: 600; }
+.hero-assurance svg { width: 17px; height: 17px; color: #54d8c8; }
 .page-heading { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin-bottom: 30px; }
 .eyebrow { display: block; font-size: 9px; font-weight: 700; letter-spacing: 1.8px; color: #678081; margin-bottom: 10px; }
 .page-heading h1 { font-size: clamp(30px, 3vw, 42px); letter-spacing: -1.6px; line-height: 1.1; margin: 0 0 12px; }
@@ -188,6 +202,12 @@ input::placeholder, textarea::placeholder { color: #83909f; opacity: 1; }
   .workspace-bar { height: 46px; padding: 0 20px; font-size: 10px; }
   .workspace-note { display: none !important; }
   .main-content { padding: 26px 18px 40px; }
+  .cases-hero { min-height: 460px; margin-bottom: 22px; }
+  .cases-hero-image { object-position: 64% center; }
+  .cases-hero-shade { background: linear-gradient(180deg, #071b2c7d 0%, #071b2ce3 48%, #071b2cfc 72%); }
+  .cases-hero-content { justify-content: flex-end; width: 100%; padding: 28px 24px 32px; }
+  .cases-hero h1 { font-size: 42px; letter-spacing: -2px; }
+  .cases-hero p { margin: 16px 0 20px; }
   .page-heading { align-items: flex-start; flex-wrap: wrap; gap: 16px; }
   .page-heading h1 { font-size: 34px; }
   .page-heading .button { padding: 9px 12px; }

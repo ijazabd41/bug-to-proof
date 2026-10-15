@@ -116,8 +116,17 @@ export interface RunInputs {
   caseSnapshot: Record<string, unknown>;
   reproductionTest: {
     filePath: string;
+    root?: string;
     content: string;
     fingerprint: string;
+    provenance?: {
+      reproductionRunId: string;
+      definitionHash: string;
+      compiledTestHash: string;
+      sourceFingerprint: string;
+      acceptedAt: string;
+      acceptedBy: string;
+    };
   };
 }
 
@@ -135,6 +144,7 @@ export interface RepairRunRecord {
   targetSnapshotDir: string;
   testFingerprint: string;
   reproductionTestFile: string;
+  reproductionTestRoot?: string;
   targetPort?: number;
   targetUrl?: string;
   baselineRun?: TestRun;

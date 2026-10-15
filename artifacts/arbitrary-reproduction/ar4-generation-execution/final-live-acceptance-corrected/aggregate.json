@@ -1,0 +1,23 @@
+{
+  "reportsSubmitted": 3,
+  "categories": ["calculation-state", "cart-action", "navigation"],
+  "terminalStates": {
+    "CANDIDATE_INVALID": 1,
+    "BLOCKED": 2
+  },
+  "retainedCandidateAttempts": 4,
+  "validCandidates": 0,
+  "executableCandidates": 0,
+  "evidenceRunnerExecutions": 0,
+  "responseShapes": {
+    "choices_array:first_choice_object:message_object:content_string_nonempty": 3,
+    "choices_array:first_choice_object:message_object:content_string_empty": 1,
+    "http_error:429": 2
+  },
+  "providerInfrastructureFailures": 2,
+  "sourceFingerprintBefore": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289",
+  "sourceFingerprintAfter": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289",
+  "sourceIdentityUnchanged": true,
+  "acceptanceSatisfied": false,
+  "limitation": "No fresh report produced a valid executable candidate. Two runs encountered sanitized provider HTTP 429 failures; the remaining successful outputs were empty, malformed, or rejected against the frozen discovery inventory."
+}

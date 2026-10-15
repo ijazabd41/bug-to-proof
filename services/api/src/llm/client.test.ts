@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { callLLM } from './client';
+import { callLLM, callLLMWithDiagnostics } from './client';
 
 describe('LLM Client', () => {
   const originalEnv = process.env;
@@ -66,5 +66,32 @@ describe('LLM Client', () => {
 
     const result = await reloadedCallLLM('hello prompt');
     expect(result).toBe('');
+  });
+
+  it('classifies a successful response with missing message content without retaining raw output', async () => {
+    process.env.LLM_ENABLED = 'true';
+    process.env.LLM_API_KEY = 'test-key';
+    (global.fetch as any).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ id: 'secret-provider-id', choices: [{ finish_reason: 'stop', message: {} }] }),
+    });
+
+    const result = await callLLMWithDiagnostics('hello prompt');
+
+    expect(result).toEqual({
+      content: '',
+      responseShape: 'choices_array:first_choice_object:message_object:content_missing',
+    });
+    expect(JSON.stringify(result)).not.toContain('secret-provider-id');
+  });
+
+  it.each([
+    [{ choices: [{ message: { content: "   " } }] }, 'choices_array:first_choice_object:message_object:content_string_empty'],
+    [{ choices: [{ message: { content: [{ type: "text", text: "secret" }] } }] }, 'choices_array:first_choice_object:message_object:content_not_string'],
+  ])('classifies other unusable successful response shapes without retaining content', async (body, responseShape) => {
+    process.env.LLM_ENABLED = 'true';
+    process.env.LLM_API_KEY = 'test-key';
+    (global.fetch as any).mockResolvedValueOnce({ ok: true, json: async () => body });
+    expect(await callLLMWithDiagnostics('hello prompt')).toEqual({ content: '', responseShape });
   });
 });

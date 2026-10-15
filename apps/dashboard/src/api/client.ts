@@ -1,4 +1,18 @@
 import type { BugCase } from "../types";
+import type {
+  ReproductionRunRecordSummary,
+  StartReproductionRunResponse,
+} from "../types/reproduction";
+
+export interface CreateCaseRequest {
+  title: string;
+  description: string;
+  steps?: string[];
+  expected?: string;
+  actual?: string;
+  startPath?: string;
+  context?: string;
+}
 
 // Remove trailing slash so we can always prefix with "/"
 const RAW_BASE = (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? "http://localhost:3001";
@@ -52,8 +66,16 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
     throw err;
   }
 
-  // 202 Accepted or 204 No Content — no body to parse
-  if (res.status === 202 || res.status === 204) return undefined as T;
+  // 202 Accepted or 204 No Content — no body to parse (unless JSON body exists)
+  if (res.status === 202 || res.status === 204) {
+    const text = await res.text();
+    if (!text) return undefined as T;
+    try {
+      return JSON.parse(text) as T;
+    } catch {
+      return undefined as T;
+    }
+  }
 
   return res.json() as Promise<T>;
 }
@@ -68,7 +90,7 @@ export const api = {
     request<BugCase>(`/api/cases/${id}`, { signal }),
 
   /** POST /api/cases */
-  createCase: (body: { title: string; description: string }, signal?: AbortSignal) =>
+  createCase: (body: CreateCaseRequest, signal?: AbortSignal) =>
     request<BugCase>("/api/cases", {
       method: "POST",
       body: JSON.stringify(body),
@@ -98,4 +120,38 @@ export const api = {
   /** POST /api/demo/reset */
   demoReset: (signal?: AbortSignal) =>
     request<BugCase>("/api/demo/reset", { method: "POST", signal }),
+
+  /** POST /api/cases/:caseId/reproduction-runs — returns 202 with StartReproductionRunResponse */
+  startReproductionRun: (caseId: string, signal?: AbortSignal) =>
+    request<StartReproductionRunResponse>(
+      `/api/cases/${caseId}/reproduction-runs`,
+      { method: "POST", signal }
+    ),
+
+  /** GET /api/cases/:caseId/reproduction-runs */
+  listReproductionRuns: (caseId: string, signal?: AbortSignal) =>
+    request<ReproductionRunRecordSummary[]>(
+      `/api/cases/${caseId}/reproduction-runs`,
+      { signal }
+    ),
+
+  /** GET /api/reproduction-runs/:runId */
+  getReproductionRun: (runId: string, signal?: AbortSignal) =>
+    request<ReproductionRunRecordSummary>(
+      `/api/reproduction-runs/${runId}`,
+      { signal }
+    ),
+
+  /** POST /api/reproduction-runs/:runId/cancel */
+  cancelReproductionRun: (runId: string, signal?: AbortSignal) =>
+    request<{ reproductionRunId: string; state: string }>(
+      `/api/reproduction-runs/${runId}/cancel`,
+      { method: "POST", signal }
+    ),
+
+  /** POST /api/reproduction-runs/:runId/review — hash-bound human decision */
+  reviewReproductionRun: (runId: string, body: { decision: "APPROVE" | "REJECT"; definitionHash: string; compiledTestHash: string; acceptedBy: string; reviewerNotes?: string }, signal?: AbortSignal) =>
+    request<ReproductionRunRecordSummary>(`/api/reproduction-runs/${runId}/review`, {
+      method: "POST", body: JSON.stringify(body), signal,
+    }),
 };

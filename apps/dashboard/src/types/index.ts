@@ -1,5 +1,7 @@
 export type {
   BugCase,
+  BugReportDetails,
+  ReportCompleteness,
   CaseStatus,
   Evidence,
   EvidenceType,

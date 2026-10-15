@@ -1,6 +1,6 @@
 # Arbitrary new bug reproduction implementation plan
 
-Status: **PLANNED — implementation not started**  
+Status: **AR0–AR7 COMPLETE**
 Created: 2026-10-12 (Asia/Karachi)  
 Progress: [docs/progress/arbitrary-bug-reproduction.md](../docs/progress/arbitrary-bug-reproduction.md)  
 Parent architecture: [dynamic-ai-repair-plan.md](dynamic-ai-repair-plan.md)

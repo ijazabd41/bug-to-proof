@@ -1,0 +1,17 @@
+﻿{
+    "category":  "navigation",
+    "caseId":  "case-1791917827903-dh7fk4p5",
+    "reproductionRunId":  "03bad5a2-9c16-4ca0-8fe2-c22760eff158",
+    "state":  "BLOCKED",
+    "stopReason":  "Generation provider failed",
+    "attemptExecutionIds":  [
+
+                            ],
+    "classifications":  [
+
+                        ],
+    "responseShapes":  [
+
+                       ],
+    "evidenceDirectory":  "D:\\bug-to-proof\\artifacts\\arbitrary-reproduction\\ar4-generation-execution\\trusted-target-runtime-live-acceptance\\navigation-case-1791917827903-dh7fk4p5-03bad5a2-9c16-4ca0-8fe2-c22760eff158"
+}

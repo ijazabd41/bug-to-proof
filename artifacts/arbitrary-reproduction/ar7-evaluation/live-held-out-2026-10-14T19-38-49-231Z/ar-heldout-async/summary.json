@@ -1,0 +1,31 @@
+{
+  "evaluationId": "ar-heldout-async",
+  "split": "held-out",
+  "category": "async",
+  "caseId": "case-1792006748145-jjf3dygv",
+  "reproductionRunId": "24458c90-dbe6-4f07-be5f-d73d9644e49b",
+  "state": "CANDIDATE_EXECUTION_ERROR",
+  "stopReason": "Candidate attempt limit (3) reached",
+  "attempts": 3,
+  "classifications": [
+    "CANDIDATE_EXECUTION_ERROR",
+    "CANDIDATE_INVALID",
+    "CANDIDATE_EXECUTION_ERROR"
+  ],
+  "responseShapes": [
+    null,
+    "choices_array:first_choice_object:message_object:content_string_empty",
+    null
+  ],
+  "validCandidate": true,
+  "executableCandidate": false,
+  "relevantReproduction": false,
+  "infrastructureError": false,
+  "unsupported": false,
+  "durationMs": 72483,
+  "usage": [
+    null,
+    null,
+    null
+  ]
+}

@@ -19,6 +19,8 @@ This page is the documentation entry point. Documents are grouped by purpose and
 | Document | Scope |
 | --- | --- |
 | [Demo script](demo-script.md) | Configured benchmark demonstration; review prerequisites before recording |
+| [Dynamic demo script](dynamic-demo-script.md) | Arbitrary-report generation, review, frozen baseline, and proof walkthrough |
+| [Portfolio release notes](portfolio-release.md) | Resume bullet, LinkedIn draft, verified metrics, and claim boundary |
 | [RAG architecture and interview guide](rag-interview-guide.md) | Retrieval providers, evaluation, tradeoffs, and interview explanation |
 | [Design concepts](design-concepts/prompts.md) | Dashboard concept prompts; mock data is illustrative |
 | [Demo recording](../demo_recording.md) | Historical configured-case demo recording |

@@ -8,9 +8,9 @@
 
 ## What is this?
 
-Bug-to-Proof is an evidence-backed repair and verification prototype for the configured local MiniShop application. For cases with a configured Playwright reproduction test, the exact same test fails before the patch with an `ASSERTION_FAILED` behavior diff and passes after applying the approved patch, with screenshots, regression logs, and SHA-256 digests preserved as a downloadable Proof Bundle.
+Bug-to-Proof is an evidence-backed reproduction and repair prototype for the configured local MiniShop application. A new structured report can drive bounded page discovery, a schema-constrained Playwright candidate, hash-bound human review, a frozen failing baseline, isolated patch verification with the identical test, regression gates, and a SHA-256 manifest-backed Proof Bundle.
 
-New reports can be captured today, but arbitrary reports do not yet receive an automatically generated reproduction test. That work is specified in the [arbitrary bug reproduction plan](plans/arbitrary-bug-reproduction-plan.md). Do not describe the current release as supporting any website or any bug report.
+The boundary matters: this is not an “any website, any bug” system. Live generation and frozen-baseline review have been demonstrated on MiniShop. The recorded end-to-end repair uses a deterministic reference proposal; its browser execution, regression checks, and proof verification are real. The frozen four-report held-out generation set has been executed once: 2/4 produced valid candidates, 1/4 reached an executable passing baseline, 0/4 produced a relevant reproduction, and 2/4 encountered provider connectivity failures.
 
 Start with the [documentation index](docs/README.md). For current implementation details, verification matrix, and system status, see [Current Project Status](docs/current-project-status.md).
 
@@ -67,7 +67,24 @@ npm run repair:evaluate -- --simulated
 npm run repair:evaluate
 ```
 
-### 3. Cryptographic Proof Bundle Export (.zip)
+### 3. Arbitrary-report reproduction with review
+
+- Captures steps, expected behavior, actual behavior, starting path, and context as first-class report fields.
+- Discovers a bounded, sanitized inventory of MiniShop routes and controls.
+- Accepts only versioned actions and assertions; raw CSS, XPath, JavaScript, and untrusted selectors are rejected.
+- Keeps repeated controls unambiguous through discovery-issued `data-testid` identities.
+- Freezes the exact reviewed test and binds approval to report, target, discovery, policy, definition, and compiled-test hashes.
+- Counts only structured assertion failures as reproduced product bugs; provider, selector, navigation, timeout, and environment failures remain separate.
+
+Run the retained-evidence scorecard or the local end-to-end reference:
+
+```bash
+npm run arbitrary:evaluate
+npm run arbitrary:verify
+npm run demo:check
+```
+
+### 4. Cryptographic Proof Bundle Export (.zip)
 Every repair run can be exported as a self-contained, tamper-evident Proof Bundle (.zip):
 - **Versioned Manifest (`manifest.json`)**: Contains run metadata, timestamps, and SHA-256 digests for all files.
 - **Bug Case Snapshot (`case-snapshot.json`)**: Immutable snapshot of the original bug report.
@@ -82,7 +99,7 @@ Download via API or Dashboard:
 - **API**: `GET /api/ai/repair-runs/:runId/bundle.zip`
 - **Dashboard**: Click **"Download Proof Bundle (.zip)"** in the AI Repair Assistant pane.
 
-### 4. Cross-Platform CI (Windows & Ubuntu)
+### 5. Cross-Platform CI (Windows & Ubuntu)
 GitHub Actions workflow (`.github/workflows/ci.yml`) validates the monorepo across both `windows-latest` and `ubuntu-latest`:
 - Monorepo typechecking (`npm run typecheck`)
 - Full unit test suite (`npm run test:unit`)
@@ -91,7 +108,7 @@ GitHub Actions workflow (`.github/workflows/ci.yml`) validates the monorepo acro
 - Real browser failure-to-pass workflow (`npx tsx scripts/verify-real-browser-workflow.ts`)
 - Automated upload of proof and verification artifacts.
 
-### 5. Artifact Hygiene & Safe Storage Cleanup
+### 6. Artifact Hygiene & Safe Storage Cleanup
 - **Separation of Concerns**: Curated historical evidence (`artifacts/evaluation/`, `artifacts/system-testing/`, `artifacts/portfolio-cart/`) is preserved permanently.
 - **Safe Cleanup Tool**:
   ```bash
@@ -108,7 +125,7 @@ GitHub Actions workflow (`.github/workflows/ci.yml`) validates the monorepo acro
 ## Running Verification & Tests
 
 ```bash
-# 1. Run all unit and integration test suites (198 tests)
+# 1. Run all unit and integration test suites
 npm run test:unit
 
 # 2. Run TypeScript typechecking across monorepo
@@ -122,6 +139,9 @@ npx tsx scripts/verify-real-browser-workflow.ts
 
 # 5. Run full simulated repair evaluation benchmark
 npm run repair:evaluate -- --simulated
+
+# 6. Rebuild the AR7 scorecard from retained evidence
+npm run arbitrary:evaluate
 ```
 
 ---

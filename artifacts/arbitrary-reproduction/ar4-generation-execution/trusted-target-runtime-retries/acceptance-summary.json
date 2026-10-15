@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "1.0",
+  "recordedAt": "2026-10-14",
+  "acceptanceCriterion": "At least three distinct MiniShop reports produce executable candidates without reference-test access; selector failures never count as reproduction.",
+  "sourceFingerprintBefore": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289",
+  "sourceFingerprintAfter": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289",
+  "inventoryDigest": "17822468a35e921c7b66b92c24f728bea1f78d9cc91244bd9ca7ef361545e86b",
+  "reportsSubmitted": 3,
+  "validCandidates": 3,
+  "executableCandidates": 3,
+  "evidenceRunnerExecutions": 3,
+  "structuredAssertionFailures": 2,
+  "passingBaselines": 1,
+  "selectorFailuresCountedAsReproduction": 0,
+  "runs": [
+    {
+      "category": "calculation-state",
+      "caseId": "case-1791917776888-hvza72c3",
+      "reproductionRunId": "8dca2a60-8416-40e4-a4e6-e7de42948cf4",
+      "state": "AWAITING_TEST_REVIEW",
+      "classification": "ASSERTION_FAILED",
+      "definitionHash": "19604a7965f6ecb5027b25e6b1eba557990bd0a490ed22d20b2b9f9ceebe8aff",
+      "compiledTestHash": "4c571551e174c161da1f2093ac138eda138b4f4e512bd3ff54b7d23d378431f9",
+      "evidenceResult": "artifacts/reproduction-runs/8dca2a60-8416-40e4-a4e6-e7de42948cf4-attempt-1/evidence/result.json"
+    },
+    {
+      "category": "cart-action",
+      "caseId": "case-1791917801583-urha9nkd",
+      "reproductionRunId": "c96b9eb4-304e-4b38-ac4d-4096a6435fc0",
+      "state": "AWAITING_TEST_REVIEW",
+      "classification": "ASSERTION_FAILED",
+      "definitionHash": "5faf46591fe8bce4906908ed377f8290886568a7a6bf2e3d55254e25362852a5",
+      "compiledTestHash": "25fd1793dd629b8a1117d1257504a2d6d40f9f8da7aeec651fe2872f995d1bfd",
+      "evidenceResult": "artifacts/reproduction-runs/c96b9eb4-304e-4b38-ac4d-4096a6435fc0-attempt-1/evidence/result.json"
+    },
+    {
+      "category": "navigation",
+      "caseId": "case-1791917827903-dh7fk4p5",
+      "reproductionRunId": "7969bb48-1d36-4114-8883-35a88b812516",
+      "state": "BASELINE_PASSED",
+      "classification": "BASELINE_PASSED",
+      "definitionHash": "2324865f9f720d49120ff87d25d2fbb3819464ef0329964e6d8bd110e28e6dfd",
+      "compiledTestHash": "9f78a4b4cd89fda86006ba62f95d470d54082d1408d562b871f2c75d860b7858",
+      "evidenceResult": "artifacts/reproduction-runs/7969bb48-1d36-4114-8883-35a88b812516-attempt-1/evidence/result.json"
+    }
+  ],
+  "acceptanceSatisfied": true
+}

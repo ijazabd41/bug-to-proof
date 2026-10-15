@@ -1,0 +1,56 @@
+﻿[
+    {
+        "category":  "calculation-state",
+        "caseId":  "case-1791917776888-hvza72c3",
+        "reproductionRunId":  "78745fe7-03b0-4e64-9ccb-2e36d6e7bfce",
+        "state":  "AWAITING_TEST_REVIEW",
+        "stopReason":  null,
+        "attemptExecutionIds":  [
+                                    "78745fe7-03b0-4e64-9ccb-2e36d6e7bfce-attempt-1"
+                                ],
+        "classifications":  [
+                                "ASSERTION_FAILED"
+                            ],
+        "responseShapes":  [
+                               null
+                           ],
+        "evidenceDirectory":  "D:\\bug-to-proof\\artifacts\\arbitrary-reproduction\\ar4-generation-execution\\trusted-target-runtime-live-acceptance\\calculation-state-case-1791917776888-hvza72c3-78745fe7-03b0-4e64-9ccb-2e36d6e7bfce"
+    },
+    {
+        "category":  "cart-action",
+        "caseId":  "case-1791917801583-urha9nkd",
+        "reproductionRunId":  "7d99e9de-2512-4dd3-8f16-c220ee79f189",
+        "state":  "BLOCKED",
+        "stopReason":  "Generation provider failed",
+        "attemptExecutionIds":  [
+                                    "7d99e9de-2512-4dd3-8f16-c220ee79f189-attempt-1",
+                                    "7d99e9de-2512-4dd3-8f16-c220ee79f189-attempt-2"
+                                ],
+        "classifications":  [
+                                "CANDIDATE_INVALID",
+                                "CANDIDATE_INVALID"
+                            ],
+        "responseShapes":  [
+                               "choices_array:first_choice_object:message_object:content_string_nonempty",
+                               "choices_array:first_choice_object:message_object:content_string_nonempty"
+                           ],
+        "evidenceDirectory":  "D:\\bug-to-proof\\artifacts\\arbitrary-reproduction\\ar4-generation-execution\\trusted-target-runtime-live-acceptance\\cart-action-case-1791917801583-urha9nkd-7d99e9de-2512-4dd3-8f16-c220ee79f189"
+    },
+    {
+        "category":  "navigation",
+        "caseId":  "case-1791917827903-dh7fk4p5",
+        "reproductionRunId":  "03bad5a2-9c16-4ca0-8fe2-c22760eff158",
+        "state":  "BLOCKED",
+        "stopReason":  "Generation provider failed",
+        "attemptExecutionIds":  [
+
+                                ],
+        "classifications":  [
+
+                            ],
+        "responseShapes":  [
+
+                           ],
+        "evidenceDirectory":  "D:\\bug-to-proof\\artifacts\\arbitrary-reproduction\\ar4-generation-execution\\trusted-target-runtime-live-acceptance\\navigation-case-1791917827903-dh7fk4p5-03bad5a2-9c16-4ca0-8fe2-c22760eff158"
+    }
+]

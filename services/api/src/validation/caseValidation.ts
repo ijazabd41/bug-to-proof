@@ -1,4 +1,4 @@
-import type { BugCase, CaseStatus, PatchStatus, Reproduction, Patch } from "@bug-to-proof/shared-types";
+import type { BugCase, BugReportDetails, CaseStatus, PatchStatus, Reproduction, Patch } from "@bug-to-proof/shared-types";
 
 export interface ValidationResult<T = unknown> {
   valid: boolean;
@@ -20,8 +20,8 @@ export function generateCollisionResistantCaseId(): string {
   return `case-${timestamp}-${randomSuffix}`;
 }
 
-const ALLOWED_CREATE_KEYS = new Set(["title", "description"]);
-const ALLOWED_PATCH_KEYS = new Set(["title", "description", "status", "reproduction", "patch"]);
+const ALLOWED_CREATE_KEYS = new Set(["title", "description", "steps", "expected", "actual", "startPath", "context"]);
+const ALLOWED_PATCH_KEYS = new Set(["title", "description", "report", "status", "reproduction", "patch"]);
 const ALLOWED_REPRODUCTION_KEYS = new Set(["steps", "preconditions", "expected", "actual", "testFile"]);
 const ALLOWED_PATCH_KEYS_OBJ = new Set([
   "summary",
@@ -48,7 +48,41 @@ const VALID_STATUS_VALUES = new Set<CaseStatus>([
 
 const VALID_PATCH_STATUS_VALUES = new Set<PatchStatus>(["PROPOSED", "APPLIED", "REJECTED"]);
 
-export function validateCreateCase(body: unknown): ValidationResult<{ title: string; description: string }> {
+export interface CreateCaseInput {
+  title: string;
+  description: string;
+  steps: string[];
+  expected: string;
+  actual: string;
+  startPath: string;
+  context: string;
+}
+
+function validateReportFields(record: Record<string, unknown>, prefix = ""): ValidationResult<Omit<BugReportDetails, "schemaVersion">> {
+  const label = (field: string) => prefix ? `${prefix}.${field}` : field;
+  const rawSteps = record.steps ?? [];
+  if (!Array.isArray(rawSteps) || rawSteps.length > 20) return { valid: false, error: `${label("steps")} must be an array with at most 20 entries` };
+  const steps: string[] = [];
+  for (let i = 0; i < rawSteps.length; i++) {
+    if (typeof rawSteps[i] !== "string" || !(rawSteps[i] as string).trim()) return { valid: false, error: `${label("steps")}[${i}] must be a non-empty string` };
+    if ((rawSteps[i] as string).length > 1000) return { valid: false, error: `${label("steps")}[${i}] exceeds maximum length of 1000 characters` };
+    steps.push((rawSteps[i] as string).trim());
+  }
+  const values: Record<"expected" | "actual" | "startPath" | "context", string> = { expected: "", actual: "", startPath: "", context: "" };
+  const limits = { expected: 2000, actual: 2000, startPath: 500, context: 2000 };
+  for (const field of Object.keys(values) as Array<keyof typeof values>) {
+    const raw = record[field] ?? "";
+    if (typeof raw !== "string") return { valid: false, error: `${label(field)} must be a string` };
+    if (raw.length > limits[field]) return { valid: false, error: `${label(field)} exceeds maximum length of ${limits[field]} characters` };
+    values[field] = raw.trim();
+  }
+  if (values.startPath && (!values.startPath.startsWith("/") || values.startPath.startsWith("//") || /^[a-z]+:\/\//i.test(values.startPath))) {
+    return { valid: false, error: `${label("startPath")} must be an application-relative path beginning with /` };
+  }
+  return { valid: true, data: { steps, ...values } };
+}
+
+export function validateCreateCase(body: unknown): ValidationResult<CreateCaseInput> {
   if (!body || typeof body !== "object" || Array.isArray(body)) {
     return { valid: false, error: "Request body must be a JSON object" };
   }
@@ -80,11 +114,15 @@ export function validateCreateCase(body: unknown): ValidationResult<{ title: str
     return { valid: false, error: "description exceeds maximum length of 5000 characters" };
   }
 
+  const reportValidation = validateReportFields(body as Record<string, unknown>);
+  if (!reportValidation.valid || !reportValidation.data) return reportValidation as ValidationResult<CreateCaseInput>;
+
   return {
     valid: true,
     data: {
       title: title.trim(),
       description: description.trim(),
+      ...reportValidation.data,
     },
   };
 }
@@ -130,6 +168,17 @@ export function validatePatchCase(body: unknown): ValidationResult<Partial<BugCa
       return { valid: false, error: "description exceeds maximum length of 5000 characters" };
     }
     sanitized.description = record.description.trim();
+  }
+
+  if ("report" in record) {
+    if (!record.report || typeof record.report !== "object" || Array.isArray(record.report)) return { valid: false, error: "report must be an object" };
+    const reportRecord = record.report as Record<string, unknown>;
+    const allowed = new Set(["schemaVersion", "steps", "expected", "actual", "startPath", "context"]);
+    for (const key of Object.keys(reportRecord)) if (!allowed.has(key)) return { valid: false, error: `Unknown field in report: ${key}` };
+    if ("schemaVersion" in reportRecord && reportRecord.schemaVersion !== "1.0") return { valid: false, error: "report.schemaVersion must be 1.0" };
+    const validated = validateReportFields(reportRecord, "report");
+    if (!validated.valid || !validated.data) return validated as ValidationResult<Partial<BugCase>>;
+    sanitized.report = { schemaVersion: "1.0", ...validated.data };
   }
 
   if ("status" in record) {

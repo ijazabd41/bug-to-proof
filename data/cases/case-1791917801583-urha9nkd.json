@@ -1,0 +1,42 @@
+{
+  "id": "case-1791917801583-urha9nkd",
+  "title": "Removing one unit deletes the entire cart line",
+  "description": "When the same product has quantity two, clicking its Remove button deletes the whole line instead of removing one unit.",
+  "report": {
+    "schemaVersion": "1.0",
+    "steps": [
+      "Open the shop page",
+      "Add Keyboard to the cart twice",
+      "Click Remove for Keyboard once"
+    ],
+    "expected": "Keyboard should remain in the cart with quantity 1.",
+    "actual": "The Keyboard line disappears and the cart becomes empty.",
+    "startPath": "/",
+    "context": "Fresh browser storage and an initially empty cart."
+  },
+  "reportCompleteness": {
+    "complete": true,
+    "missingFields": []
+  },
+  "status": "REPORTED",
+  "createdAt": "2026-10-13T18:56:41.583Z",
+  "updatedAt": "2026-10-13T18:56:43.012Z",
+  "reproduction": {
+    "preconditions": [
+      "The product is added to the cart with a quantity of 2."
+    ],
+    "steps": [
+      "1. Add the product to the cart.",
+      "2. Verify the quantity is set to 2.",
+      "3. Click the Remove button for that product."
+    ],
+    "expected": "Only one unit of the product is removed, leaving a quantity of 1 in the cart.",
+    "actual": "The entire product line is deleted from the cart.",
+    "testFile": "",
+    "lastRun": null
+  },
+  "patch": null,
+  "verification": null,
+  "evidence": [],
+  "rootCauseExplanation": null
+}

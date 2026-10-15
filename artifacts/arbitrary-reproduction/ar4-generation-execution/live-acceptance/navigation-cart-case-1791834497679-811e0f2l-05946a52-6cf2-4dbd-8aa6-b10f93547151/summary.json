@@ -1,0 +1,14 @@
+﻿{
+    "category":  "navigation-cart",
+    "caseId":  "case-1791834497679-811e0f2l",
+    "reproductionRunId":  "05946a52-6cf2-4dbd-8aa6-b10f93547151",
+    "state":  "BLOCKED",
+    "stopReason":  "Generation provider failed",
+    "attemptExecutionIds":  [
+
+                            ],
+    "classifications":  [
+
+                        ],
+    "evidenceDirectory":  "D:\\bug-to-proof\\artifacts\\arbitrary-reproduction\\ar4-generation-execution\\live-acceptance\\navigation-cart-case-1791834497679-811e0f2l-05946a52-6cf2-4dbd-8aa6-b10f93547151"
+}

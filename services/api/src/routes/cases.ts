@@ -21,6 +21,7 @@ import {
   generateCollisionResistantCaseId,
   sanitizeLLMReproduction,
 } from "../validation/caseValidation";
+import { assessReportCompleteness } from "../reproduction/reportCompleteness";
 
 export const casesRouter = Router();
 
@@ -66,7 +67,7 @@ casesRouter.post("/", async (req: Request, res: Response, next: NextFunction) =>
       return;
     }
 
-    const { title, description } = validation.data;
+    const { title, description, steps, expected, actual, startPath, context } = validation.data;
     const id = generateCollisionResistantCaseId();
     const now = new Date().toISOString();
 
@@ -84,6 +85,8 @@ casesRouter.post("/", async (req: Request, res: Response, next: NextFunction) =>
       id,
       title,
       description,
+      report: { schemaVersion: "1.0", steps, expected, actual, startPath, context },
+      reportCompleteness: assessReportCompleteness({ schemaVersion: "1.0", steps, expected, actual, startPath, context }),
       status: "REPORTED",
       createdAt: now,
       updatedAt: now,
@@ -244,6 +247,10 @@ casesRouter.patch("/:id", async (req: Request, res: Response, next: NextFunction
     // ── Merge allowed validated fields ────────────────────────────────────
     if (body.title) bugCase.title = body.title;
     if (body.description) bugCase.description = body.description;
+    if (body.report) {
+      bugCase.report = body.report;
+      bugCase.reportCompleteness = assessReportCompleteness(body.report);
+    }
     if (body.status) bugCase.status = body.status;
     if (body.reproduction) {
       bugCase.reproduction = {

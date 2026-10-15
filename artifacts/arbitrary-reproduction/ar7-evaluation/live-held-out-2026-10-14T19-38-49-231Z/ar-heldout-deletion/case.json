@@ -1,0 +1,39 @@
+{
+  "id": "case-1792006729858-7o7i1hz2",
+  "title": "Removing Keyboard leaves the wrong cart line",
+  "description": "Removing one product appears to retain it and discard the other product.",
+  "report": {
+    "schemaVersion": "1.0",
+    "steps": [
+      "Open the shop page",
+      "Add Keyboard",
+      "Add Mouse Pad",
+      "Remove Keyboard"
+    ],
+    "expected": "Only Mouse Pad should remain in the cart.",
+    "actual": "Keyboard remains and Mouse Pad disappears.",
+    "startPath": "/",
+    "context": "Fresh browser storage and an empty cart."
+  },
+  "reportCompleteness": {
+    "complete": true,
+    "missingFields": []
+  },
+  "status": "REPORTED",
+  "createdAt": "2026-10-14T19:38:49.858Z",
+  "updatedAt": "2026-10-14T19:38:49.858Z",
+  "reproduction": {
+    "preconditions": [],
+    "steps": [
+      "Removing one product appears to retain it and discard the other product."
+    ],
+    "expected": "",
+    "actual": "",
+    "testFile": "",
+    "lastRun": null
+  },
+  "patch": null,
+  "verification": null,
+  "evidence": [],
+  "rootCauseExplanation": null
+}

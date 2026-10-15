@@ -1,0 +1,44 @@
+﻿{
+    "id":  "case-1791834872639-wdq7dsy2",
+    "title":  "Cart total omits the shipping charge after adding a keyboard",
+    "description":  "The visible Shipping charge is not included in the displayed Total for a cart below the free-shipping threshold.",
+    "report":  {
+                   "schemaVersion":  "1.0",
+                   "steps":  [
+                                 "Open the shop page",
+                                 "Add Keyboard to the cart",
+                                 "Compare the displayed Shipping and Total values"
+                             ],
+                   "expected":  "For a .00 Keyboard plus .00 shipping, Total should be .00.",
+                   "actual":  "The page displays .00 shipping but Total remains .00.",
+                   "startPath":  "/",
+                   "context":  "Fresh browser storage and an initially empty cart."
+               },
+    "reportCompleteness":  {
+                               "complete":  true,
+                               "missingFields":  [
+
+                                                 ]
+                           },
+    "status":  "REPORTED",
+    "createdAt":  "2026-10-12T19:54:32.639Z",
+    "updatedAt":  "2026-10-12T19:54:32.639Z",
+    "reproduction":  {
+                         "preconditions":  [
+
+                                           ],
+                         "steps":  [
+                                       "The visible Shipping charge is not included in the displayed Total for a cart below the free-shipping threshold."
+                                   ],
+                         "expected":  "",
+                         "actual":  "",
+                         "testFile":  "",
+                         "lastRun":  null
+                     },
+    "patch":  null,
+    "verification":  null,
+    "evidence":  [
+
+                 ],
+    "rootCauseExplanation":  null
+}

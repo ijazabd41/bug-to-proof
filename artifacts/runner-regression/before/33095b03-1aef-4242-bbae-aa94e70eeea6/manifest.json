@@ -1,0 +1,14 @@
+{
+  "passed": false,
+  "outcome": "INFRASTRUCTURE_ERROR",
+  "expected": "",
+  "actual": "Invalid or missing Playwright JSON report",
+  "durationMs": 2,
+  "runId": "33095b03-1aef-4242-bbae-aa94e70eeea6",
+  "testFingerprint": "7e7a80cfdee4b522d2d1703fd67c7b1decb57a4a606519930d0ffee23e5d4b94",
+  "testIds": [],
+  "artifactPaths": {},
+  "rawOutput": "not JSON\n",
+  "exitCode": 0,
+  "failureKind": "INVALID_REPORT"
+}

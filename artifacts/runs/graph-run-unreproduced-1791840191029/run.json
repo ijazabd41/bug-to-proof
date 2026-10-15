@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "graph-run-unreproduced-1791840191029",
+  "caseId": "test-graph-case-001",
+  "mode": "dynamic",
+  "state": "BLOCKED",
+  "attempt": 1,
+  "maxAttempts": 3,
+  "attempts": [],
+  "diagnostics": [],
+  "originalSourceFingerprint": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289",
+  "targetSnapshotDir": "D:\\bug-to-proof\\artifacts\\runs\\graph-run-unreproduced-1791840191029\\workspace",
+  "testFingerprint": "fp-test",
+  "reproductionTestFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
+  "requiredChecks": [],
+  "events": [
+    {
+      "timestamp": "2026-10-12T21:23:11.212Z",
+      "stage": "initialization",
+      "message": "Created isolated workspace snapshot and started app",
+      "data": {
+        "originalSourceFingerprint": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289",
+        "url": "http://localhost:5311"
+      }
+    },
+    {
+      "timestamp": "2026-10-12T21:23:11.234Z",
+      "stage": "baseline",
+      "message": "Baseline verification stopped: The reported failure was not reproduced on original source."
+    },
+    {
+      "timestamp": "2026-10-12T21:23:11.341Z",
+      "stage": "completion",
+      "message": "Run finalized with status: BLOCKED (The reported failure was not reproduced on original source.)"
+    }
+  ],
+  "createdAt": "2026-10-12T21:23:11.212Z",
+  "updatedAt": "2026-10-12T21:23:11.341Z",
+  "baselineRun": {
+    "outcome": "PASSED",
+    "testFingerprint": "fp-test",
+    "testIds": [
+      "tests/playwright/cases/case-001-cart-total.spec.ts:cart total should equal sum:chromium"
+    ],
+    "runId": "run-passed",
+    "runAt": "2026-10-12T21:23:11.232Z",
+    "passed": true,
+    "expected": "Total is $30.00",
+    "actual": "Total is $30.00",
+    "durationMs": 100,
+    "evidenceIds": []
+  },
+  "stopReason": "The reported failure was not reproduced on original source.",
+  "completedAt": "2026-10-12T21:23:11.338Z"
+}

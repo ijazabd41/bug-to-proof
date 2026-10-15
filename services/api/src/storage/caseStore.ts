@@ -1,8 +1,24 @@
 import fs from "fs";
 import path from "path";
-import type { BugCase } from "@bug-to-proof/shared-types";
+import type { BugCase, BugReportDetails } from "@bug-to-proof/shared-types";
 import { DATA_DIR } from "../utils/paths";
 import { validateCaseId } from "../validation/caseValidation";
+import { assessReportCompleteness } from "../reproduction/reportCompleteness";
+
+export function normalizeCaseRecord(input: BugCase): BugCase {
+  const bugCase = structuredClone(input);
+  const report: BugReportDetails = bugCase.report ?? {
+    schemaVersion: "1.0",
+    steps: bugCase.reproduction?.steps ? [...bugCase.reproduction.steps] : [],
+    expected: bugCase.reproduction?.expected ?? "",
+    actual: bugCase.reproduction?.actual ?? "",
+    startPath: "",
+    context: "",
+  };
+  bugCase.report = report;
+  bugCase.reportCompleteness = assessReportCompleteness(report);
+  return bugCase;
+}
 
 /** Ensure data/cases/ directory exists. */
 export function ensureDataDir(): void {
@@ -38,7 +54,7 @@ export function readCase(id: string): BugCase | null {
 
   try {
     const raw = fs.readFileSync(filePath, "utf-8");
-    return JSON.parse(raw) as BugCase;
+    return normalizeCaseRecord(JSON.parse(raw) as BugCase);
   } catch (err) {
     console.error(`[caseStore] Error reading case file ${filePath}: Corrupted or invalid JSON`);
     throw new CorruptCaseRecordError(filePath, err);
@@ -57,7 +73,7 @@ export function readAllCases(): BugCase[] {
     const fullPath = path.join(DATA_DIR, f);
     try {
       const raw = fs.readFileSync(fullPath, "utf-8");
-      const parsed = JSON.parse(raw) as BugCase;
+      const parsed = normalizeCaseRecord(JSON.parse(raw) as BugCase);
       results.push(parsed);
     } catch (err) {
       console.error(`[caseStore] Corrupt case record detected in file: ${fullPath}`);

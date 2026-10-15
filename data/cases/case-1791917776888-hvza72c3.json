@@ -1,0 +1,82 @@
+{
+  "id": "case-1791917776888-hvza72c3",
+  "title": "Cart total omits the shipping charge",
+  "description": "When the cart subtotal is below the free-shipping threshold, the displayed Total shows only the merchandise subtotal instead of subtotal plus the visible shipping charge.",
+  "report": {
+    "schemaVersion": "1.0",
+    "steps": [
+      "Open the shop page",
+      "Add Keyboard to the cart",
+      "Observe the Shipping and Total values"
+    ],
+    "expected": "With a $10.00 Keyboard and $5.00 shipping, Total should display $15.00.",
+    "actual": "Shipping displays $5.00 but Total displays $10.00.",
+    "startPath": "/",
+    "context": "Fresh browser storage and an initially empty cart."
+  },
+  "reportCompleteness": {
+    "complete": true,
+    "missingFields": []
+  },
+  "status": "REPRODUCED",
+  "createdAt": "2026-10-13T18:56:16.888Z",
+  "updatedAt": "2026-10-14T07:56:00.416Z",
+  "reproduction": {
+    "preconditions": [],
+    "steps": [
+      "Open the shop page",
+      "Add Keyboard to the cart",
+      "Observe the Shipping and Total values"
+    ],
+    "expected": "With a $10.00 Keyboard and $5.00 shipping, Total should display $15.00.",
+    "actual": "Shipping displays $5.00 but Total displays $10.00.",
+    "testFile": "D:\\bug-to-proof\\artifacts\\reproduction-runs\\accepted\\8dca2a60-8416-40e4-a4e6-e7de42948cf4\\reproduction.spec.ts",
+    "testRoot": "D:\\bug-to-proof\\artifacts\\reproduction-runs\\accepted",
+    "generatedTest": {
+      "reproductionRunId": "8dca2a60-8416-40e4-a4e6-e7de42948cf4",
+      "definitionHash": "19604a7965f6ecb5027b25e6b1eba557990bd0a490ed22d20b2b9f9ceebe8aff",
+      "compiledTestHash": "4c571551e174c161da1f2093ac138eda138b4f4e512bd3ff54b7d23d378431f9",
+      "sourceFingerprint": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289",
+      "acceptedAt": "2026-10-14T07:55:50.46Z",
+      "acceptedBy": "AR5 live acceptance reviewer"
+    },
+    "lastRun": {
+      "outcome": "ASSERTION_FAILED",
+      "testFingerprint": "48f3565ee820b974f24a16c4d15a3550ef2d613e3d152df5832c93370194fd10",
+      "testIds": [
+        "reproduction.spec.ts:btp-8dca2a60-8416-40e4-a4e6-e7de42948cf4-attempt-1-v1-19604a7965f6:chromium"
+      ],
+      "runId": "8dca2a60-8416-40e4-a4e6-e7de42948cf4-accepted-baseline",
+      "reportHash": "c781c41811cd1daea03e1fe9cda129a519f6253a0fe30029000ef9d3a7e780a4",
+      "runAt": "2026-10-14T07:56:00.373Z",
+      "passed": false,
+      "expected": "",
+      "actual": "Error: BTP_ASSERTION: targetCurrencyEquals\nExpected: 15\nReceived: 10\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: 15\nReceived: 10",
+      "durationMs": 9823,
+      "evidenceIds": []
+    }
+  },
+  "patch": null,
+  "verification": {
+    "status": "PENDING",
+    "beforeRun": {
+      "outcome": "ASSERTION_FAILED",
+      "testFingerprint": "48f3565ee820b974f24a16c4d15a3550ef2d613e3d152df5832c93370194fd10",
+      "testIds": [
+        "reproduction.spec.ts:btp-8dca2a60-8416-40e4-a4e6-e7de42948cf4-attempt-1-v1-19604a7965f6:chromium"
+      ],
+      "runId": "8dca2a60-8416-40e4-a4e6-e7de42948cf4-accepted-baseline",
+      "reportHash": "c781c41811cd1daea03e1fe9cda129a519f6253a0fe30029000ef9d3a7e780a4",
+      "runAt": "2026-10-14T07:56:00.373Z",
+      "passed": false,
+      "expected": "",
+      "actual": "Error: BTP_ASSERTION: targetCurrencyEquals\nExpected: 15\nReceived: 10\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: 15\nReceived: 10",
+      "durationMs": 9823,
+      "evidenceIds": []
+    },
+    "afterRun": null,
+    "comparison": null
+  },
+  "evidence": [],
+  "rootCauseExplanation": null
+}

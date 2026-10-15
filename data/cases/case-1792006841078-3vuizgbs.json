@@ -1,0 +1,39 @@
+{
+  "id": "case-1792006841078-3vuizgbs",
+  "title": "Free shipping threshold is not reflected in the order summary",
+  "description": "An order at exactly $50 appears to retain a shipping fee in both calculation and display.",
+  "report": {
+    "schemaVersion": "1.0",
+    "steps": [
+      "Open the shop page",
+      "Add USB Hub",
+      "Add Webcam",
+      "Observe Shipping and Total"
+    ],
+    "expected": "At a $50 subtotal, Shipping should be $0.00 and Total should be $50.00.",
+    "actual": "Shipping shows $5.00 and the order total includes it.",
+    "startPath": "/",
+    "context": "Fresh browser storage; free shipping begins at $50."
+  },
+  "reportCompleteness": {
+    "complete": true,
+    "missingFields": []
+  },
+  "status": "REPORTED",
+  "createdAt": "2026-10-14T19:40:41.078Z",
+  "updatedAt": "2026-10-14T19:40:41.078Z",
+  "reproduction": {
+    "preconditions": [],
+    "steps": [
+      "An order at exactly $50 appears to retain a shipping fee in both calculation and display."
+    ],
+    "expected": "",
+    "actual": "",
+    "testFile": "",
+    "lastRun": null
+  },
+  "patch": null,
+  "verification": null,
+  "evidence": [],
+  "rootCauseExplanation": null
+}

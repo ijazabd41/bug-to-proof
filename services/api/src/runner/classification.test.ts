@@ -32,4 +32,11 @@ describe("report classification (simulated reports)", () => {
     expect(classifyReport({ ...report("passed"), errors: [{ message: "config error" }] }, 0).outcome).toBe("INFRASTRUCTURE_ERROR");
     expect(classifyReport(report("passed"), 1).outcome).toBe("INFRASTRUCTURE_ERROR");
   });
+  it.each([
+    ["browserType.launch: executable missing", "BROWSER_UNAVAILABLE"],
+    ["page.goto: net::ERR_CONNECTION_REFUSED", "TARGET_UNREACHABLE"],
+    ["locator.click: Timeout 30000ms exceeded", "SELECTOR_OR_ACTION_ERROR"],
+  ])("returns structured failure kind for %s", (error, failureKind) => {
+    expect(classifyReport(report("failed", error, false), 1)).toMatchObject({ outcome: "INFRASTRUCTURE_ERROR", failureKind });
+  });
 });

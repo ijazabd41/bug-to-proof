@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import type { ApiError } from "@bug-to-proof/shared-types";
 import { CaseStorageError, CorruptCaseRecordError } from "../storage/caseStore";
 import { RunStorageError, CorruptRunRecordError } from "../ai/repair/runStore";
+import { CorruptReproductionRunError } from "../reproduction/reproductionRunStore";
 
 export function errorHandler(
   err: Error,
@@ -29,12 +30,18 @@ export function errorHandler(
     err instanceof CorruptCaseRecordError ||
     (err as any)?.name === "CorruptCaseRecordError" ||
     err instanceof CorruptRunRecordError ||
-    (err as any)?.name === "CorruptRunRecordError"
+    (err as any)?.name === "CorruptRunRecordError" ||
+    err instanceof CorruptReproductionRunError ||
+    (err as any)?.name === "CorruptReproductionRunError"
   ) {
-    res.status(500).json({
-      error: (err instanceof CorruptRunRecordError || (err as any)?.name === "CorruptRunRecordError")
+    const errorMsg =
+      (err instanceof CorruptReproductionRunError || (err as any)?.name === "CorruptReproductionRunError")
+        ? "Corrupt reproduction run record on disk"
+        : (err instanceof CorruptRunRecordError || (err as any)?.name === "CorruptRunRecordError")
         ? "Corrupt repair run record on disk"
-        : "Corrupt case record on disk",
+        : "Corrupt case record on disk";
+    res.status(500).json({
+      error: errorMsg,
       details: err.message,
       retryable: false,
     });

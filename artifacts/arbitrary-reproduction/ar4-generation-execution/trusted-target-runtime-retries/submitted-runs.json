@@ -1,0 +1,35 @@
+﻿[
+    {
+        "category":  "calculation-state",
+        "caseId":  "case-1791917776888-hvza72c3",
+        "reproductionRunId":  "8dca2a60-8416-40e4-a4e6-e7de42948cf4",
+        "state":  "AWAITING_TEST_REVIEW",
+        "stopReason":  null,
+        "classifications":  [
+                                "ASSERTION_FAILED"
+                            ],
+        "evidenceDirectory":  "D:\\bug-to-proof\\artifacts\\arbitrary-reproduction\\ar4-generation-execution\\trusted-target-runtime-retries\\calculation-state-case-1791917776888-hvza72c3-8dca2a60-8416-40e4-a4e6-e7de42948cf4"
+    },
+    {
+        "category":  "cart-action",
+        "caseId":  "case-1791917801583-urha9nkd",
+        "reproductionRunId":  "c96b9eb4-304e-4b38-ac4d-4096a6435fc0",
+        "state":  "AWAITING_TEST_REVIEW",
+        "stopReason":  null,
+        "classifications":  [
+                                "ASSERTION_FAILED"
+                            ],
+        "evidenceDirectory":  "D:\\bug-to-proof\\artifacts\\arbitrary-reproduction\\ar4-generation-execution\\trusted-target-runtime-retries\\cart-action-case-1791917801583-urha9nkd-c96b9eb4-304e-4b38-ac4d-4096a6435fc0"
+    },
+    {
+        "category":  "navigation",
+        "caseId":  "case-1791917827903-dh7fk4p5",
+        "reproductionRunId":  "177b7fc9-97b4-4bec-a4a3-2edbc1994dbd",
+        "state":  "BASELINE_PASSED",
+        "stopReason":  "Candidate baseline passed without reproducing the bug",
+        "classifications":  [
+                                "BASELINE_PASSED"
+                            ],
+        "evidenceDirectory":  "D:\\bug-to-proof\\artifacts\\arbitrary-reproduction\\ar4-generation-execution\\trusted-target-runtime-retries\\navigation-case-1791917827903-dh7fk4p5-177b7fc9-97b4-4bec-a4a3-2edbc1994dbd"
+    }
+]

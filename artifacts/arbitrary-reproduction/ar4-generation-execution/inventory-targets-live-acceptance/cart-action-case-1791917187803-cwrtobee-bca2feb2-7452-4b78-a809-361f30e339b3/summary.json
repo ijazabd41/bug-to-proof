@@ -1,0 +1,23 @@
+﻿{
+    "category":  "cart-action",
+    "caseId":  "case-1791917187803-cwrtobee",
+    "reproductionRunId":  "bca2feb2-7452-4b78-a809-361f30e339b3",
+    "state":  "CANDIDATE_EXECUTION_ERROR",
+    "stopReason":  "Candidate attempt limit (3) reached",
+    "attemptExecutionIds":  [
+                                "bca2feb2-7452-4b78-a809-361f30e339b3-attempt-1",
+                                "bca2feb2-7452-4b78-a809-361f30e339b3-attempt-2",
+                                "bca2feb2-7452-4b78-a809-361f30e339b3-attempt-3"
+                            ],
+    "classifications":  [
+                            "CANDIDATE_EXECUTION_ERROR",
+                            "CANDIDATE_EXECUTION_ERROR",
+                            "CANDIDATE_EXECUTION_ERROR"
+                        ],
+    "responseShapes":  [
+                           null,
+                           null,
+                           null
+                       ],
+    "evidenceDirectory":  "D:\\bug-to-proof\\artifacts\\arbitrary-reproduction\\ar4-generation-execution\\inventory-targets-live-acceptance\\cart-action-case-1791917187803-cwrtobee-bca2feb2-7452-4b78-a809-361f30e339b3"
+}

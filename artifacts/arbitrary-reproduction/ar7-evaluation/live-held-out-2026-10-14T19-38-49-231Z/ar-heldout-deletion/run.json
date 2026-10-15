@@ -1,0 +1,135 @@
+{
+  "schemaVersion": "1.0",
+  "reproductionRunId": "3f8ead4b-000c-4826-a344-0e0fe12c2b4e",
+  "caseId": "case-1792006729858-7o7i1hz2",
+  "state": "BASELINE_PASSED",
+  "reportSnapshot": {
+    "title": "Removing Keyboard leaves the wrong cart line",
+    "description": "Removing one product appears to retain it and discard the other product.",
+    "steps": [
+      "Open the shop page",
+      "Add Keyboard",
+      "Add Mouse Pad",
+      "Remove Keyboard"
+    ],
+    "expected": "Only Mouse Pad should remain in the cart.",
+    "actual": "Keyboard remains and Mouse Pad disappears.",
+    "startPath": "/",
+    "context": "Fresh browser storage and an empty cart."
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "attemptExecutionId": "3f8ead4b-000c-4826-a344-0e0fe12c2b4e-attempt-1",
+      "definition": {
+        "schemaVersion": "1.0",
+        "title": "Removing Keyboard leaves the wrong cart line",
+        "startPath": "/",
+        "preconditions": [
+          {
+            "type": "clearLocalStorage"
+          }
+        ],
+        "steps": [
+          {
+            "type": "clickTarget",
+            "testId": "add-to-cart-1"
+          },
+          {
+            "type": "clickTarget",
+            "testId": "add-to-cart-2"
+          },
+          {
+            "type": "clickTarget",
+            "testId": "nav-cart-link"
+          },
+          {
+            "type": "clickTarget",
+            "testId": "remove-from-cart-1"
+          }
+        ],
+        "assertion": {
+          "type": "targetVisibilityEquals",
+          "testId": "cart-item-1",
+          "visible": false
+        },
+        "rationale": "Verify that removing the Keyboard item from the cart removes it and leaves the Mouse Pad item present.",
+        "reportMapping": [
+          {
+            "reportFact": "title",
+            "definitionPath": "title"
+          },
+          {
+            "reportFact": "startPath",
+            "definitionPath": "startPath"
+          },
+          {
+            "reportFact": "expected",
+            "definitionPath": "assertion.expected"
+          }
+        ]
+      },
+      "definitionHash": "383f7f64ac6d626e8bccbe63e68c63c1c0357ce9733d335cccc176b7d686f8a7",
+      "compilerVersion": "1.0.0",
+      "compiledTestHash": "f66739119d46d38d0fca932f4c2f25b605f33ff52322e2de7c107d328e72cccd",
+      "provider": "legacy",
+      "model": "openai/gpt-oss-20b",
+      "promptVersion": "reproduction-v1",
+      "classification": "BASELINE_PASSED",
+      "diagnostics": "All selected tests passed",
+      "durationMs": 9074,
+      "artifactPaths": [
+        "3f8ead4b-000c-4826-a344-0e0fe12c2b4e/attempt-1/model-output.txt",
+        "3f8ead4b-000c-4826-a344-0e0fe12c2b4e-attempt-1/generated-test/reproduction.spec.ts",
+        "artifacts/reproduction-runs/3f8ead4b-000c-4826-a344-0e0fe12c2b4e-attempt-1/evidence/result.json",
+        "artifacts/reproduction-runs/3f8ead4b-000c-4826-a344-0e0fe12c2b4e-attempt-1/evidence/reproduction-btp-3f8ead4b--1b37f-e-attempt-1-v1-383f7f64ac6d-chromium/test-finished-1.png",
+        "artifacts/reproduction-runs/3f8ead4b-000c-4826-a344-0e0fe12c2b4e-attempt-1/evidence/reproduction-btp-3f8ead4b--1b37f-e-attempt-1-v1-383f7f64ac6d-chromium/trace.zip"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "sequence": 1,
+      "state": "DISCOVERING_TARGET",
+      "message": "Started bounded target discovery",
+      "createdAt": "2026-10-14T19:38:49.900Z"
+    },
+    {
+      "sequence": 2,
+      "state": "GENERATING_CANDIDATE",
+      "message": "Generating candidate attempt 1",
+      "createdAt": "2026-10-14T19:38:49.972Z"
+    },
+    {
+      "sequence": 3,
+      "state": "BASELINE_PASSED",
+      "message": "Candidate baseline passed without reproducing the bug",
+      "createdAt": "2026-10-14T19:39:07.480Z"
+    }
+  ],
+  "limits": {
+    "maxAttempts": 3,
+    "maxSteps": 20,
+    "maxRuntimeMs": 120000,
+    "maxDefinitionBytes": 32000,
+    "maxDiagnosticBytes": 16000
+  },
+  "createdAt": "2026-10-14T19:38:49.899Z",
+  "updatedAt": "2026-10-14T19:39:07.480Z",
+  "targetSnapshot": {
+    "sourceFingerprint": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289",
+    "targetUrl": "http://localhost:5174",
+    "createdAt": "2026-10-14T19:38:49.966Z"
+  },
+  "discovery": {
+    "artifactPath": "3f8ead4b-000c-4826-a344-0e0fe12c2b4e/discovery/discovery.json",
+    "inventoryDigest": "17822468a35e921c7b66b92c24f728bea1f78d9cc91244bd9ca7ef361545e86b",
+    "routes": [
+      "/",
+      "/cart"
+    ],
+    "capturedAt": "2026-10-14T19:38:49.966Z"
+  },
+  "stopReason": "Candidate baseline passed without reproducing the bug",
+  "completedAt": "2026-10-14T19:39:07.482Z"
+}

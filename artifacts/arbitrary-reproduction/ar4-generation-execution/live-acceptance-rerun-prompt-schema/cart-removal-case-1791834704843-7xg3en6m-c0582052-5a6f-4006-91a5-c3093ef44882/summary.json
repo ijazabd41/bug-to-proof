@@ -1,0 +1,18 @@
+﻿{
+    "category":  "cart-removal",
+    "caseId":  "case-1791834704843-7xg3en6m",
+    "reproductionRunId":  "c0582052-5a6f-4006-91a5-c3093ef44882",
+    "state":  "CANDIDATE_EXECUTION_ERROR",
+    "stopReason":  "Candidate attempt limit (3) reached",
+    "attemptExecutionIds":  [
+                                "c0582052-5a6f-4006-91a5-c3093ef44882-attempt-1",
+                                "c0582052-5a6f-4006-91a5-c3093ef44882-attempt-2",
+                                "c0582052-5a6f-4006-91a5-c3093ef44882-attempt-3"
+                            ],
+    "classifications":  [
+                            "CANDIDATE_INVALID",
+                            "CANDIDATE_EXECUTION_ERROR",
+                            "CANDIDATE_EXECUTION_ERROR"
+                        ],
+    "evidenceDirectory":  "D:\\bug-to-proof\\artifacts\\arbitrary-reproduction\\ar4-generation-execution\\live-acceptance-rerun-prompt-schema\\cart-removal-case-1791834704843-7xg3en6m-c0582052-5a6f-4006-91a5-c3093ef44882"
+}
