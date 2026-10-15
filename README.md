@@ -2,7 +2,7 @@
 
 > Turn a structured bug report into a constrained browser reproduction, a reviewed repair, and evidence that can be independently checked.
 
-Bug-to-Proof is a TypeScript/React portfolio project built around one question: **can an AI-assisted repair workflow prove what happened instead of merely claiming success?**
+Bug-to-Proof is a TypeScript/React prototype built around one question: **can an AI-assisted repair workflow prove what happened instead of merely claiming success?**
 
 For the included MiniShop application, the system discovers trusted UI targets, generates a schema-constrained Playwright candidate, pauses for hash-bound human review, records the baseline against unchanged source, verifies an isolated patch with the identical test, runs regression gates, and exports a SHA-256 manifest-backed proof bundle.
 
@@ -76,6 +76,17 @@ The development command starts:
 
 Provider-backed generation is optional. Configure the documented variables in your local `.env`; never commit that file.
 
+## Usage
+
+1. Open the dashboard and create or select a structured bug report.
+2. Start reproduction generation. The API inventories trusted routes and controls before requesting a candidate.
+3. Inspect the candidate, validation result, compiled test, and retained baseline evidence.
+4. Approve only an assertion failure that matches the report. Approval freezes the exact test bytes and hashes.
+5. Start repair analysis, review the proposed patch, and approve or reject it.
+6. Download the proof bundle only after the same-test verification and required regression gates pass.
+
+Configured tests continue to work without an external provider. Dynamic candidate generation requires an enabled OpenAI-compatible or Ollama provider. Provider failures remain explicit lifecycle outcomes and are not treated as reproduced bugs.
+
 ## Run the checks
 
 ```bash
@@ -84,40 +95,20 @@ npm run test:unit -- --maxWorkers=2
 npm run build
 ```
 
-Useful workflows:
+Additional maintenance and evaluation commands:
 
 ```bash
-# Rebuild the scorecard when retained local evidence is present
+# Rebuild the scorecard from locally retained evidence
 npm run arbitrary:evaluate
 
-# Run the local report-to-proof reference
+# Run the local report-to-proof verification workflow
 npm run arbitrary:verify
-
-# Validate the retained demo chain (requires its local runtime evidence)
-npm run demo:check
 
 # Inspect disposable artifact cleanup without deleting anything
 npm run artifacts:clean
 ```
 
-The live held-out command sends reports to the configured external provider. Run it only with explicit authorization:
-
-```bash
-npm run arbitrary:evaluate:live -- --confirm-live
-```
-
-## Demo
-
-Use the [3–4 minute dynamic demo script](docs/dynamic-demo-script.md). It walks through:
-
-1. a structured report without a handwritten test;
-2. bounded discovery and constrained generation;
-3. exact candidate review and hash binding;
-4. a retained assertion failure on unchanged source;
-5. identical-test repair verification and proof export;
-6. measured results, including failures and limitations.
-
-The local readiness check is deliberately fail-closed. Generated runtime evidence stays under `artifacts/` and is excluded from Git; the public repository retains only sanitized summaries under `docs/evidence/`.
+Commands that contact an external generation provider require explicit operator authorization and are intentionally documented outside the quick-start path. Generated runtime evidence stays under `artifacts/` and is excluded from Git; the repository retains sanitized summaries under `docs/evidence/`.
 
 ## Repository map
 
@@ -145,12 +136,13 @@ artifacts/            Local generated evidence (Git-ignored)
 
 For implementation details, historical milestones, and exact limitations, start at the [documentation index](docs/README.md).
 
-## Portfolio material
+## Documentation
 
-- [LinkedIn and résumé copy](docs/portfolio-release.md)
-- [Dynamic demo script](docs/dynamic-demo-script.md)
-- [Sanitized AR7 evaluation](docs/evidence/ar7-evaluation.md)
+- [Documentation index](docs/README.md)
 - [Current verification status](docs/current-project-status.md)
+- [Sanitized AR7 evaluation](docs/evidence/ar7-evaluation.md)
+- [Arbitrary-reproduction engineering ledger](docs/progress/arbitrary-bug-reproduction.md)
+- [Security policy](SECURITY.md)
 
 ## License
 
