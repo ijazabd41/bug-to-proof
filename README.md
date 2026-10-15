@@ -1,209 +1,157 @@
 # Bug-to-Proof
 
-> Turn a bug report into reproducible, evidence-backed proof.
+> Turn a structured bug report into a constrained browser reproduction, a reviewed repair, and evidence that can be independently checked.
 
-**Reported → Reproduced → Failed → Patched → Verified → Proved**
+Bug-to-Proof is a TypeScript/React portfolio project built around one question: **can an AI-assisted repair workflow prove what happened instead of merely claiming success?**
 
----
+For the included MiniShop application, the system discovers trusted UI targets, generates a schema-constrained Playwright candidate, pauses for hash-bound human review, records the baseline against unchanged source, verifies an isolated patch with the identical test, runs regression gates, and exports a SHA-256 manifest-backed proof bundle.
 
-## What is this?
+This is an evidence-engineering prototype, not an “any website, any bug” product. The verified target is the configured local MiniShop application, and provider or environment failures are never counted as reproduced product bugs.
 
-Bug-to-Proof is an evidence-backed reproduction and repair prototype for the configured local MiniShop application. A new structured report can drive bounded page discovery, a schema-constrained Playwright candidate, hash-bound human review, a frozen failing baseline, isolated patch verification with the identical test, regression gates, and a SHA-256 manifest-backed Proof Bundle.
+## Why it is different
 
-The boundary matters: this is not an “any website, any bug” system. Live generation and frozen-baseline review have been demonstrated on MiniShop. The recorded end-to-end repair uses a deterministic reference proposal; its browser execution, regression checks, and proof verification are real. The frozen four-report held-out generation set has been executed once: 2/4 produced valid candidates, 1/4 reached an executable passing baseline, 0/4 produced a relevant reproduction, and 2/4 encountered provider connectivity failures.
+- **Constrained generation:** candidates use versioned actions and assertions. Raw CSS, XPath, JavaScript, and arbitrary selectors are rejected.
+- **Discovery-bound controls:** repeated controls are addressed through identities issued by the page inventory.
+- **Human approval:** the reviewed definition and compiled test are frozen and bound to SHA-256 hashes.
+- **Honest lifecycle states:** only a report-relevant assertion failure on unchanged source reaches `REPRODUCED`.
+- **Same-test verification:** the exact accepted test must fail before the patch and pass afterward.
+- **Isolated repair:** proposed edits are applied in a contained workspace with path and diff validation.
+- **Fail-closed gates:** typecheck, build, tests, provenance, and proof checks must all pass.
+- **Auditable output:** proof bundles contain a versioned manifest and per-file digests.
 
-Start with the [documentation index](docs/README.md). For current implementation details, verification matrix, and system status, see [Current Project Status](docs/current-project-status.md).
+## Verified results
 
----
+The retained AR7 scorecard reports results with their denominators:
 
-## Quick Start
+| Cohort | Result |
+| --- | --- |
+| Discovery-bound acceptance | 3/3 executable candidates; 2/3 relevant assertion failures |
+| Human-reviewed baselines | 1/2 review-eligible failures accepted and frozen |
+| End-to-end reference repair | 1/1 passed identical-test, regression, and proof checks |
+| Frozen held-out reports | 2/4 valid candidates; 1/4 executable; 0/4 relevant reproductions |
+| Held-out infrastructure failures | 2/4 provider-connectivity failures |
+
+The end-to-end repair proposal was deterministic reference output. Its browser execution, unchanged-test verification, regression gates, and proof validation were real. The frozen held-out set was executed once and was not reused after a discovered locator gap was fixed.
+
+See the [sanitized evaluation summary](docs/evidence/ar7-evaluation.md) and [current project status](docs/current-project-status.md) for the full boundary.
+
+## Architecture
+
+```mermaid
+flowchart LR
+    R[Structured report] --> D[Bounded page discovery]
+    D --> G[Schema-constrained candidate]
+    G --> V[Policy and inventory validation]
+    V --> E[Playwright evidence runner]
+    E --> H{Relevant assertion failure?}
+    H -- no --> S[Honest terminal state]
+    H -- yes --> A[Hash-bound human review]
+    A --> F[Frozen reproduction]
+    F --> P[Isolated patch proposal]
+    P --> C[Same-test and regression checks]
+    C --> B[Manifest-backed proof bundle]
+```
+
+The API owns lifecycle persistence, discovery, candidate validation, repair orchestration, and proof export. The dashboard presents reports, review checkpoints, evidence, and final states. MiniShop is the deliberately bounded target application.
+
+## Quick start
+
+Requirements: Node.js 22+, npm 9+, and Chromium for browser verification.
 
 ```bash
-# 1. Clone the repo
-git clone <repo-url>
+git clone <your-repository-url>
 cd bug-to-proof
-
-# 2. Install all dependencies (single command for the whole monorepo)
 npm install
-
-# 3. Copy environment file (optional LLM keys)
 cp .env.example .env
-
-# 4. Start all services concurrently
 npm run dev
 ```
 
-This starts:
-- **Dashboard**: http://localhost:5173
-- **API**: http://localhost:3001
-- **MiniShop (Demo App)**: http://localhost:5174
+On Windows PowerShell, use `Copy-Item .env.example .env` instead of `cp`.
 
----
+The development command starts:
 
-## Core Capabilities & Implemented Improvements
+- Dashboard: <http://localhost:5173>
+- API: <http://localhost:3001>
+- MiniShop: <http://localhost:5174>
 
-### 1. Robust Persistence & Resilient Startup
-- **Atomic File Replacement**: All run and case records are written to unique temporary files and replaced atomically (`fs.renameSync`) without unsafe copy-overwrite fallback or blocking busy-waits. On failure, temporary files are unlinked and the existing record is preserved byte-for-byte.
-- **Structured Error Diagnostics**: Distinguishes missing records (`404 Not Found`), invalid ID formats (`400 Bad Request`), storage contention (`503 Service Unavailable`), and corrupted files (`500 Internal Server Error`).
-- **Resilient Startup Recovery**: Startup reconciliation (`recoverInterruptedRuns`) scans records individually, logs corrupt records while preserving their bytes intact for audit, and safely reconciles valid interrupted runs to `BLOCKED` while preserving `AWAITING_REVIEW` runs.
+Provider-backed generation is optional. Configure the documented variables in your local `.env`; never commit that file.
 
-### 2. Broader Repair Benchmark (8 Diverse Cases)
-The benchmark in `data/evals/repair-cases.json` includes 8 distinct cases covering:
-1. `case-001-cart-total`: Calculation defect in cart item summation.
-2. `case-002-repeated-item-qty`: State defect in quantity incrementing.
-3. `case-003-item-removal`: State defect in item deletion.
-4. `case-004-cart-clear`: State defect in checkout cart clearance.
-5. `case-005-cart-total-quantities`: Calculation defect with multi-quantity items.
-6. `case-006-nav-cart-count`: **UI Rendering Defect** in `App.tsx` badge rendering.
-7. `case-007-promo-discount`: **Asynchronous State Defect** with promo code validation and discount calculation in `cartStore.ts`.
-8. `case-008-tiered-shipping`: **Multi-File Coordinated Defect** requiring coordinated modifications across `cartStore.ts` and `Cart.tsx`.
-
-Run the benchmark evaluation:
-```bash
-# Run the simulated evaluation harness across all 8 cases (100% verified)
-npm run repair:evaluate -- --simulated
-
-# Run the live browser reproduction & evaluation benchmark
-npm run repair:evaluate
-```
-
-### 3. Arbitrary-report reproduction with review
-
-- Captures steps, expected behavior, actual behavior, starting path, and context as first-class report fields.
-- Discovers a bounded, sanitized inventory of MiniShop routes and controls.
-- Accepts only versioned actions and assertions; raw CSS, XPath, JavaScript, and untrusted selectors are rejected.
-- Keeps repeated controls unambiguous through discovery-issued `data-testid` identities.
-- Freezes the exact reviewed test and binds approval to report, target, discovery, policy, definition, and compiled-test hashes.
-- Counts only structured assertion failures as reproduced product bugs; provider, selector, navigation, timeout, and environment failures remain separate.
-
-Run the retained-evidence scorecard or the local end-to-end reference:
+## Run the checks
 
 ```bash
-npm run arbitrary:evaluate
-npm run arbitrary:verify
-npm run demo:check
-```
-
-### 4. Cryptographic Proof Bundle Export (.zip)
-Every repair run can be exported as a self-contained, tamper-evident Proof Bundle (.zip):
-- **Versioned Manifest (`manifest.json`)**: Contains run metadata, timestamps, and SHA-256 digests for all files.
-- **Bug Case Snapshot (`case-snapshot.json`)**: Immutable snapshot of the original bug report.
-- **Reproduction Spec (`reproduction/{spec}.spec.ts`)**: Exact Playwright test with verified fingerprint.
-- **Baseline Evidence (`baseline/`)**: Test result, screenshots, and failure diagnostic.
-- **Proposal & Review (`proposal/`)**: Diagnosis, rationale, unified diff (`patch.diff`), and approval record.
-- **Verification Evidence (`verification/`)**: Post-patch test result and verification screenshots.
-- **Regression Checks (`checks/`)**: Results and logs for `tsc`, `vite build`, and `vitest`.
-- **Proof Report (`proof-report.md`)**: Complete human-readable verification report in GitHub Flavored Markdown.
-
-Download via API or Dashboard:
-- **API**: `GET /api/ai/repair-runs/:runId/bundle.zip`
-- **Dashboard**: Click **"Download Proof Bundle (.zip)"** in the AI Repair Assistant pane.
-
-### 5. Cross-Platform CI (Windows & Ubuntu)
-GitHub Actions workflow (`.github/workflows/ci.yml`) validates the monorepo across both `windows-latest` and `ubuntu-latest`:
-- Monorepo typechecking (`npm run typecheck`)
-- Full unit test suite (`npm run test:unit`)
-- Production Vite builds (`npm run build`)
-- Benchmark simulated evaluation (`npm run repair:evaluate -- --simulated`)
-- Real browser failure-to-pass workflow (`npx tsx scripts/verify-real-browser-workflow.ts`)
-- Automated upload of proof and verification artifacts.
-
-### 6. Artifact Hygiene & Safe Storage Cleanup
-- **Separation of Concerns**: Curated historical evidence (`artifacts/evaluation/`, `artifacts/system-testing/`, `artifacts/portfolio-cart/`) is preserved permanently.
-- **Safe Cleanup Tool**:
-  ```bash
-  # Dry-run inspection (default, removes nothing)
-  npm run artifacts:clean
-
-  # Execute cleanup of disposable workspace caches
-  npm run artifacts:clean -- --force
-  ```
-  The cleanup tool automatically protects active runs, `AWAITING_REVIEW` runs, pinned runs, corrupt audit records, and curated directories.
-
----
-
-## Running Verification & Tests
-
-```bash
-# 1. Run all unit and integration test suites
-npm run test:unit
-
-# 2. Run TypeScript typechecking across monorepo
 npm run typecheck
-
-# 3. Run production builds for Dashboard and MiniShop
+npm run test:unit -- --maxWorkers=2
 npm run build
+```
 
-# 4. Run real browser failure-to-pass workflow through evidence runner
-npx tsx scripts/verify-real-browser-workflow.ts
+Useful workflows:
 
-# 5. Run full simulated repair evaluation benchmark
-npm run repair:evaluate -- --simulated
-
-# 6. Rebuild the AR7 scorecard from retained evidence
+```bash
+# Rebuild the scorecard when retained local evidence is present
 npm run arbitrary:evaluate
+
+# Run the local report-to-proof reference
+npm run arbitrary:verify
+
+# Validate the retained demo chain (requires its local runtime evidence)
+npm run demo:check
+
+# Inspect disposable artifact cleanup without deleting anything
+npm run artifacts:clean
 ```
 
----
+The live held-out command sends reports to the configured external provider. Run it only with explicit authorization:
 
-## Architecture & Lifecycle
-
-The dynamic repair workflow is orchestrated by **LangGraph StateGraph** (`services/api/src/ai/repair/repairGraph.ts`), coupled with durable filesystem checkpointing and exact human-in-the-loop review interruption:
-
-```mermaid
-flowchart TD
-    Start([START]) --> prepareWorkspace["1. prepareWorkspace\n(isolate snapshot, start MiniShop)"]
-    prepareWorkspace --> reproduceBaseline["2. reproduceBaseline\n(Playwright before-run)"]
-    reproduceBaseline -->|ASSERTION_FAILED| investigateSource["3. investigateSource\n(bounded source exploration)"]
-    reproduceBaseline -->|Passed / Error| finalizeRun["11. finalizeRun\n(BLOCKED / Stop app)"]
-    investigateSource --> proposePatch["4. proposePatch\n(LLM candidate patch)"]
-    proposePatch --> validateProposal["5. validateProposal\n(validate edits & SHA-256 hash)"]
-    validateProposal -->|Valid| pauseForReview["6. pauseForReview\n(interrupt: AWAITING_REVIEW)"]
-    validateProposal -->|Invalid & Retries Left| recordFailedAttemptAndRestore["10. recordFailedAttemptAndRestore\n(restore pristine workspace)"]
-    validateProposal -->|Invalid & Max Attempts| finalizeRun
-    pauseForReview -->|Approved & Hash Verified| applyApprovedPatch["7. applyApprovedPatch\n(transactional application)"]
-    pauseForReview -->|Rejected| finalizeRun
-    applyApprovedPatch --> verifyReproduction["8. verifyReproduction\n(Playwright after-run)"]
-    verifyReproduction -->|PASSED| runRegressionChecks["9. runRegressionChecks\n(tsc, vite build, vitest)"]
-    verifyReproduction -->|Failed & Retries Left| recordFailedAttemptAndRestore
-    verifyReproduction -->|Failed & Max Attempts| finalizeRun
-    runRegressionChecks -->|All Passed| finalizeRun
-    runRegressionChecks -->|Failed & Retries Left| recordFailedAttemptAndRestore
-    runRegressionChecks -->|Failed & Max Attempts| finalizeRun
-    recordFailedAttemptAndRestore -->|Attempt <= Max| investigateSource
-    recordFailedAttemptAndRestore -->|Attempt > Max| finalizeRun
-    finalizeRun --> EndNode([END: VERIFIED / FAILED / REJECTED / BLOCKED])
+```bash
+npm run arbitrary:evaluate:live -- --confirm-live
 ```
 
----
+## Demo
 
-## Evidence Integrity Gates
+Use the [3–4 minute dynamic demo script](docs/dynamic-demo-script.md). It walks through:
 
-The verification engine enforces strict, fail-closed evidence integrity:
-- **Valid Baseline Gate**: Only a recorded behavior assertion failure (`ASSERTION_FAILED` with `Expected` vs `Received` diff) qualifies as a reproduced bug. Infrastructure or syntax errors are not counted as reproductions.
-- **Fingerprint Stability & Identity Binding**: Reproduction tests, reporter-format test IDs (`${specFile}:${title}:${project}`), and candidate source manifests are hashed before and after execution to prevent tampering or mutations during checks.
-- **Exact Approval Binding**: Proposal approvals must supply the canonical SHA-256 hash (`proposalHash`) and `proposalId`. If source or proposal differs, application is rejected.
-- **Transactional Rollback**: Patches are applied transactionally with rollback on error, preserving pristine workspace state.
+1. a structured report without a handwritten test;
+2. bounded discovery and constrained generation;
+3. exact candidate review and hash binding;
+4. a retained assertion failure on unchanged source;
+5. identical-test repair verification and proof export;
+6. measured results, including failures and limitations.
 
----
+The local readiness check is deliberately fail-closed. Generated runtime evidence stays under `artifacts/` and is excluded from Git; the public repository retains only sanitized summaries under `docs/evidence/`.
 
-## Project Structure
+## Repository map
 
+```text
+apps/dashboard/       React dashboard and review UI
+apps/minishop/        Configured demo target
+services/api/         Express API, lifecycle, repair graph, proof export
+packages/shared-types Shared contracts
+tests/playwright/     Browser reproduction specifications
+data/evals/           Frozen benchmark and evaluation datasets
+scripts/              Evidence, evaluation, verification, and cleanup tools
+docs/                 Current documentation and sanitized evidence
+artifacts/            Local generated evidence (Git-ignored)
 ```
-bug-to-proof/
-├── apps/
-│   ├── dashboard/          # React + Vite dashboard UI with Proof Bundle export
-│   └── minishop/           # React + Vite demo app with seeded benchmark defects
-├── services/
-│   └── api/                # Node.js + Express API, LangGraph engine, and Proof Exporter
-├── packages/
-│   └── shared-types/       # Shared TypeScript contracts and interfaces
-├── tests/
-│   └── playwright/         # Playwright reproduction & verification specs (8 cases)
-├── data/
-│   ├── cases/              # Persisted JSON case files
-│   └── evals/              # Repair benchmark datasets (repair-cases.json)
-├── scripts/                # Evaluation, cleanup, real-browser verification scripts
-├── artifacts/              # Curated evidence, proof bundles, logs, and run records
-└── docs/                   # Current status page and historical audits
-```
+
+## Security and evidence model
+
+- Report text is treated as untrusted data.
+- Generated locators must match the sanitized discovery inventory.
+- Provider output is schema-validated before compilation or execution.
+- Secrets and raw provider payloads are not part of public evidence.
+- Approval is bound to proposal and test hashes.
+- Path containment and archive allowlists protect isolated workspaces and exports.
+- Infrastructure, timeout, navigation, and selector errors remain distinct from product failures.
+
+For implementation details, historical milestones, and exact limitations, start at the [documentation index](docs/README.md).
+
+## Portfolio material
+
+- [LinkedIn and résumé copy](docs/portfolio-release.md)
+- [Dynamic demo script](docs/dynamic-demo-script.md)
+- [Sanitized AR7 evaluation](docs/evidence/ar7-evaluation.md)
+- [Current verification status](docs/current-project-status.md)
+
+## License
+
+No license has been selected yet. The source is visible for review, but reuse rights are not granted until a license is added.

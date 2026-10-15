@@ -2,6 +2,8 @@
 
 This page is the documentation entry point. Documents are grouped by purpose and freshness so historical audit results are not mistaken for current product capability.
 
+Raw runtime evidence is intentionally Git-ignored. Artifact links in historical reports refer to the local evidence-producing checkout and may not resolve in a fresh public clone. Use the [sanitized AR7 evaluation](evidence/ar7-evaluation.md) for the public scorecard.
+
 ## Current truth
 
 | Document | Purpose |
@@ -21,6 +23,7 @@ This page is the documentation entry point. Documents are grouped by purpose and
 | [Demo script](demo-script.md) | Configured benchmark demonstration; review prerequisites before recording |
 | [Dynamic demo script](dynamic-demo-script.md) | Arbitrary-report generation, review, frozen baseline, and proof walkthrough |
 | [Portfolio release notes](portfolio-release.md) | Resume bullet, LinkedIn draft, verified metrics, and claim boundary |
+| [Sanitized AR7 evaluation](evidence/ar7-evaluation.md) | Public scorecard, provenance hashes, and honest claim boundary |
 | [RAG architecture and interview guide](rag-interview-guide.md) | Retrieval providers, evaluation, tradeoffs, and interview explanation |
 | [Design concepts](design-concepts/prompts.md) | Dashboard concept prompts; mock data is illustrative |
 | [Demo recording](../demo_recording.md) | Historical configured-case demo recording |

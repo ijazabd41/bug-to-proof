@@ -1,1 +1,0 @@
-{"version":9,"type":"context-options","origin":"library","browserName":"","playwrightVersion":"1.63.0","options":{},"platform":"win32","wallTime":1791499507858,"monotonicTime":2394.359,"sdkLanguage":"javascript","title":"case-002-repeated-item-qty.spec.ts:22 › Case 002 — Repeated item quantity increment › adding an item twice should increment its quantity to 2"}

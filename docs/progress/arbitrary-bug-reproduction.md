@@ -1,5 +1,7 @@
 # Arbitrary bug reproduction progress
 
+> This is the detailed engineering ledger. Its artifact links refer to generated local evidence that is intentionally excluded from the public Git repository. The sanitized public scorecard is [`docs/evidence/ar7-evaluation.md`](../evidence/ar7-evaluation.md).
+
 Plan: [plans/arbitrary-bug-reproduction-plan.md](../../plans/arbitrary-bug-reproduction-plan.md)  
 Status: **AR0–AR7 COMPLETE**
 Last updated: 2026-10-14 (Asia/Karachi)

@@ -1,2 +1,0 @@
-const path = require("path");
-module.exports = { testDir: __dirname, timeout: Number(process.env.PLAYWRIGHT_TIMEOUT || 30000), retries: 0, workers: 1, use: { baseURL: process.env.MINISHOP_BASE_URL || "http://localhost:5174", screenshot: "on", trace: "on" }, outputDir: process.env.BTP_ARTIFACT_DIR ? path.resolve(process.env.BTP_ARTIFACT_DIR) : path.join(__dirname, "results"), projects: [{ name: "chromium", use: { browserName: "chromium" } }] };

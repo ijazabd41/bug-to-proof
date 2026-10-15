@@ -11,7 +11,7 @@ This demo is scoped to the configured local MiniShop. It shows the actual genera
 
 The frozen held-out runner is `npm run arbitrary:evaluate:live -- --confirm-live`. Run it only after the operator explicitly authorizes sending the four frozen reports to the configured external provider.
 
-`npm run demo:check` fails closed unless the structured case, reviewed run, accepted bytes, baseline failure, identical-test repair result, regression gates, independently extractable proof bundle, scorecard, and presentation documents agree. Its machine-readable result is `artifacts/arbitrary-reproduction/ar7-evaluation/demo-readiness.json`.
+`npm run demo:check` fails closed unless the structured case, reviewed run, accepted bytes, baseline failure, identical-test repair result, regression gates, independently extractable proof bundle, scorecard, and presentation documents agree. Its machine-readable result is generated locally under `artifacts/arbitrary-reproduction/ar7-evaluation/` and is intentionally excluded from Git.
 
 ## Storyboard
 
@@ -37,7 +37,7 @@ Open the AR6 reference result and Proof Bundle. Show baseline failure, post-patc
 
 ### 6. Close with measured results (30 seconds)
 
-Open `artifacts/arbitrary-reproduction/ar7-evaluation/evaluation-report.md`. Use the displayed denominators: 3/3 discovery-bound acceptance reports produced executable candidates, 2/3 produced relevant assertion failures, and 1/2 review-eligible failures completed human acceptance. Then show the separately frozen held-out result: 2/4 valid candidates, 1/4 executable passing baseline, 0/4 relevant reproductions, and 2/4 provider-connectivity failures. Explain that the held-out run exposed the textbox locator gap fixed by compiler 1.1.0 and was not rerun after that correction.
+Open the locally generated AR7 scorecard, or use the public [`docs/evidence/ar7-evaluation.md`](evidence/ar7-evaluation.md) summary. Use the displayed denominators: 3/3 discovery-bound acceptance reports produced executable candidates, 2/3 produced relevant assertion failures, and 1/2 review-eligible failures completed human acceptance. Then show the separately frozen held-out result: 2/4 valid candidates, 1/4 executable passing baseline, 0/4 relevant reproductions, and 2/4 provider-connectivity failures. Explain that the held-out run exposed the textbox locator gap fixed by compiler 1.1.0 and was not rerun after that correction.
 
 ## Recording safety
 

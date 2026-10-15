@@ -5,6 +5,8 @@
 **Status**: Arbitrary report generation, review, frozen baseline, isolated repair verification, provenance-bearing proof integration, held-out evaluation, and portfolio packaging are implemented through AR7
 **Historical Documents**: For older milestone audits, see [Historical Review Index](#historical-reviews).
 
+> **Evidence storage:** raw runs, traces, screenshots, logs, and proof ZIPs are local Git-ignored artifacts. Public, sanitized release evidence is retained in [`docs/evidence/ar7-evaluation.md`](evidence/ar7-evaluation.md).
+
 ---
 
 ## 1. Project Overview & Objective

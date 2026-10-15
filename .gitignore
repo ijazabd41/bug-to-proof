@@ -13,17 +13,17 @@ vite.config.ts.timestamp-*
 .env.local
 .env.*.local
 
-# Test artifacts — runtime-generated sandboxes and scratch
-artifacts/runs/**/workspace/
-artifacts/runs/**/pristine/
-artifacts/runs/**/dist/
-artifacts/runs/**/node_modules/
+# Test and evidence artifacts — generated locally, never publish raw runs
+artifacts/**
+!artifacts/README.md
 test-results/
 playwright-report/
 tests/playwright/artifacts/
 
-# Keep the gitkeep placeholders and curated evidence
-!artifacts/.gitkeep
+# Runtime-created report records (curated seed cases remain tracked)
+data/cases/case-[0-9][0-9][0-9][0-9]*.json
+
+# Keep source-controlled placeholders outside the runtime artifact tree
 !data/cases/.gitkeep
 
 # TypeScript
