@@ -2,17 +2,19 @@ import { RunnableSequence, RunnableLambda } from "@langchain/core/runnables";
 import { PromptTemplate } from "@langchain/core/prompts";
 import { ragConfig, generateAnswer } from "./providers";
 import { retrieve, SourceChunk, RetrievalResult } from "./retrieval";
+import type { CorpusScope } from "./corpus";
 export { LocalTokenEmbeddings } from "./providers";
 export type { SourceChunk } from "./retrieval";
 export interface RagAnswer {
   answer: string; mode: "generated" | "extractive"; sources: SourceChunk[];
+  scope: CorpusScope;
   citations?: string[];
   warnings?: string[];
   abstained?: boolean;
   telemetry?: RetrievalResult["telemetry"] & { generationProvider: string; generationMs: number; totalMs: number };
 }
-export async function retrieveContext(query: string): Promise<SourceChunk[]> {
-  return (await retrieve(query)).sources;
+export async function retrieveContext(query: string, scope: CorpusScope = "source"): Promise<SourceChunk[]> {
+  return (await retrieve(query, undefined, "hybrid", scope)).sources;
 }
 const prompt = PromptTemplate.fromTemplate(
   "You explain the Bug-to-Proof repository using ONLY retrieved excerpts. " +
@@ -41,14 +43,14 @@ export function validateGenerated(text: string, sources: SourceChunk[]): { answe
     return { answer: value.answer.trim(), citations: value.citations, abstained: false };
   } catch { return null; }
 }
-export async function answerQuestion(question: string): Promise<RagAnswer> {
+export async function answerQuestion(question: string, scope: CorpusScope = "source"): Promise<RagAnswer> {
   if (!question.trim() || question.length > 4000) throw new Error("Question must contain 1 to 4000 characters");
   const start = Date.now();
   const config = ragConfig();
-  const result = await retrieve(question, config);
+  const result = await retrieve(question, config, "hybrid", scope);
   const telemetry = { ...result.telemetry, generationProvider: config.generationProvider, generationMs: 0, totalMs: 0 };
   if (!result.sources.length) return {
-    answer: "No relevant local source was retrieved.", mode: "extractive", sources: [], citations: [],
+    answer: "No relevant local source was retrieved.", mode: "extractive", scope, sources: [], citations: [],
     warnings: [], abstained: true, telemetry: { ...telemetry, totalMs: Date.now() - start },
   };
   const warnings: string[] = [];
@@ -71,7 +73,7 @@ export async function answerQuestion(question: string): Promise<RagAnswer> {
   telemetry.generationMs = Date.now() - generationStart;
   telemetry.totalMs = Date.now() - start;
   if (generated) return {
-    ...generated, mode: "generated", sources: result.sources, warnings, telemetry,
+    ...generated, mode: "generated", scope, sources: result.sources, warnings, telemetry,
     answer: generated.answer + (generated.citations.length ? "\n\nSources: " + generated.citations.map((id) => {
       const source = result.sources.find((item) => item.chunkId === id)!;
       return `[${source.source}#${id}] (lines ${source.startLine}-${source.endLine})`;
@@ -79,6 +81,6 @@ export async function answerQuestion(question: string): Promise<RagAnswer> {
   };
   return {
     answer: result.sources.map((source) => `[${source.source}#${source.chunkId}]\n${source.content}`).join("\n\n"),
-    mode: "extractive", sources: result.sources, citations: [], warnings, abstained: false, telemetry,
+    mode: "extractive", scope, sources: result.sources, citations: [], warnings, abstained: false, telemetry,
   };
 }

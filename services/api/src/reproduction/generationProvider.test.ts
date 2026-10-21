@@ -4,7 +4,7 @@ import { buildReproductionPrompt } from "./generationProvider";
 describe("reproduction generation prompt", () => {
   it("supplies the strict data-only schema shapes without repository artifacts", () => {
     const prompt = buildReproductionPrompt({
-      promptVersion: "reproduction-v1",
+      promptVersion: "reproduction-v2",
       report: { title: "Cart route", description: "Cart link stays on shop" },
       discovery: {
         schemaVersion: "1.0",
@@ -27,8 +27,13 @@ describe("reproduction generation prompt", () => {
     expect(prompt).toContain('"reportFact":"verbatim report fact"');
     expect(prompt).toContain('"testId":"cart-total"');
     expect(prompt).toContain('"type":"targetCurrencyEquals"');
+    expect(prompt).toContain('"type":"targetCurrencySumEquals"');
+    expect(prompt).toContain("relational currency expectation");
     expect(prompt).toContain('"type":"fillTarget"');
     expect(prompt).toContain("assertion must be exactly one object");
+    expect(prompt).toContain("Hard navigation after an interactive state change can discard the in-memory cart");
+    expect(prompt).toContain("targetVisibilityEquals for existence");
+    expect(prompt).toContain("wait for the reported result after asynchronous actions");
     expect(prompt).not.toContain("reference fix");
     expect(prompt).not.toContain("artifacts/");
   });

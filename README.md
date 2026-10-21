@@ -35,7 +35,13 @@ The end-to-end repair proposal was deterministic reference output. Its browser e
 
 See the [sanitized evaluation summary](docs/evidence/ar7-evaluation.md) and [current project status](docs/current-project-status.md) for the full boundary.
 
+The latest frozen 12-bug/2-control MiniShop cohort passed 16/16 independent browser reference checks and ran once through the configured Groq endpoint. **10/12** bug reports had independently reviewed report-matched failing assertions, exceeding the predeclared 8/12 target. Eleven of twelve bug cases produced valid executable candidates; one candidate failed review, and one was blocked by a classified provider HTTP 429. Both controls avoided false reproduction. No v5 candidate has human baseline acceptance or live-model repair verification. See the [v5 live scorecard](docs/evidence/prospective-v5-live-evaluation.md), [v5 reference verification](docs/evidence/prospective-v5-reference.md), and earlier [v3](docs/evidence/prospective-v3-live-evaluation.md) and [v2](docs/evidence/prospective-v2-live-evaluation.md) historical scores; the AR7 numbers above remain historical.
+
+A separately authorized post-evaluation retry of the HTTP-429 USB-total case produced a valid report-matched failure on the first provider request, and the identical generated test passed against fixed MiniShop. This diagnostic does not rescore the consumed cohort; the official v5 result remains 10/12. See the [USB-total diagnostic report](docs/evidence/p5-usb-retry-diagnostic.md).
+
 ## Architecture
+
+Detailed, shareable diagrams are available in the [architecture guide](docs/architecture.md).
 
 ```mermaid
 flowchart LR
@@ -91,15 +97,18 @@ Configured tests continue to work without an external provider. Dynamic candidat
 
 ```bash
 npm run typecheck
-npm run test:unit -- --maxWorkers=2
+npm run test:unit -- --maxWorkers=1 --no-file-parallelism
 npm run build
 ```
 
 Additional maintenance and evaluation commands:
 
 ```bash
-# Rebuild the scorecard from locally retained evidence
+# Rebuild the historical AR7 scorecard from locally retained evidence
 npm run arbitrary:evaluate
+
+# Recalculate the reviewed v5 scorecard from frozen per-case records
+npm run arbitrary:evaluate:score -- artifacts/arbitrary-reproduction/prospective-evaluation/v5-heldout-groq-2026-10-21
 
 # Run the local report-to-proof verification workflow
 npm run arbitrary:verify

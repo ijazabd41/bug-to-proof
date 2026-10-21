@@ -140,6 +140,26 @@ describe("reproduction definition V1", () => {
     expect(validateReproductionDefinition({ ...supportedDefinition(), steps: [{ type: "fillTarget", testId: "promo-input", text: "SAVE20", selector: "#unsafe" }] }).ok).toBe(false);
   });
 
+  it("compiles a discovery-bound currency sum relationship without model-authored code", () => {
+    const result = compileReproductionDefinition({
+      ...supportedDefinition(),
+      assertion: { type: "targetCurrencySumEquals", testId: "cart-total", terms: ["cart-subtotal", "shipping-fee"], currency: "USD" },
+    }, "currency-sum");
+    expect(result.source).toContain("targetCurrencySumEquals");
+    expect(result.source).toContain("normalizeCurrencyCents");
+    expect(result.source).toContain("assertion.terms");
+    expect(result.source).not.toContain("assertion.code");
+  });
+
+  it("rejects relational prose as a literal target text expectation", () => {
+    const result = validateReproductionDefinition({
+      ...supportedDefinition(),
+      assertion: { type: "targetTextEquals", testId: "cart-total", expected: "Total equals subtotal plus visible shipping" },
+    });
+    expect(result).toMatchObject({ ok: false });
+    if (!result.ok) expect(result.errors.join(" ")).toMatch(/relational|computed/i);
+  });
+
   it("implements seedCart through trusted product actions instead of application storage internals", () => {
     const result = compileReproductionDefinition({ ...supportedDefinition(), preconditions: [{ type: "seedCart", productId: 1, quantity: 2 }] }, "seed-via-ui");
     expect(result.source).toContain("add-to-cart-${precondition.productId}");

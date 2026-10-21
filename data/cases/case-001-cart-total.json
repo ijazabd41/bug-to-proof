@@ -4,7 +4,7 @@
   "description": "When multiple items are added to the cart, the total displays only the first item price instead of the sum of all items.",
   "status": "REPRODUCTION_FAILED",
   "createdAt": "2026-10-09T08:29:30.148Z",
-  "updatedAt": "2026-10-11T20:25:15.895Z",
+  "updatedAt": "2026-10-15T21:05:59.985Z",
   "reproduction": {
     "preconditions": [],
     "steps": [
@@ -14,36 +14,139 @@
     "actual": "Defect observed",
     "testFile": "tests/playwright/cases/case-001-cart-total.spec.ts",
     "lastRun": {
-      "outcome": "INFRASTRUCTURE_ERROR",
-      "testFingerprint": "bc3ded85db78e4735c59884ee2ef9b83b445c0a22c90f5cace95b9221ed5ff6d",
-      "testIds": [],
-      "runId": "287a6ca6-3b9f-49d3-a101-a01f4db72449",
-      "runAt": "2026-10-11T20:25:15.895Z",
-      "passed": false,
+      "runAt": "2026-10-15T21:05:59.985Z",
+      "passed": true,
+      "outcome": "PASSED",
+      "actual": "All selected tests passed",
       "expected": "All assertions pass",
-      "actual": "MiniShop is not reachable at http://localhost:5174",
-      "durationMs": 22,
-      "evidenceIds": []
+      "durationMs": 7057,
+      "runId": "e624e89b-c53c-482c-9ac6-31d251e5f10a",
+      "testFingerprint": "8768f154ce1bde6ca8ceed591bfe83f4d33d1e955568c2d08997f6335f2287c7",
+      "testIds": [
+        "case-001-cart-total.spec.ts:cart total should equal sum of all item prices:chromium",
+        "case-001-cart-total.spec.ts:cart total should update when items are added incrementally:chromium"
+      ],
+      "reportHash": "bbcfc685fca3b14101eb995b1fa53f4b60d84e5532d7aa1f5cd274830e9d9836",
+      "evidenceIds": [
+        "ev-e624e89b-c53c-482c-9ac6-31d251e5f10a-resultJson",
+        "ev-e624e89b-c53c-482c-9ac6-31d251e5f10a-screenshot",
+        "ev-e624e89b-c53c-482c-9ac6-31d251e5f10a-trace"
+      ]
     }
   },
   "patch": null,
   "verification": {
     "status": "PENDING",
     "beforeRun": {
-      "outcome": "INFRASTRUCTURE_ERROR",
-      "testFingerprint": "bc3ded85db78e4735c59884ee2ef9b83b445c0a22c90f5cace95b9221ed5ff6d",
-      "testIds": [],
-      "runId": "287a6ca6-3b9f-49d3-a101-a01f4db72449",
-      "runAt": "2026-10-11T20:25:15.895Z",
-      "passed": false,
+      "runAt": "2026-10-15T21:05:59.985Z",
+      "passed": true,
+      "outcome": "PASSED",
+      "actual": "All selected tests passed",
       "expected": "All assertions pass",
-      "actual": "MiniShop is not reachable at http://localhost:5174",
-      "durationMs": 22,
-      "evidenceIds": []
+      "durationMs": 7057,
+      "runId": "e624e89b-c53c-482c-9ac6-31d251e5f10a",
+      "testFingerprint": "8768f154ce1bde6ca8ceed591bfe83f4d33d1e955568c2d08997f6335f2287c7",
+      "testIds": [
+        "case-001-cart-total.spec.ts:cart total should equal sum of all item prices:chromium",
+        "case-001-cart-total.spec.ts:cart total should update when items are added incrementally:chromium"
+      ],
+      "reportHash": "bbcfc685fca3b14101eb995b1fa53f4b60d84e5532d7aa1f5cd274830e9d9836",
+      "evidenceIds": [
+        "ev-e624e89b-c53c-482c-9ac6-31d251e5f10a-resultJson",
+        "ev-e624e89b-c53c-482c-9ac6-31d251e5f10a-screenshot",
+        "ev-e624e89b-c53c-482c-9ac6-31d251e5f10a-trace"
+      ]
     },
     "afterRun": null,
     "comparison": null
   },
-  "evidence": [],
-  "rootCauseExplanation": null
+  "evidence": [
+    {
+      "id": "ev-case-001-cart-total-1fb5210b-e130-4f92-a8fe-b7e14f8280b5-before-screenshot",
+      "type": "screenshot",
+      "phase": "before",
+      "path": "artifacts/case-001-cart-total/before/1fb5210b-e130-4f92-a8fe-b7e14f8280b5/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/test-finished-1.png",
+      "createdAt": "2026-10-15T14:28:09.397Z",
+      "description": "Screenshot captured before patch"
+    },
+    {
+      "id": "ev-case-001-cart-total-1fb5210b-e130-4f92-a8fe-b7e14f8280b5-before-trace",
+      "type": "trace",
+      "phase": "before",
+      "path": "artifacts/case-001-cart-total/before/1fb5210b-e130-4f92-a8fe-b7e14f8280b5/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/trace.zip",
+      "createdAt": "2026-10-15T14:28:09.397Z",
+      "description": "Playwright trace before patch"
+    },
+    {
+      "id": "ev-case-001-cart-total-1fb5210b-e130-4f92-a8fe-b7e14f8280b5-before-result",
+      "type": "result-json",
+      "phase": "before",
+      "path": "artifacts/case-001-cart-total/before/1fb5210b-e130-4f92-a8fe-b7e14f8280b5/result.json",
+      "createdAt": "2026-10-15T14:28:09.397Z",
+      "description": "Raw Playwright JSON result before patch"
+    },
+    {
+      "id": "ev-d4d817c1-8df3-4a9b-894b-52215340614d-resultJson",
+      "type": "result-json",
+      "phase": "before",
+      "path": "artifacts/case-001-cart-total/before/d4d817c1-8df3-4a9b-894b-52215340614d/result.json",
+      "createdAt": "2026-10-15T14:29:15.913Z",
+      "description": "Recorded before resultJson"
+    },
+    {
+      "id": "ev-d4d817c1-8df3-4a9b-894b-52215340614d-screenshot",
+      "type": "screenshot",
+      "phase": "before",
+      "path": "artifacts/case-001-cart-total/before/d4d817c1-8df3-4a9b-894b-52215340614d/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/test-finished-1.png",
+      "createdAt": "2026-10-15T14:29:15.913Z",
+      "description": "Recorded before screenshot"
+    },
+    {
+      "id": "ev-d4d817c1-8df3-4a9b-894b-52215340614d-trace",
+      "type": "trace",
+      "phase": "before",
+      "path": "artifacts/case-001-cart-total/before/d4d817c1-8df3-4a9b-894b-52215340614d/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/trace.zip",
+      "createdAt": "2026-10-15T14:29:15.913Z",
+      "description": "Recorded before trace"
+    },
+    {
+      "id": "ev-e624e89b-c53c-482c-9ac6-31d251e5f10a-resultJson",
+      "type": "result-json",
+      "phase": "before",
+      "path": "artifacts/case-001-cart-total/before/e624e89b-c53c-482c-9ac6-31d251e5f10a/result.json",
+      "createdAt": "2026-10-15T21:05:59.985Z",
+      "description": "Recorded before resultJson"
+    },
+    {
+      "id": "ev-e624e89b-c53c-482c-9ac6-31d251e5f10a-screenshot",
+      "type": "screenshot",
+      "phase": "before",
+      "path": "artifacts/case-001-cart-total/before/e624e89b-c53c-482c-9ac6-31d251e5f10a/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/test-finished-1.png",
+      "createdAt": "2026-10-15T21:05:59.985Z",
+      "description": "Recorded before screenshot"
+    },
+    {
+      "id": "ev-e624e89b-c53c-482c-9ac6-31d251e5f10a-trace",
+      "type": "trace",
+      "phase": "before",
+      "path": "artifacts/case-001-cart-total/before/e624e89b-c53c-482c-9ac6-31d251e5f10a/case-001-cart-total-Case-0-3c8dc-qual-sum-of-all-item-prices-chromium/trace.zip",
+      "createdAt": "2026-10-15T21:05:59.985Z",
+      "description": "Recorded before trace"
+    }
+  ],
+  "rootCauseExplanation": null,
+  "report": {
+    "schemaVersion": "1.0",
+    "steps": [
+      "Run reproduction test"
+    ],
+    "expected": "All assertions pass",
+    "actual": "Defect observed",
+    "startPath": "",
+    "context": ""
+  },
+  "reportCompleteness": {
+    "complete": true,
+    "missingFields": []
+  }
 }

@@ -110,4 +110,40 @@ describe("generated spec evidence-runner boundary", () => {
       else expect(result.outcome).toBe("PASSED");
     } finally { await new Promise<void>(resolve => server.close(() => resolve())); }
   }, 45_000);
+
+  it("keeps a trusted seedCart setup in memory through its assertion", async () => {
+    const integrationRoot = path.resolve("artifacts/arbitrary-reproduction/ar4-generation-execution/integration-temp"); fs.mkdirSync(integrationRoot, { recursive: true });
+    const root = fs.mkdtempSync(path.join(integrationRoot, "btp-seed-in-memory-")); dirs.push(root);
+    const server = http.createServer((_req, res) => { res.writeHead(200, { "content-type": "text/html" }); res.end(`<!doctype html><button data-testid="add-to-cart-1" onclick="document.querySelector('[data-testid=cart-item-quantity-1]').textContent='×'+(++window.quantity)">Add</button><span data-testid="cart-item-quantity-1">×0</span><script>window.quantity=0</script>`); });
+    await new Promise<void>(resolve => server.listen(0, "127.0.0.1", resolve));
+    try {
+      const address = server.address(); if (!address || typeof address === "string") throw new Error("Fixture server did not bind");
+      const generatedRoot = path.join(root, "generated"); const artifactDir = path.join(root, "evidence");
+      const compiled = persistCompiledReproduction({ schemaVersion: "1.0", title: "Seed quantity", startPath: "/", preconditions: [{ type: "seedCart", productId: 1, quantity: 2 }],
+        steps: [], assertion: { type: "targetNumberEquals", testId: "cart-item-quantity-1", expected: 2 },
+        rationale: "Seeded quantity remains available", reportMapping: [{ reportFact: "quantity should be 2", definitionPath: "assertion.expected" }] }, "seed-in-memory", generatedRoot);
+      const result = await runTest("case-seed-in-memory", compiled.filePath, "before", { generatedTestRoot: generatedRoot, artifactDir,
+        runId: "seed-in-memory", targetUrl: `http://127.0.0.1:${address.port}`, timeoutMs: 30_000 });
+      if (result.failureKind === "BROWSER_UNAVAILABLE") expect(result.outcome).toBe("INFRASTRUCTURE_ERROR");
+      else expect(result.outcome).toBe("PASSED");
+    } finally { await new Promise<void>(resolve => server.close(() => resolve())); }
+  }, 45_000);
+
+  it("waits briefly for an asynchronous reported result before deciding the assertion", async () => {
+    const integrationRoot = path.resolve("artifacts/arbitrary-reproduction/ar4-generation-execution/integration-temp"); fs.mkdirSync(integrationRoot, { recursive: true });
+    const root = fs.mkdtempSync(path.join(integrationRoot, "btp-async-assertion-")); dirs.push(root);
+    const server = http.createServer((_req, res) => { res.writeHead(200, { "content-type": "text/html" }); res.end(`<!doctype html><button data-testid="apply-promo-button" onclick="setTimeout(() => document.querySelector('[data-testid=promo-status]').textContent='Applied', 400)">Apply</button><span data-testid="promo-status">Pending</span>`); });
+    await new Promise<void>(resolve => server.listen(0, "127.0.0.1", resolve));
+    try {
+      const address = server.address(); if (!address || typeof address === "string") throw new Error("Fixture server did not bind");
+      const generatedRoot = path.join(root, "generated"); const artifactDir = path.join(root, "evidence");
+      const compiled = persistCompiledReproduction({ schemaVersion: "1.0", title: "Promo applied", startPath: "/", preconditions: [],
+        steps: [{ type: "clickTarget", testId: "apply-promo-button" }], assertion: { type: "targetTextEquals", testId: "promo-status", expected: "Applied" },
+        rationale: "Wait for the reported async status", reportMapping: [{ reportFact: "status should be Applied", definitionPath: "assertion.expected" }] }, "async-assertion", generatedRoot);
+      const result = await runTest("case-async-assertion", compiled.filePath, "before", { generatedTestRoot: generatedRoot, artifactDir,
+        runId: "async-assertion", targetUrl: `http://127.0.0.1:${address.port}`, timeoutMs: 30_000 });
+      if (result.failureKind === "BROWSER_UNAVAILABLE") expect(result.outcome).toBe("INFRASTRUCTURE_ERROR");
+      else expect(result.outcome).toBe("PASSED");
+    } finally { await new Promise<void>(resolve => server.close(() => resolve())); }
+  }, 45_000);
 });

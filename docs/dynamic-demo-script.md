@@ -1,15 +1,16 @@
-# Dynamic arbitrary-report demo (3–4 minutes)
+# Dynamic arbitrary-report demo (4–5 minutes)
 
 This demo is scoped to the configured local MiniShop. It shows the actual generated-test lifecycle; it does not claim support for arbitrary external websites.
 
 ## Before recording
 
-1. Run `npm run typecheck`, `npm run build`, `npm run arbitrary:evaluate`, and `npm run demo:check`.
+1. Run `npm run typecheck`, `npm run build`, `npm run test:unit -- --maxWorkers=1 --no-file-parallelism`, `npm run test:playwright`, and `npm run demo:check`.
 2. Start Dashboard, API, and MiniShop with `npm run dev`.
 3. Open the dashboard at `http://localhost:5173` and MiniShop at `http://localhost:5174`.
 4. Keep the accepted calculation case `case-1791917776888-hvza72c3` available as the reliable recorded path.
+5. Open the [v5 live evaluation](evidence/prospective-v5-live-evaluation.md) and the retained local `artifacts/arbitrary-reproduction/prospective-evaluation/v5-heldout-groq-2026-10-21/` directory for the measured failure path and scorecard.
 
-The frozen held-out runner is `npm run arbitrary:evaluate:live -- --confirm-live`. Run it only after the operator explicitly authorizes sending the four frozen reports to the configured external provider.
+The v5 held-out dataset has been consumed. Show its retained artifacts; do not run it again for a new score.
 
 `npm run demo:check` fails closed unless the structured case, reviewed run, accepted bytes, baseline failure, identical-test repair result, regression gates, independently extractable proof bundle, scorecard, and presentation documents agree. Its machine-readable result is generated locally under `artifacts/arbitrary-reproduction/ar7-evaluation/` and is intentionally excluded from Git.
 
@@ -35,9 +36,13 @@ Show state `REPRODUCED`, outcome `ASSERTION_FAILED`, expected 15, received 10, a
 
 Open the AR6 reference result and Proof Bundle. Show baseline failure, post-patch pass, identical test fingerprint, passing typecheck/build/unit checks, and verified manifest provenance. State clearly that this recorded proposal is deterministic reference output; the execution and evidence gates are real.
 
-### 6. Close with measured results (30 seconds)
+### 6. Show an honest failure path (30 seconds)
 
-Open the locally generated AR7 scorecard, or use the public [`docs/evidence/ar7-evaluation.md`](evidence/ar7-evaluation.md) summary. Use the displayed denominators: 3/3 discovery-bound acceptance reports produced executable candidates, 2/3 produced relevant assertion failures, and 1/2 review-eligible failures completed human acceptance. Then show the separately frozen held-out result: 2/4 valid candidates, 1/4 executable passing baseline, 0/4 relevant reproductions, and 2/4 provider-connectivity failures. Explain that the held-out run exposed the textbox locator gap fixed by compiler 1.1.0 and was not rerun after that correction.
+Open the retained `p5-usb-total-under-counts/run.json` under the v5 held-out directory. Show `BLOCKED`, Groq HTTP 429, and the three recorded HTTP requests. Point to the per-case record as evidence. Explain the safe retry choice: once provider quota recovers, start a new ordinary case run; keep the v5 held-out score unchanged because that split is consumed. The 429 is an infrastructure outcome, not a reproduced MiniShop bug.
+
+### 7. Close with measured results (30 seconds)
+
+Open the [v5 public scorecard](evidence/prospective-v5-live-evaluation.md). State the denominator: 14/14 retained outcomes, 11/12 valid executable bug candidates, 10/12 independently reviewed report matches, one classified provider 429, and 0/2 control false positives. The predeclared 8/12 match target was met on this small MiniShop cohort. State that the reviewed matches have not received human baseline acceptance or live-model repair verification. The older AR7, v2, and v3 results remain historical.
 
 ## Recording safety
 

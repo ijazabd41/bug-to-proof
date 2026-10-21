@@ -21,16 +21,19 @@ export function EvidencePanel({ evidence, phase, title, run }: EvidencePanelProp
 
   if (filtered.length === 0) {
     return (
-      <p style={{ color: "#9ca3af", fontSize: 13 }}>
+      <p style={{ color: "#94a3b8", fontSize: 13 }}>
         No evidence collected yet.
       </p>
     );
   }
 
+  const isPassed = run?.passed;
+  const isInfra = run?.outcome === "INFRASTRUCTURE_ERROR";
+
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
       {title && (
-        <h4 style={{ fontSize: 14, fontWeight: 600, color: "#374151" }}>{title}</h4>
+        <h4 style={{ fontSize: 14, fontWeight: 600, color: "#1e293b" }}>{title}</h4>
       )}
 
       {/* Run result badge */}
@@ -39,75 +42,119 @@ export function EvidencePanel({ evidence, phase, title, run }: EvidencePanelProp
           className="evidence-run"
           style={{
             display: "flex",
-            gap: 8,
+            gap: 10,
             alignItems: "flex-start",
             flexWrap: "wrap",
-            background: run.passed ? "#dcfce7" : "#fee2e2",
-            padding: "8px 12px",
-            borderRadius: 6,
+            background: isInfra ? "#fff7ed" : isPassed ? "#ecfdf5" : "#fef2f2",
+            border: `1px solid ${isInfra ? "#fed7aa" : isPassed ? "#a7f3d0" : "#fecaca"}`,
+            padding: "10px 14px",
+            borderRadius: 8,
             fontSize: 13,
           }}
         >
           <span
             style={{
               fontWeight: 700,
-              color: run.passed ? "#15803d" : "#b91c1c",
+              fontFamily: "'Geist Mono', 'JetBrains Mono', ui-monospace, monospace",
+              color: isInfra ? "#c2410c" : isPassed ? "#047857" : "#b91c1c",
               whiteSpace: "nowrap",
             }}
           >
-            {run.outcome === "INFRASTRUCTURE_ERROR" ? "⚠️ INFRASTRUCTURE ERROR" : run.passed ? "✅ PASSED" : "❌ ASSERTION FAILED"}
+            {isInfra
+              ? "⚠️ INFRASTRUCTURE ERROR"
+              : isPassed
+              ? "✅ PASSED"
+              : "❌ ASSERTION FAILED"}
           </span>
-          <span style={{ color: "#374151" }}>
-            Expected: <em>{run.expected}</em>
+          <span style={{ color: "#334155" }}>
+            Expected: <em style={{ color: "#0f172a", fontWeight: 600 }}>{run.expected}</em>
           </span>
           {!run.passed && (
-            <details className="failure-details">
-              <summary>Actual result · View failure details</summary>
-              <pre>{run.actual}</pre>
+            <details className="failure-details" style={{ width: "100%", marginTop: 4 }}>
+              <summary style={{ cursor: "pointer", color: "#b91c1c", fontWeight: 600 }}>
+                Actual result · View failure details
+              </summary>
+              <pre
+                style={{
+                  background: "#0f172a",
+                  border: "1px solid #1e293b",
+                  borderRadius: 6,
+                  padding: 12,
+                  marginTop: 8,
+                  color: "#fecaca",
+                  fontSize: 11,
+                  lineHeight: 1.6,
+                  fontFamily: "'Geist Mono', 'JetBrains Mono', ui-monospace, monospace",
+                  whiteSpace: "pre-wrap",
+                  overflowWrap: "anywhere",
+                  maxHeight: 220,
+                  overflowY: "auto",
+                }}
+              >
+                {run.actual}
+              </pre>
             </details>
           )}
-          <span style={{ color: "#9ca3af", fontSize: 12 }}>
-            {run.durationMs}ms · {new Date(run.runAt).toLocaleString()}
+          <span
+            style={{
+              color: "#64748b",
+              fontSize: 11,
+              fontFamily: "'Geist Mono', 'JetBrains Mono', ui-monospace, monospace",
+              marginLeft: "auto",
+            }}
+          >
+            {run.durationMs}ms · {new Date(run.runAt).toLocaleTimeString()}
           </span>
         </div>
       )}
 
       {/* Screenshot */}
       {screenshot && (
-        <div>
+        <div className="screenshot-container">
           {imgError ? (
             <div
               role="img"
               aria-label={screenshot.description}
               style={{
-                background: "#f7f8fa",
-                border: "1px dashed #d1d5db",
-                borderRadius: 6,
-                padding: "24px 16px",
+                background: "#f8fafc",
+                border: "1px dashed #cbd5e1",
+                borderRadius: 8,
+                padding: "28px 16px",
                 textAlign: "center",
-                color: "#9ca3af",
+                color: "#64748b",
                 fontSize: 13,
               }}
             >
               📷 Screenshot not yet available
               <br />
-              <span style={{ fontSize: 11 }}>{screenshot.description}</span>
+              <span style={{ fontSize: 11, color: "#94a3b8" }}>{screenshot.description}</span>
             </div>
           ) : (
-            <img
-              src={artifactUrl(screenshot.path)}
-              alt={screenshot.description}
+            <div
               style={{
-                maxWidth: "100%",
-                border: "1px solid #e5e7eb",
-                borderRadius: 6,
-                display: "block",
+                background: "#f8fafc",
+                border: "1px solid #e2e8f0",
+                borderRadius: 8,
+                padding: 4,
+                overflow: "hidden",
+                boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
               }}
-              onError={() => setImgError(true)}
-            />
+            >
+              <img
+                src={artifactUrl(screenshot.path)}
+                alt={screenshot.description}
+                style={{
+                  maxWidth: "100%",
+                  borderRadius: 6,
+                  display: "block",
+                }}
+                onError={() => setImgError(true)}
+              />
+            </div>
           )}
-          <p style={{ fontSize: 12, color: "#9ca3af", marginTop: 4 }}>
-            {screenshot.description}
+          <p style={{ fontSize: 11, color: "#64748b", marginTop: 6, display: "flex", alignItems: "center", gap: 6 }}>
+            <span>📸</span>
+            <span>{screenshot.description}</span>
           </p>
         </div>
       )}
@@ -119,7 +166,21 @@ export function EvidencePanel({ evidence, phase, title, run }: EvidencePanelProp
             href={artifactUrl(ev.path)}
             target="_blank"
             rel="noreferrer"
-            style={{ color: "#3b82d4" }}
+            className="artifact-link"
+            style={{
+              color: "#0284c7",
+              textDecoration: "none",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              background: "#f0f9ff",
+              border: "1px solid #bae6fd",
+              padding: "5px 11px",
+              borderRadius: 6,
+              fontSize: 12,
+              fontFamily: "'Geist Mono', 'JetBrains Mono', ui-monospace, monospace",
+              fontWeight: 500,
+            }}
             aria-label={`Download ${ev.description}`}
           >
             📎 {ev.description}
@@ -134,7 +195,21 @@ export function EvidencePanel({ evidence, phase, title, run }: EvidencePanelProp
             href={artifactUrl(ev.path)}
             target="_blank"
             rel="noreferrer"
-            style={{ color: "#3b82d4" }}
+            className="artifact-link"
+            style={{
+              color: "#0284c7",
+              textDecoration: "none",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              background: "#f0f9ff",
+              border: "1px solid #bae6fd",
+              padding: "5px 11px",
+              borderRadius: 6,
+              fontSize: 12,
+              fontFamily: "'Geist Mono', 'JetBrains Mono', ui-monospace, monospace",
+              fontWeight: 500,
+            }}
             aria-label={`View ${ev.description}`}
           >
             {ev.type} — {ev.description}

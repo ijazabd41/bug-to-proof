@@ -2,11 +2,11 @@
 
 > **REFERENCE GUIDE:** RAG supports source retrieval and proposal context; it does not establish test correctness or automatic reproduction. See [current status](current-project-status.md).
 
-Updated 9 October 2026.
+Updated 20 October 2026.
 
 ## Recommended portfolio configuration
 
-Use a hosted learned embedding model and your existing OpenAI-compatible chat provider, with a local persistent vector index. This is a focused prototype: no separate database service is needed for the small allowlisted repository.
+Use the measured lexical hybrid configuration for the portfolio demo: BM25 plus the deterministic `hashed-tokens-v1` index, fused by reciprocal-rank fusion. It runs offline and needs no embedding account. A learned embedding model is an optional comparison, not a requirement for this small allowlisted repository.
 
 For semantic retrieval, set RAG_EMBEDDING_PROVIDER=openai and RAG_EMBEDDING_MODEL=text-embedding-3-small. The embedding endpoint defaults to https://api.openai.com/v1. Store the embedding key in RAG_EMBEDDING_API_KEY in your local .env. Do not assume a chat-provider key works for embedding APIs. OpenAI documents this model and cosine-based search in its [embedding guide](https://developers.openai.com/api/docs/guides/embeddings).
 
@@ -14,7 +14,7 @@ For chat generation, set RAG_GENERATION_PROVIDER=openai, RAG_GENERATION_MODEL to
 
 For a fully local semantic configuration, select ollama, set RAG_EMBEDDING_MODEL=nomic-embed-text and RAG_EMBEDDING_BASE_URL=http://localhost:11434, then configure an installed local chat model using RAG_GENERATION_PROVIDER=ollama and RAG_GENERATION_MODEL. Ollama must be installed and both selected models pulled first. See the [LangChain Ollama embedding integration](https://github.com/langchain-ai/docs/blob/main/src/oss/javascript/integrations/embeddings/ollama.mdx).
 
-The default is lexical retrieval plus disabled generation so the demo and tests run without accounts or models. This default is a reproducible baseline, not semantic RAG. No live hosted or Ollama model quality has been measured yet.
+The code default is lexical retrieval plus disabled generation so tests run without accounts or models. This is a reproducible lexical baseline, not semantic RAG. Generation can be configured separately for an interactive demo.
 
 ## Architecture
 
@@ -63,7 +63,14 @@ The twelve labelled cases include ten repository questions with expected source 
 - Off-topic abstention rate: fraction of the two unsupported questions returning no sources.
 - Retrieval p95 latency, with per-question cache status and corpus fingerprint.
 
-This is a small development smoke benchmark, not a representative held-out evaluation. It does not measure generated answer accuracy, factual support, cost, or production latency. Scores from hashed-token retrieval must not be described as semantic-model results. Record a real semantic run before putting semantic quality numbers on a resume.
+The local development benchmark has recorded both configurations on the same 12 questions (10 answerable, 2 off-topic):
+
+| Retrieval setup | Hit@4 | MRR@4 | Off-topic abstention |
+| --- | ---: | ---: | ---: |
+| BM25 + hashed-token index, hybrid | 10/10 | 0.933 | 2/2 |
+| BM25 + local Ollama `nomic-embed-text`, hybrid | 10/10 | 0.817 | 0/2 |
+
+These are local, Git-ignored artifacts from 16 October 2026: `artifacts/rag-evaluation-lexical-hybrid.json` and `artifacts/rag-evaluation-ollama-hybrid.json`. The learned model did not improve this small benchmark's hit rate and lost both off-topic abstentions. This is a development smoke benchmark, not a representative held-out evaluation. It does not measure generated answer accuracy, factual support, cost, or production latency. Neither retrieval score establishes arbitrary-report reproduction reliability.
 
 ## A concise interview pitch
 
@@ -79,4 +86,4 @@ This is a small development smoke benchmark, not a representative held-out evalu
 - npm run test:unit, npm run typecheck and npm run build validate the implementation.
 - The dashboard shows whether retrieval is lexical or semantic, returned source lines, cache status and generation warnings.
 
-Remaining work before broader claims: real semantic evaluation, a larger held-out question set, factual-support grading, query cancellation, incremental indexing, multi-process cache coordination, index retention and production authentication.
+Remaining work before broader retrieval claims: a larger held-out question set, factual-support grading, query cancellation, incremental indexing, multi-process cache coordination, index retention and production authentication.

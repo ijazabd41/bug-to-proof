@@ -4,13 +4,15 @@ import path from "path";
 import { readCase, writeCase } from "../storage/caseStore";
 import { ARTIFACTS_DIR, WORKSPACE_ROOT } from "../utils/paths";
 import { discoverTargetSurface } from "../reproduction/targetDiscovery";
-import { generateReproductionCandidate } from "../reproduction/generationProvider";
+import { generateReproductionCandidate, preflightReproductionProvider } from "../reproduction/generationProvider";
 import { ReproductionRunStore } from "../reproduction/reproductionRunStore";
 import { ReproductionService } from "../reproduction/reproductionService";
 import { ReproductionReviewError, ReproductionReviewService } from "../reproduction/reproductionReviewService";
 import { runTest } from "../runner/playwrightRunner";
 import { cleanupRunResources, registerRunController } from "../ai/repair/runtimeRegistry";
 import { computeSourceManifest } from "../ai/repair/workspace";
+import fs from "fs";
+import { chromium } from "playwright";
 
 const recordsRoot = path.join(ARTIFACTS_DIR, "reproduction-runs", "records");
 const generatedRoot = path.join(ARTIFACTS_DIR, "reproduction-runs", "generated");
@@ -39,6 +41,18 @@ export const reproductionReviewService = new ReproductionReviewService({
 });
 
 export const reproductionRunsRouter = express.Router();
+
+reproductionRunsRouter.get("/reproduction-preflight", async (_req, res) => {
+  try {
+    const provider = await preflightReproductionProvider();
+    const targetUrl = process.env.MINISHOP_BASE_URL ?? "http://localhost:5174";
+    let targetReachable = false;
+    try { const response = await fetch(targetUrl, { signal: AbortSignal.timeout(5_000) }); targetReachable = response.ok; } catch { /* reported below */ }
+    const browserAvailable = fs.existsSync(chromium.executablePath());
+    res.json({ ready: provider.ready && targetReachable && browserAvailable, provider, targetReachable, browserAvailable,
+      sourceFingerprint: computeSourceManifest(path.join(WORKSPACE_ROOT, "apps/minishop")).fingerprint });
+  } catch { res.status(503).json({ ready: false, code: "PREFLIGHT_UNAVAILABLE" }); }
+});
 
 reproductionRunsRouter.post("/cases/:caseId/reproduction-runs", (req, res) => {
   const bugCase = readCase(req.params.caseId);

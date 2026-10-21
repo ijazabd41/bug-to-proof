@@ -5,25 +5,25 @@ interface PatchViewerProps {
   patch: Patch;
 }
 
-function classifyDiffLine(line: string): { color: string; fontWeight?: string } {
-  // File headers (--- a/... and +++ b/...) — do NOT treat as add/remove
+function classifyDiffLine(line: string): { color: string; bg?: string; borderLeft?: string } {
+  // File headers (--- a/... and +++ b/...)
   if (line.startsWith("---") || line.startsWith("+++")) {
-    return { color: "#8b949e" };
+    return { color: "#64748b", bg: "#f1f5f9" };
   }
   // Hunk headers
   if (line.startsWith("@@")) {
-    return { color: "#79c0ff" };
+    return { color: "#0369a1", bg: "#f0f9ff", borderLeft: "2px solid #0284c7" };
   }
   // Additions
   if (line.startsWith("+")) {
-    return { color: "#3fb950" };
+    return { color: "#15803d", bg: "#f0fdf4", borderLeft: "2px solid #16a34a" };
   }
   // Removals
   if (line.startsWith("-")) {
-    return { color: "#f85149" };
+    return { color: "#b91c1c", bg: "#fef2f2", borderLeft: "2px solid #dc2626" };
   }
-  // Context lines / diff metadata (index, diff --git, etc.)
-  return { color: "#8b949e" };
+  // Context lines
+  return { color: "#334155" };
 }
 
 export function PatchViewer({ patch }: PatchViewerProps) {
@@ -31,30 +31,33 @@ export function PatchViewer({ patch }: PatchViewerProps) {
   const lines = hasDiff ? patch.diff.split("\n") : [];
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+    <div className="patch-viewer-container" style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       {/* Patch status badge */}
-      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
         <span
+          className="patch-status-badge"
           style={{
             fontSize: 11,
             fontWeight: 700,
-            padding: "2px 8px",
+            padding: "4px 10px",
             borderRadius: 9999,
             textTransform: "uppercase",
-            letterSpacing: "0.05em",
-            background: patch.status === "APPLIED" ? "#dcfce7" : "#fef9c3",
-            color: patch.status === "APPLIED" ? "#15803d" : "#854d0e",
+            letterSpacing: "0.06em",
+            fontFamily: "'Geist Mono', 'JetBrains Mono', ui-monospace, monospace",
+            background: patch.status === "APPLIED" ? "#ecfdf5" : "#fffbeb",
+            color: patch.status === "APPLIED" ? "#047857" : "#b45309",
+            border: `1px solid ${patch.status === "APPLIED" ? "#a7f3d0" : "#fde68a"}`,
           }}
         >
           {patch.status === "APPLIED" ? "✓ Applied" : "○ Proposed"}
         </span>
         {patch.appliedAt && (
-          <span style={{ fontSize: 12, color: "#9ca3af" }}>
+          <span style={{ fontSize: 12, color: "#64748b" }}>
             Applied {new Date(patch.appliedAt).toLocaleString()}
           </span>
         )}
         {!patch.appliedAt && patch.proposedAt && (
-          <span style={{ fontSize: 12, color: "#9ca3af" }}>
+          <span style={{ fontSize: 12, color: "#64748b" }}>
             Proposed {new Date(patch.proposedAt).toLocaleString()}
           </span>
         )}
@@ -62,68 +65,109 @@ export function PatchViewer({ patch }: PatchViewerProps) {
 
       {/* Summary */}
       {patch.summary ? (
-        <div>
-          <p style={{ fontSize: 13, fontWeight: 600, color: "#374151", marginBottom: 4 }}>
+        <div className="patch-summary-box">
+          <p style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 }}>
             Summary
           </p>
-          <p style={{ fontSize: 14, color: "#374151", lineHeight: 1.6 }}>{patch.summary}</p>
+          <p style={{ fontSize: 14, color: "#0f172a", lineHeight: 1.6 }}>{patch.summary}</p>
         </div>
       ) : null}
 
       {/* Reasoning */}
       {patch.reasoning ? (
-        <div>
-          <p style={{ fontSize: 13, fontWeight: 600, color: "#374151", marginBottom: 4 }}>
+        <div className="patch-reasoning-box">
+          <p style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 }}>
             Reasoning
           </p>
-          <p style={{ fontSize: 13, color: "#6b7280", lineHeight: 1.6 }}>{patch.reasoning}</p>
+          <p style={{ fontSize: 13, color: "#475569", lineHeight: 1.6 }}>{patch.reasoning}</p>
         </div>
       ) : null}
 
       {/* Files changed */}
       {patch.filesChanged.length > 0 && (
-        <div style={{ fontSize: 12, color: "#6b7280" }}>
-          <strong>Files changed:</strong> {patch.filesChanged.join(", ")}
+        <div style={{ fontSize: 12, color: "#64748b", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+          <strong style={{ color: "#0f172a" }}>Files changed:</strong>
+          {patch.filesChanged.map((file) => (
+            <code
+              key={file}
+              style={{
+                background: "#f1f5f9",
+                border: "1px solid #cbd5e1",
+                color: "#0369a1",
+                padding: "2px 8px",
+                borderRadius: 4,
+                fontSize: 11,
+              }}
+            >
+              {file}
+            </code>
+          ))}
         </div>
       )}
 
       {/* Diff */}
-      <div>
-        <p style={{ fontSize: 13, fontWeight: 600, color: "#374151", marginBottom: 8 }}>Diff</p>
+      <div className="diff-view-card">
+        <p style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 8 }}>
+          Unified Diff
+        </p>
         {hasDiff ? (
           <pre
+            className="unified-diff-pre"
             style={{
-              background: "#0d1117",
-              color: "#c9d1d9",
-              padding: 16,
-              borderRadius: 6,
+              background: "#ffffff",
+              border: "1px solid #e2e8f0",
+              borderRadius: 8,
+              padding: "14px 0",
               overflowX: "auto",
               fontSize: 12,
-              lineHeight: 1.6,
-              fontFamily: "ui-monospace, SFMono-Regular, Menlo, 'Courier New', monospace",
+              lineHeight: 1.65,
+              fontFamily: "'Geist Mono', 'JetBrains Mono', ui-monospace, monospace",
               whiteSpace: "pre",
               tabSize: 4,
+              boxShadow: "0 1px 3px rgba(0, 0, 0, 0.04)",
             }}
             role="region"
             aria-label="Unified diff"
           >
             {lines.map((line, i) => {
-              const { color } = classifyDiffLine(line);
+              const { color, bg, borderLeft } = classifyDiffLine(line);
               return (
-                <span key={i} style={{ color, display: "block" }}>
-                  {/* Render as text, not HTML — prevents XSS */}
-                  {line || "\u00a0"}
-                </span>
+                <div
+                  key={i}
+                  style={{
+                    color,
+                    background: bg ?? "transparent",
+                    borderLeft: borderLeft ?? "2px solid transparent",
+                    padding: "1px 16px",
+                    display: "flex",
+                    minWidth: "fit-content",
+                  }}
+                >
+                  <span
+                    style={{
+                      userSelect: "none",
+                      width: 36,
+                      flexShrink: 0,
+                      color: "#94a3b8",
+                      fontSize: 10,
+                      textAlign: "right",
+                      paddingRight: 14,
+                    }}
+                  >
+                    {i + 1}
+                  </span>
+                  <span>{line || "\u00a0"}</span>
+                </div>
               );
             })}
           </pre>
         ) : (
-          <p style={{ color: "#9ca3af", fontSize: 13 }}>No diff available.</p>
+          <p style={{ color: "#94a3b8", fontSize: 13 }}>No diff available.</p>
         )}
       </div>
 
       {/* Helper text */}
-      <p style={{ fontSize: 11, color: "#9ca3af", lineHeight: 1.5 }}>
+      <p style={{ fontSize: 11, color: "#64748b", lineHeight: 1.5 }}>
         ℹ️ This diff shows the proposed code change. Marking as Applied records that a developer
         applied the patch to MiniShop. It does not automatically modify the MiniShop source code
         or any Git branches.

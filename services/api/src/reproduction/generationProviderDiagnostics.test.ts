@@ -10,7 +10,7 @@ vi.mock("../llm/client", () => ({ callLLMWithDiagnostics: mocks.call }));
 import { generateReproductionCandidate, REPRODUCTION_MAX_OUTPUT_TOKENS } from "./generationProvider";
 
 const context = {
-  promptVersion: "reproduction-v1" as const,
+  promptVersion: "reproduction-v2" as const,
   report: { title: "Cart", description: "Cart issue" },
   discovery: { schemaVersion: "1.0" as const, sourceFingerprint: "source", inventoryDigest: "inventory", routes: ["/"], controls: [], headings: [], fixtures: { products: [] }, sourceFiles: [], capturedAt: "2026-10-13T00:00:00.000Z" },
   attempt: 1,
@@ -28,6 +28,6 @@ describe("reproduction provider response boundary", () => {
 
   it("keeps HTTP provider failures out of candidate-invalid classification", async () => {
     mocks.call.mockResolvedValue({ content: "", responseShape: "http_error:429" });
-    await expect(generateReproductionCandidate(context)).rejects.toThrow("provider request failed (http_error:429)");
+    await expect(generateReproductionCandidate(context)).rejects.toThrow("Provider returned HTTP 429 (http_error:429)");
   });
 });

@@ -4,18 +4,9 @@ import { EvidencePanel } from "./EvidencePanel";
 
 interface BeforeAfterComparisonProps {
   evidence: Evidence[];
-  /**
-   * Optional verification data to derive pass/fail labels from actual run results
-   * rather than hard-coding before=FAILED / after=PASSED.
-   */
   verification?: Verification | null;
 }
 
-/**
- * A failed baseline assertion means the bug was successfully reproduced.
- * We label it clearly: "Bug reproduced — baseline test failed."
- * We never assume after=PASSED; we derive the label from the actual afterRun.
- */
 export function BeforeAfterComparison({ evidence, verification }: BeforeAfterComparisonProps) {
   const beforeRun = verification?.beforeRun ?? null;
   const afterRun = verification?.afterRun ?? null;
@@ -25,53 +16,67 @@ export function BeforeAfterComparison({ evidence, verification }: BeforeAfterCom
 
   // Derive before-panel label from actual run data
   let beforeLabel: React.ReactNode;
-  let beforeBorder = "#e5e7eb";
+  let beforeBorder = "#e2e8f0";
+
   if (beforeRun != null) {
     if (beforeRun.outcome === "INFRASTRUCTURE_ERROR") {
-      beforeLabel = <span style={{ color: "#c2410c" }}>Infrastructure error — no reproduced bug</span>;
+      beforeLabel = (
+        <span style={{ color: "#c2410c" }}>
+          Infrastructure error — no reproduced bug
+        </span>
+      );
       beforeBorder = "#fed7aa";
     } else if (!beforeRun.outcome) {
-      beforeLabel = <span style={{ color: "#6b7280" }}>Legacy run — proof unavailable</span>;
+      beforeLabel = (
+        <span style={{ color: "#64748b" }}>Legacy run — proof unavailable</span>
+      );
     } else if (beforeRun.outcome === "ASSERTION_FAILED") {
       // Test failed = bug was reproduced successfully
       beforeLabel = (
         <>
-          <span style={{ color: "#b91c1c" }}>❌ FAILED</span>
-          <span style={{ color: "#6b7280", fontWeight: 400, fontSize: 12 }}> — Bug reproduced</span>
+          <span style={{ color: "#b91c1c", fontWeight: 700 }}>❌ FAILED</span>
+          <span style={{ color: "#64748b", fontWeight: 400, fontSize: 12 }}>
+            {" "}— Bug reproduced
+          </span>
         </>
       );
       beforeBorder = "#fecaca";
     } else {
-      beforeLabel = <span style={{ color: "#15803d" }}>✅ PASSED</span>;
+      beforeLabel = <span style={{ color: "#15803d", fontWeight: 700 }}>✅ PASSED</span>;
       beforeBorder = "#bbf7d0";
     }
   } else {
-    beforeLabel = <span style={{ color: "#9ca3af" }}>Before Patch</span>;
+    beforeLabel = <span style={{ color: "#64748b" }}>Before Patch</span>;
   }
 
   // Derive after-panel label from actual run data
   let afterLabel: React.ReactNode;
-  let afterBorder = "#e5e7eb";
+  let afterBorder = "#e2e8f0";
+
   if (afterRun != null) {
     if (afterRun.passed) {
       afterLabel = (
         <>
-          <span style={{ color: "#15803d" }}>✅ PASSED</span>
-          <span style={{ color: "#6b7280", fontWeight: 400, fontSize: 12 }}> — {verification?.status === "VERIFIED" ? "Bug fixed" : "Pass recorded; verification incomplete"}</span>
+          <span style={{ color: "#15803d", fontWeight: 700 }}>✅ PASSED</span>
+          <span style={{ color: "#64748b", fontWeight: 400, fontSize: 12 }}>
+            {" "}— {verification?.status === "VERIFIED" ? "Bug fixed" : "Pass recorded; verification incomplete"}
+          </span>
         </>
       );
       afterBorder = "#bbf7d0";
     } else {
       afterLabel = (
         <>
-          <span style={{ color: "#c2410c" }}>⚠️ FAILED</span>
-          <span style={{ color: "#6b7280", fontWeight: 400, fontSize: 12 }}> — {afterRun.outcome === "INFRASTRUCTURE_ERROR" ? "Infrastructure error; verification blocked" : "Verification failed"}</span>
+          <span style={{ color: "#c2410c", fontWeight: 700 }}>⚠️ FAILED</span>
+          <span style={{ color: "#64748b", fontWeight: 400, fontSize: 12 }}>
+            {" "}— {afterRun.outcome === "INFRASTRUCTURE_ERROR" ? "Infrastructure error; verification blocked" : "Verification failed"}
+          </span>
         </>
       );
       afterBorder = "#fed7aa";
     }
   } else {
-    afterLabel = <span style={{ color: "#9ca3af" }}>After Patch</span>;
+    afterLabel = <span style={{ color: "#64748b" }}>After Patch</span>;
   }
 
   return (
@@ -94,27 +99,29 @@ export function BeforeAfterComparison({ evidence, verification }: BeforeAfterCom
         className="comparison-card"
         style={{
           border: `1px solid ${beforeBorder}`,
-          borderRadius: 8,
-          padding: 16,
-          background: "#fff",
+          borderRadius: 10,
+          padding: 18,
+          background: "#ffffff",
+          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.05)",
         }}
       >
         <h4
           style={{
             fontSize: 13,
             fontWeight: 700,
-            marginBottom: 12,
+            marginBottom: 14,
             display: "flex",
             alignItems: "center",
-            gap: 6,
+            gap: 8,
+            color: "#0f172a",
           }}
         >
-          Before Patch — {beforeLabel}
+          <span>Before Patch —</span> {beforeLabel}
         </h4>
         {hasBeforeEvidence ? (
           <EvidencePanel evidence={evidence} phase="before" run={beforeRun} />
         ) : (
-          <p style={{ color: "#9ca3af", fontSize: 13 }}>Evidence unavailable.</p>
+          <p style={{ color: "#94a3b8", fontSize: 13 }}>Evidence unavailable.</p>
         )}
       </div>
 
@@ -123,27 +130,29 @@ export function BeforeAfterComparison({ evidence, verification }: BeforeAfterCom
         className="comparison-card"
         style={{
           border: `1px solid ${afterBorder}`,
-          borderRadius: 8,
-          padding: 16,
-          background: "#fff",
+          borderRadius: 10,
+          padding: 18,
+          background: "#ffffff",
+          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.05)",
         }}
       >
         <h4
           style={{
             fontSize: 13,
             fontWeight: 700,
-            marginBottom: 12,
+            marginBottom: 14,
             display: "flex",
             alignItems: "center",
-            gap: 6,
+            gap: 8,
+            color: "#0f172a",
           }}
         >
-          After Patch — {afterLabel}
+          <span>After Patch —</span> {afterLabel}
         </h4>
         {hasAfterEvidence ? (
           <EvidencePanel evidence={evidence} phase="after" run={afterRun} />
         ) : (
-          <p style={{ color: "#9ca3af", fontSize: 13 }}>Not run yet.</p>
+          <p style={{ color: "#94a3b8", fontSize: 13 }}>Not run yet.</p>
         )}
       </div>
     </div>

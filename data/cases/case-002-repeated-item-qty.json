@@ -2,9 +2,9 @@
   "id": "case-002-repeated-item-qty",
   "title": "Adding an existing item does not increment its quantity",
   "description": "Adding the same product multiple times leaves the quantity at 1 instead of incrementing it.",
-  "status": "READY_TO_REPRODUCE",
+  "status": "REPRODUCTION_FAILED",
   "createdAt": "2026-10-09T08:30:07.670Z",
-  "updatedAt": "2026-10-09T08:30:07.670Z",
+  "updatedAt": "2026-10-15T14:30:25.344Z",
   "reproduction": {
     "preconditions": [],
     "steps": [
@@ -13,10 +13,90 @@
     "expected": "All assertions pass",
     "actual": "Defect observed",
     "testFile": "tests/playwright/cases/case-002-repeated-item-qty.spec.ts",
-    "lastRun": null
+    "lastRun": {
+      "outcome": "PASSED",
+      "testFingerprint": "b20d81dfc17b21f5e565a3c0af1d68ec20f84965d5016ad1a02c20b034e7c2f6",
+      "testIds": [
+        "case-002-repeated-item-qty.spec.ts:adding an item twice should increment its quantity to 2:chromium"
+      ],
+      "runId": "1216090f-03de-4468-a91e-e0cf0f1a6e09",
+      "reportHash": "294dedb5967ddaa0b5495b14b4809409f4754b5a7cca600756013ab504f31e84",
+      "runAt": "2026-10-15T14:30:25.343Z",
+      "passed": true,
+      "expected": "All assertions pass",
+      "actual": "All selected tests passed",
+      "durationMs": 3886,
+      "evidenceIds": [
+        "ev-case-002-repeated-item-qty-1216090f-03de-4468-a91e-e0cf0f1a6e09-before-screenshot",
+        "ev-case-002-repeated-item-qty-1216090f-03de-4468-a91e-e0cf0f1a6e09-before-trace",
+        "ev-case-002-repeated-item-qty-1216090f-03de-4468-a91e-e0cf0f1a6e09-before-result"
+      ]
+    }
   },
   "patch": null,
-  "verification": null,
-  "evidence": [],
-  "rootCauseExplanation": null
+  "verification": {
+    "status": "PENDING",
+    "beforeRun": {
+      "outcome": "PASSED",
+      "testFingerprint": "b20d81dfc17b21f5e565a3c0af1d68ec20f84965d5016ad1a02c20b034e7c2f6",
+      "testIds": [
+        "case-002-repeated-item-qty.spec.ts:adding an item twice should increment its quantity to 2:chromium"
+      ],
+      "runId": "1216090f-03de-4468-a91e-e0cf0f1a6e09",
+      "reportHash": "294dedb5967ddaa0b5495b14b4809409f4754b5a7cca600756013ab504f31e84",
+      "runAt": "2026-10-15T14:30:25.343Z",
+      "passed": true,
+      "expected": "All assertions pass",
+      "actual": "All selected tests passed",
+      "durationMs": 3886,
+      "evidenceIds": [
+        "ev-case-002-repeated-item-qty-1216090f-03de-4468-a91e-e0cf0f1a6e09-before-screenshot",
+        "ev-case-002-repeated-item-qty-1216090f-03de-4468-a91e-e0cf0f1a6e09-before-trace",
+        "ev-case-002-repeated-item-qty-1216090f-03de-4468-a91e-e0cf0f1a6e09-before-result"
+      ]
+    },
+    "afterRun": null,
+    "comparison": null
+  },
+  "evidence": [
+    {
+      "id": "ev-case-002-repeated-item-qty-1216090f-03de-4468-a91e-e0cf0f1a6e09-before-screenshot",
+      "type": "screenshot",
+      "phase": "before",
+      "path": "artifacts/case-002-repeated-item-qty/before/1216090f-03de-4468-a91e-e0cf0f1a6e09/case-002-repeated-item-qty-a147c-increment-its-quantity-to-2-chromium/test-finished-1.png",
+      "createdAt": "2026-10-15T14:30:25.343Z",
+      "description": "Screenshot captured before patch"
+    },
+    {
+      "id": "ev-case-002-repeated-item-qty-1216090f-03de-4468-a91e-e0cf0f1a6e09-before-trace",
+      "type": "trace",
+      "phase": "before",
+      "path": "artifacts/case-002-repeated-item-qty/before/1216090f-03de-4468-a91e-e0cf0f1a6e09/case-002-repeated-item-qty-a147c-increment-its-quantity-to-2-chromium/trace.zip",
+      "createdAt": "2026-10-15T14:30:25.343Z",
+      "description": "Playwright trace before patch"
+    },
+    {
+      "id": "ev-case-002-repeated-item-qty-1216090f-03de-4468-a91e-e0cf0f1a6e09-before-result",
+      "type": "result-json",
+      "phase": "before",
+      "path": "artifacts/case-002-repeated-item-qty/before/1216090f-03de-4468-a91e-e0cf0f1a6e09/result.json",
+      "createdAt": "2026-10-15T14:30:25.343Z",
+      "description": "Raw Playwright JSON result before patch"
+    }
+  ],
+  "rootCauseExplanation": null,
+  "report": {
+    "schemaVersion": "1.0",
+    "steps": [
+      "Run reproduction test"
+    ],
+    "expected": "All assertions pass",
+    "actual": "Defect observed",
+    "startPath": "",
+    "context": ""
+  },
+  "reportCompleteness": {
+    "complete": true,
+    "missingFields": []
+  }
 }

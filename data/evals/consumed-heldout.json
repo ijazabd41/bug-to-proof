@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "1.0",
+  "consumed": [
+    {
+      "datasetHash": "088b6b5bab0fc9b22322d551bfa2736e4015d81db6cf6b942d079b384c1b72d5",
+      "split": "held-out",
+      "evidence": "artifacts/arbitrary-reproduction/prospective-evaluation/v2-heldout-groq-2026-10-20/aggregate.json",
+      "completedAt": "2026-10-20T13:54:04.459Z"
+    },
+    {
+      "datasetHash": "610d9ed31d4132761d9e2cdc693ecc500d3b5f4e1c0ca9491b4c02f7227d7fec",
+      "split": "held-out",
+      "evidence": "artifacts/arbitrary-reproduction/prospective-evaluation/v3-heldout-groq-2026-10-20/aggregate.json",
+      "completedAt": "2026-10-20T18:20:51.425Z"
+    },
+    {
+      "datasetHash": "688f1a789ff7b3045c7fdb9b91a1ec8ded85a85098b069afb5b5319464d0a0e9",
+      "split": "held-out",
+      "evidence": "artifacts/arbitrary-reproduction/prospective-evaluation/v5-heldout-groq-2026-10-21/aggregate.json",
+      "completedAt": "2026-10-21T04:43:16.108Z"
+    }
+  ]
+}

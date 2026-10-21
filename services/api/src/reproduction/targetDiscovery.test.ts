@@ -28,6 +28,12 @@ describe("bounded target discovery", () => {
       expect.objectContaining({ role: "button", name: "Checkout" }),
       expect.objectContaining({ role: "textbox", name: "Promo code" }),
     ]));
+    expect(result.targets).toEqual(expect.arrayContaining([
+      expect.objectContaining({ testId: "promo-status" }),
+      expect.objectContaining({ testId: "cart-item-name-1" }),
+      expect.objectContaining({ testId: "product-name-4" }),
+      expect.objectContaining({ testId: "product-price-4" }),
+    ]));
     expect(result.sourceFingerprint).toMatch(/^[a-f0-9]{64}$/);
     expect(result.inventoryDigest).toMatch(/^[a-f0-9]{64}$/);
   });

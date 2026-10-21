@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "1.0",
+  "datasetHash": "64edf731be5c1b5dd976ce4f3ba1fae8bfd5503e8c37e040c5d74b8b7f63af93",
+  "splitOrder": ["dev", "held-out"],
+  "provider": "openai",
+  "endpoint": "https://api.groq.com/openai/v1",
+  "model": "openai/gpt-oss-20b",
+  "promptVersion": "reproduction-v2",
+  "compilerVersion": "1.4.0",
+  "providerTimeoutMs": 60000,
+  "providerHttpRequestAttemptsMax": 3,
+  "candidateAttemptsMax": 3,
+  "heldOut": { "answerableBugCases": 12, "controlCases": 2 },
+  "targets": {
+    "completeOutcomes": 14,
+    "answerableValidCandidatesAtLeast": 10,
+    "answerableExecutableCandidatesAtLeast": 9,
+    "reviewedBugMatchesAtLeast": 8,
+    "controlFalsePositives": 0,
+    "unclassifiedInfrastructureErrors": 0
+  },
+  "review": "A failing assertion counts only after independent comparison with the frozen report and retained browser evidence. The same generated test is checked against fixed MiniShop when possible.",
+  "repairClaim": "No live repair success is claimed without human acceptance, identical-test post-patch passing evidence, and regressions."
+}

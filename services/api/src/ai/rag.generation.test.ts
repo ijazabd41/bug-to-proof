@@ -26,5 +26,16 @@ describe("RAG generation workflow (model responses simulated)", () => {
     expect(answer.mode).toBe("extractive");
     expect(answer.sources.length).toBeGreaterThan(0);
     expect(answer.warnings).toContain("GENERATION_UNAVAILABLE");
+    expect(answer.scope).toBe("source");
+    expect(answer.sources.every((source) => source.sourceType !== "documentation")).toBe(true);
+  });
+
+  it("retrieves project documentation only when explicitly requested", async () => {
+    vi.stubEnv("RAG_EMBEDDING_PROVIDER", "lexical");
+    vi.stubEnv("RAG_GENERATION_PROVIDER", "disabled");
+    const answer = await answerQuestion("Why use RAG rather than fine-tuning?", "documentation");
+    expect(answer.scope).toBe("documentation");
+    expect(answer.sources.length).toBeGreaterThan(0);
+    expect(answer.sources.every((source) => source.sourceType === "documentation")).toBe(true);
   });
 });

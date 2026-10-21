@@ -25,7 +25,7 @@ export default [
     test: {
       name: "api",
       environment: "node",
-      include: ["services/api/src/**/*.test.ts"],
+      include: ["services/api/src/**/*.test.ts", "scripts/**/*.test.ts"],
       fileParallelism: false,
     },
   },

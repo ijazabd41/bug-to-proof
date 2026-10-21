@@ -3,6 +3,7 @@ import path from "path";
 import net from "net";
 import { spawn, exec, ChildProcess } from "child_process";
 import { createHash } from "crypto";
+import { createRequire } from "module";
 import { WORKSPACE_ROOT, ARTIFACTS_DIR } from "../../utils/paths";
 import {
   registerAppProcess,
@@ -232,7 +233,8 @@ export async function startIsolatedMiniShop(
   const port = customPort ?? (await getAvailablePort());
   const url = `http://127.0.0.1:${port}`;
 
-  const viteCli = path.join(WORKSPACE_ROOT, "node_modules", "vite", "bin", "vite.js");
+  const requireFromMiniShop = createRequire(path.join(WORKSPACE_ROOT, "apps", "minishop", "package.json"));
+  const viteCli = path.join(path.dirname(requireFromMiniShop.resolve("vite/package.json")), "bin", "vite.js");
   const configPath = path.join(workspace.minishopDir, "vite.config.ts");
 
   let startupLogs = "";

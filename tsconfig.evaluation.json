@@ -1,0 +1,34 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["node"],
+    "noEmit": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
+  },
+  "files": [
+    "data/evals/prospective-v2-fixtures.ts",
+    "data/evals/prospective-v3-fixtures.ts",
+    "data/evals/prospective-v4-fixtures.ts",
+    "data/evals/prospective-v5-fixtures.ts",
+    "scripts/arbitrary-evaluation-core.ts",
+    "scripts/arbitrary-evaluation-core.test.ts",
+    "scripts/prospective-v2-fixtures.test.ts",
+    "scripts/prospective-v3-fixtures.test.ts",
+    "scripts/prospective-v4-fixtures.test.ts",
+    "scripts/prospective-v5-fixtures.test.ts",
+    "scripts/run-arbitrary-heldout-evaluation.ts",
+    "scripts/run-isolated-prospective-evaluation.ts",
+    "scripts/review-prospective-v2-candidates.ts",
+    "scripts/audit-consumed-candidate-policy.ts",
+    "scripts/score-arbitrary-heldout-evaluation.ts",
+    "scripts/verify-prospective-v2-reference.ts",
+    "scripts/verify-prospective-v3-reference.ts",
+    "scripts/verify-prospective-v4-reference.ts",
+    "scripts/verify-prospective-v5-reference.ts"
+  ]
+}

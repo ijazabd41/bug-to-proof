@@ -349,9 +349,34 @@ export async function cancelRepairRun(
 }
 
 export function getRepairRun(runId: string): RepairRunRecord | null {
-  return getRunRecord(runId);
+  const run = getRunRecord(runId);
+  return run ? withDiscoveredBaselineArtifacts(run) : null;
 }
 
 export function listRepairRuns(caseId?: string): RepairRunRecord[] {
-  return listRunRecords(caseId);
+  return listRunRecords(caseId).map(withDiscoveredBaselineArtifacts);
+}
+
+function withDiscoveredBaselineArtifacts(run: RepairRunRecord): RepairRunRecord {
+  if (run.baselineArtifacts?.screenshot || run.baselineArtifacts?.trace || run.baselineArtifacts?.resultJson) return run;
+  const baselineDir = path.join(ARTIFACTS_DIR, "runs", run.runId, "baseline");
+  if (!fs.existsSync(baselineDir)) return run;
+  const files: string[] = [];
+  const visit = (directory: string) => {
+    for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+      const target = path.join(directory, entry.name);
+      if (entry.isDirectory()) visit(target);
+      else if (entry.isFile()) files.push(target);
+    }
+  };
+  visit(baselineDir);
+  const reference = (file: string | undefined) => file
+    ? `artifacts/${path.relative(ARTIFACTS_DIR, file).replace(/\\/g, "/")}`
+    : undefined;
+  const artifacts = {
+    screenshot: reference(files.find(file => file.toLowerCase().endsWith(".png"))),
+    trace: reference(files.find(file => path.basename(file).toLowerCase() === "trace.zip")),
+    resultJson: reference(files.find(file => path.basename(file).toLowerCase() === "result.json")),
+  };
+  return artifacts.screenshot || artifacts.trace || artifacts.resultJson ? { ...run, baselineArtifacts: artifacts } : run;
 }

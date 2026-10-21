@@ -22,6 +22,9 @@ export interface ReproductionAttemptSummary {
   durationMs?: number;
   provider?: string;
   model?: string;
+  responseShape?: string;
+  requestAttempts?: number;
+  httpStatus?: number;
 }
 
 export interface AcceptedReproductionCandidateSummary {
@@ -44,6 +47,7 @@ export interface ReproductionRunRecordSummary {
   reproductionRunId: string;
   caseId: string;
   state: ReproductionRunState;
+  reportSnapshot?: { title: string; description: string; steps?: readonly string[]; expected?: string; actual?: string; startPath?: string; context?: string };
   attempts: ReproductionAttemptSummary[];
   acceptedCandidate?: AcceptedReproductionCandidateSummary;
   review?: { decision: "APPROVE" | "REJECT"; reviewedAt: string; reviewedBy: string; reviewerNotes?: string };

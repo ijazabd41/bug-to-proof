@@ -1,5 +1,27 @@
 # Dashboard design implementation
 
+## Reference palette pass — 16 October 2026
+
+The two supplied HTML references were used for color and styling only: a pale blue canvas, white surfaces, teal primary actions, cool gray dividers, and Geist/Inter typography with system fallbacks. Existing dashboard routes and real case actions remain in place. The references' illustrative people, release numbers, system-health claims, and proof guarantees were not copied into application data.
+
+The dashboard production build, all 22 dashboard unit tests, and recorded desktop/mobile UI checks passed. The latest evidence runner report, exact executed test, and screenshots are in `artifacts/ui-redesign/59ab7360-89a0-4e3c-937c-0d49f65f2939/`.
+
+## Case register redesign — 16 October 2026
+
+The overview now uses a compact top navigation and a full-width case register. The large introductory panel, repeated workflow copy, and always-visible side form were removed. “New report” opens a keyboard-accessible native dialog; its close control and Escape behavior return to the case register. The case detail retains the evidence-first layout.
+
+The dashboard build passed and all 21 dashboard unit tests passed. The evidence runner passed both browser scenarios in `artifacts/ui-redesign/8a7ed38b-aeed-4189-a39b-59d9c11fa736/`. Desktop and mobile screenshots include the case register and report dialog; checks cover search, status filtering, report validation and payload, dialog centering and Escape dismissal, detail placement, and mobile overflow. The browser test intercepts case creation, so no case is saved.
+
+The entries below document earlier iterations and their separate evidence runs.
+
+## Proofline refresh — 15 October 2026
+
+The dashboard now presents the product as **Proofline**. The case register leads the workspace, with a compact report-to-verification sequence, a report form alongside the register on desktop, and stacked content on mobile. The large illustrative hero was removed in favor of a typographic introduction. Warm neutral surfaces, charcoal navigation, and a restrained rust accent replace the previous navy and teal treatment. Repository and API package names remain unchanged.
+
+The dashboard production build passed. The project evidence runner passed both UI smoke scenarios for desktop and mobile in `artifacts/ui-redesign/fa75819f-aade-4628-9296-5cbfeadca37b/`. The report includes the exact executed spec, JSON results, traces, and four screenshots. The checks cover case search and status filtering against the saved dataset, form validation and request payload, desktop column placement, case detail visibility, and mobile overflow and stacking. Submission was intercepted, so it did not create a saved case.
+
+Existing saved case data and other uncommitted project work were preserved. The record below describes the earlier design and its earlier verification run.
+
 > **Current UI report:** This document verifies the latest dashboard redesign. It does not claim that arbitrary bug reports can already be reproduced automatically.
 
 Implemented the two approved design concepts in the local React dashboard.

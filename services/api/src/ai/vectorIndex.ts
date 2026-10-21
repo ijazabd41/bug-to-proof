@@ -6,7 +6,7 @@ import type { EmbeddingsInterface } from "@langchain/core/embeddings";
 import { Document } from "@langchain/core/documents";
 import { digest } from "../runner/integrity";
 import { WORKSPACE_ROOT } from "../utils/paths";
-import { loadCorpus, CorpusChunk } from "./corpus";
+import { loadCorpus, CorpusChunk, type CorpusScope } from "./corpus";
 import { createEmbeddings, RagConfig } from "./providers";
 
 export interface IndexResult {
@@ -26,11 +26,12 @@ export function validVectors(vectors: number[][], count: number, dimensions?: nu
 export async function loadIndex(
   config: RagConfig, embeddings: EmbeddingsInterface = createEmbeddings(config),
   directory = indexRoot,
+  scope: CorpusScope = "source",
 ): Promise<IndexResult> {
   const start = Date.now();
-  const corpus = await loadCorpus(config.chunkSize, config.chunkOverlap);
+  const corpus = await loadCorpus(config.chunkSize, config.chunkOverlap, scope);
   const fingerprint = digest(JSON.stringify({
-    version: 1, corpus: corpus.fingerprint, provider: config.embeddingProvider,
+    version: 2, scope, corpus: corpus.fingerprint, provider: config.embeddingProvider,
     model: config.embeddingModel, endpoint: digest(config.embeddingBaseUrl),
   }));
   const indexPath = path.join(directory, fingerprint + ".json");

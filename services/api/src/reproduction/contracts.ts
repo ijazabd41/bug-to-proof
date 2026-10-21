@@ -86,7 +86,9 @@ export interface ReproductionAttempt {
   model?: string;
   responseShape?: string;
   promptVersion?: string;
-  classification?: "CANDIDATE_INVALID" | "CANDIDATE_EXECUTION_ERROR" | "BASELINE_PASSED" | "ASSERTION_FAILED";
+  classification?: "PROVIDER_ERROR" | "CANDIDATE_INVALID" | "CANDIDATE_EXECUTION_ERROR" | "BASELINE_PASSED" | "ASSERTION_FAILED";
+  requestAttempts?: number;
+  httpStatus?: number;
   failureKind?: import("../runner/playwrightRunner").ExecutionFailureKind;
   diagnostics?: string;
   validationFindings?: readonly string[];

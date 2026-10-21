@@ -1,6 +1,7 @@
 import { createEmbeddings, ragConfig, tokens, RagConfig } from "./providers";
 import { loadIndex, validVectors } from "./vectorIndex";
 import { CorpusChunk } from "./corpus";
+import type { CorpusScope } from "./corpus";
 export interface SourceChunk extends CorpusChunk { score: number; rankScore: number; lexicalScore: number; }
 export interface RetrievalResult {
   sources: SourceChunk[];
@@ -23,12 +24,12 @@ export function bm25Scores(query: string, chunks: CorpusChunk[]): number[] {
   }, 0));
 }
 export async function retrieve(
-  query: string, config: RagConfig = ragConfig(), strategy: "vector" | "hybrid" = "hybrid",
+  query: string, config: RagConfig = ragConfig(), strategy: "vector" | "hybrid" = "hybrid", scope: CorpusScope = "source",
 ): Promise<RetrievalResult> {
   if (!query.trim() || query.length > 4000) throw new Error("Query must contain 1 to 4000 characters");
   const start = Date.now();
   const embeddings = createEmbeddings(config);
-  const index = await loadIndex(config, embeddings);
+  const index = await loadIndex(config, embeddings, undefined, scope);
   const telemetry = {
     provider: config.embeddingProvider, model: config.embeddingModel, strategy, indexFingerprint: index.fingerprint,
     cacheHit: index.cacheHit, corpusChunks: index.chunks.length, retrievalMs: 0, topK: config.topK,

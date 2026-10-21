@@ -8,8 +8,8 @@ import { describe, it, expect } from 'vitest';
 import React from 'react';
 
 describe('App', () => {
-  it('renders Bug-to-Proof text', () => {
+  it('renders the Proofline workspace', () => {
     render(<App />);
-    expect(screen.getByText(/Bug-to-Proof/i)).toBeInTheDocument();
+    expect(screen.getByText(/proofline/i)).toBeInTheDocument();
   });
 });

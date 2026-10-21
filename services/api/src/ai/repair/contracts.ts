@@ -148,6 +148,7 @@ export interface RepairRunRecord {
   targetPort?: number;
   targetUrl?: string;
   baselineRun?: TestRun;
+  baselineArtifacts?: { screenshot?: string; trace?: string; resultJson?: string };
   proposal?: ModelProposal;
   review?: ProposalReview;
   postPatchRun?: TestRun;

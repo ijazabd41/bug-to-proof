@@ -4,10 +4,20 @@ vi.mock("../llm/client", () => ({ callLLM: vi.fn().mockResolvedValue("") }));
 import app from "../index";
 describe("AI API", () => {
   it("returns offline RAG with sources", async () => {
-    const response = await request(app).post("/api/ai/ask").send({ question: "cart total price quantity" });
-    expect(response.status).toBe(200);
-    expect(response.body.mode).toBe("extractive");
-    expect(response.body.sources.length).toBeGreaterThan(0);
+    vi.stubEnv("RAG_GENERATION_PROVIDER", "disabled");
+    try {
+      const response = await request(app).post("/api/ai/ask").send({ question: "cart total price quantity", scope: "source" });
+      expect(response.status).toBe(200);
+      expect(response.body.mode).toBe("extractive");
+      expect(response.body.scope).toBe("source");
+      expect(response.body.sources.length).toBeGreaterThan(0);
+      expect(response.body.sources.every((source: { sourceType: string }) => source.sourceType !== "documentation")).toBe(true);
+    } finally { vi.unstubAllEnvs(); }
+  });
+  it("rejects unknown retrieval scopes", async () => {
+    const response = await request(app).post("/api/ai/ask").send({ question: "cart total", scope: "everything" });
+    expect(response.status).toBe(400);
+    expect(response.body.error).toMatch(/scope/i);
   });
   it("builds and reuses the local index through the API", async () => {
     const first = await request(app).post("/api/ai/index").send({});

@@ -7,10 +7,11 @@ import { ReproductionService } from "./reproductionService";
 
 const dirs: string[] = [];
 const discovery = { schemaVersion: "1.0" as const, sourceFingerprint: "source", inventoryDigest: "inventory", routes: ["/", "/cart"],
-  controls: [{ role: "button" as const, name: "Add Widget to cart", sourcePath: "src/App.tsx" }], headings: [],
+  controls: [{ role: "button" as const, name: "Add Widget to cart", sourcePath: "src/App.tsx" },
+    { role: "link" as const, name: "Cart", sourcePath: "src/App.tsx" }], headings: [],
   fixtures: { products: [{ id: 1, name: "Widget", price: 10 }] }, sourceFiles: ["src/App.tsx"], capturedAt: "2026-10-12T00:00:00.000Z" };
 const definition = { schemaVersion: "1.0", title: "Cart report", startPath: "/", preconditions: [],
-  steps: [{ type: "click", role: "button", name: "Add Widget to cart" }, { type: "goto", path: "/cart" }],
+  steps: [{ type: "click", role: "button", name: "Add Widget to cart" }, { type: "click", role: "link", name: "Cart" }],
   assertion: { type: "urlPathEquals", expected: "/cart" }, rationale: "Maps the report", reportMapping: [{ reportFact: "wrong route", definitionPath: "assertion.expected" }] };
 const reports = ["cart total", "cart removal", "checkout navigation"].map(title => ({ title, description: `${title} fails`, steps: ["open app"], expected: "expected", actual: "actual", startPath: "/" }));
 
@@ -26,7 +27,7 @@ describe("bounded reproduction service", () => {
     for (const [index, report] of reports.entries()) {
       const result = await service.run({ caseId: `case-${index}`, report, targetUrl: "http://localhost:5174" });
       expect(result.state).toBe("AWAITING_TEST_REVIEW"); expect(result.attempts).toHaveLength(1);
-      expect(result.attempts[0]).toMatchObject({ classification: "ASSERTION_FAILED", promptVersion: "reproduction-v1" });
+      expect(result.attempts[0]).toMatchObject({ classification: "ASSERTION_FAILED", promptVersion: "reproduction-v2" });
       expect(JSON.stringify(result)).not.toContain(root.replace(/\\/g, "/"));
     }
     expect(generate).toHaveBeenCalledTimes(3); expect(JSON.stringify(generate.mock.calls)).not.toMatch(/reference|patch|tests\/playwright/i);

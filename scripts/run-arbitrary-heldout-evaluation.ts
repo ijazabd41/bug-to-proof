@@ -1,57 +1,101 @@
-import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
+import { createHash } from "node:crypto";
+import { aggregateCases, assertHeldoutFresh, canonical, datasetHash, scoreCase, validateDataset, type EvaluationDataset, type ScoredCase } from "./arbitrary-evaluation-core";
 
-type EvalCase = { id: string; split: "dev" | "held-out"; category: string; report: Record<string, unknown> };
-type Dataset = { schemaVersion: string; frozenAt: string; status: string; policy: Record<string, unknown>; cases: EvalCase[]; datasetHash: string };
 const root = path.resolve(import.meta.dirname, "..");
-const datasetPath = path.join(root, "data", "evals", "arbitrary-reproduction-release.json");
+const evalRoot = path.join(root, "artifacts", "arbitrary-reproduction", "prospective-evaluation");
+const allowedDatasetRoot = path.join(root, "data", "evals");
 const api = process.env.BTP_API_URL ?? "http://127.0.0.1:3001/api";
-const args = new Set(process.argv.slice(2));
-if (!args.has("--confirm-live")) throw new Error("Live provider evaluation requires --confirm-live");
-const split = args.has("--all") ? undefined : "held-out";
-const canonical = (value: unknown): string => value === null || typeof value !== "object" ? JSON.stringify(value) : Array.isArray(value)
-  ? `[${value.map(canonical).join(",")}]`
-  : `{${Object.entries(value as Record<string, unknown>).sort(([a], [b]) => a.localeCompare(b)).map(([k, v]) => `${JSON.stringify(k)}:${canonical(v)}`).join(",")}}`;
-const hashDataset = (data: Dataset) => createHash("sha256").update(canonical({ schemaVersion: data.schemaVersion, frozenAt: data.frozenAt, policy: data.policy, cases: data.cases })).digest("hex");
-const dataset = JSON.parse(fs.readFileSync(datasetPath, "utf8").replace(/^\uFEFF/, "")) as Dataset;
-const observedHash = hashDataset(dataset);
-if (observedHash !== dataset.datasetHash) throw new Error(`Frozen dataset hash mismatch: expected ${dataset.datasetHash}, got ${observedHash}`);
-if (dataset.status !== "FROZEN_FOR_FUTURE_EVALUATION" || dataset.policy.promptTuningAfterFreezeAllowed !== false) throw new Error("Dataset is not frozen");
+const args = process.argv.slice(2);
+const value = (key: string) => { const i = args.indexOf(key); return i < 0 ? undefined : args[i + 1]; };
+if (!args.includes("--confirm-live")) throw new Error("Live provider evaluation requires --confirm-live");
+const datasetArg = value("--dataset");
+const outputArg = value("--output");
+if (!datasetArg || !outputArg) throw new Error("Usage: npm run arbitrary:evaluate:live -- --confirm-live --dataset data/evals/<new-frozen>.json --output artifacts/arbitrary-reproduction/prospective-evaluation/<run-id> [--resume]");
+const datasetPath = path.resolve(root, datasetArg);
+const outputRoot = path.resolve(root, outputArg);
+if (!datasetPath.startsWith(`${allowedDatasetRoot}${path.sep}`) || !datasetPath.endsWith(".json")) throw new Error("Dataset must be a JSON file under data/evals");
+if (!outputRoot.startsWith(`${evalRoot}${path.sep}`)) throw new Error("Output must be under artifacts/arbitrary-reproduction/prospective-evaluation");
+if (path.basename(datasetPath) === "arbitrary-reproduction-release.json") throw new Error("The AR7 held-out cohort has been consumed; use a newly frozen dataset");
+const dataset = JSON.parse(fs.readFileSync(datasetPath, "utf8").replace(/^\uFEFF/, "")) as EvaluationDataset;
+validateDataset(dataset);
+assertHeldoutFresh(dataset.datasetHash, args.includes("--dev") ? "dev" : "held-out", JSON.parse(fs.readFileSync(path.join(root, "data", "evals", "consumed-heldout.json"), "utf8")));
+const selected = dataset.cases.filter(item => item.split === (args.includes("--dev") ? "dev" : "held-out"));
+if (!selected.length) throw new Error("Selected split is empty");
 
-const request = async (url: string, init?: RequestInit) => {
-  const response = await fetch(url, init); const text = await response.text();
-  if (!response.ok) throw new Error(`${response.status} ${response.statusText}: ${text.slice(0, 500)}`);
-  return JSON.parse(text);
-};
+const readJson = (file: string) => JSON.parse(fs.readFileSync(file, "utf8"));
+const writeNew = (file: string, value: unknown) => fs.writeFileSync(file, JSON.stringify(value, null, 2) + "\n", { flag: "wx" });
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-async function main() {
-  const selected = dataset.cases.filter(item => !split || item.split === split);
-  const terminal = new Set(["AWAITING_TEST_REVIEW", "CANDIDATE_INVALID", "CANDIDATE_EXECUTION_ERROR", "BASELINE_PASSED", "UNSUPPORTED", "CANCELLED", "BLOCKED", "REPRODUCED"]);
-  const outputRoot = path.join(root, "artifacts", "arbitrary-reproduction", "ar7-evaluation", `live-${split ?? "all"}-${new Date().toISOString().replace(/[:.]/g, "-")}`);
-  fs.mkdirSync(outputRoot, { recursive: true });
-  const results: any[] = [];
-  for (const item of selected) {
-  const created = await request(`${api}/cases`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(item.report) });
-  const started = await request(`${api}/cases/${created.id}/reproduction-runs`, { method: "POST", headers: { "content-type": "application/json" }, body: "{}" });
-  const deadline = Date.now() + 10 * 60_000; let run: any;
-  do { await sleep(2_000); run = await request(`${api}/reproduction-runs/${started.reproductionRunId}`); if (Date.now() > deadline) throw new Error(`Timed out: ${item.id}`); }
-  while (!terminal.has(run.state));
-  const itemDir = path.join(outputRoot, item.id); fs.mkdirSync(itemDir, { recursive: true });
-  fs.writeFileSync(path.join(itemDir, "case.json"), JSON.stringify(created, null, 2) + "\n");
-  fs.writeFileSync(path.join(itemDir, "run.json"), JSON.stringify(run, null, 2) + "\n");
-  const result = { evaluationId: item.id, split: item.split, category: item.category, caseId: created.id, reproductionRunId: run.reproductionRunId, state: run.state,
-    stopReason: run.stopReason, attempts: run.attempts.length, classifications: run.attempts.map((x: any) => x.classification), responseShapes: run.attempts.map((x: any) => x.responseShape),
-    validCandidate: run.attempts.some((x: any) => !!x.definitionHash), executableCandidate: run.attempts.some((x: any) => ["ASSERTION_FAILED", "BASELINE_PASSED"].includes(x.classification)),
-    relevantReproduction: run.state === "AWAITING_TEST_REVIEW" || run.state === "REPRODUCED", infrastructureError: run.state === "BLOCKED" && (run.stopReason === "Generation provider failed" || run.attempts.some((x: any) => x.failureKind && x.failureKind !== "SELECTOR_OR_ACTION_ERROR")),
-    unsupported: run.state === "UNSUPPORTED", durationMs: run.attempts.reduce((sum: number, x: any) => sum + (x.durationMs ?? 0), 0), usage: run.attempts.map((x: any) => x.usage ?? null) };
-    results.push(result); fs.writeFileSync(path.join(itemDir, "summary.json"), JSON.stringify(result, null, 2) + "\n"); console.log(`${item.id}: ${run.state}`);
+async function request(url: string, init?: RequestInit) {
+  const response = await fetch(url, { ...init, signal: AbortSignal.timeout(30_000) });
+  if (!response.ok) throw new Error(`API returned HTTP ${response.status} for ${new URL(url).pathname}`);
+  return response.json();
+}
+async function preflight() {
+  const status = await request(`${api}/ai/status`);
+  if (status.generationProvider === "disabled" || !status.generationModel) throw new Error("Generation provider/model is not configured on the API");
+  const readiness = await request(`${api}/reproduction-preflight`);
+  if (!readiness.ready) throw new Error(`Reproduction preflight failed: ${readiness.provider?.code ?? readiness.code ?? "UNKNOWN"}; targetReachable=${!!readiness.targetReachable}; browserAvailable=${!!readiness.browserAvailable}`);
+  return { generationProvider: status.generationProvider, generationModel: status.generationModel,
+    corpusFingerprint: status.corpusFingerprint, sourceFingerprint: readiness.sourceFingerprint, providerPreflight: readiness.provider.code };
+}
+const terminal = new Set(["AWAITING_TEST_REVIEW", "CANDIDATE_INVALID", "CANDIDATE_EXECUTION_ERROR", "BASELINE_PASSED", "UNSUPPORTED", "CANCELLED", "BLOCKED", "REPRODUCED"]);
+async function executeCase(item: (typeof selected)[number]): Promise<{ run?: any; caseRecord?: any; error?: string }> {
+  let caseRecord: any;
+  let run: any;
+  try {
+    caseRecord = await request(`${api}/cases`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(item.report) });
+    const started = await request(`${api}/cases/${caseRecord.id}/reproduction-runs`, { method: "POST", headers: { "content-type": "application/json" }, body: "{}" });
+    const deadline = Date.now() + 10 * 60_000;
+    while (Date.now() < deadline) {
+      await sleep(2_000);
+      run = await request(`${api}/reproduction-runs/${started.reproductionRunId}`);
+      if (terminal.has(run.state)) return { run, caseRecord };
+    }
+    return { run, caseRecord, error: "Poll deadline exceeded" };
+  } catch (error) {
+    return { run, caseRecord, error: error instanceof Error ? error.message : "Unknown evaluation error" };
   }
-  const count = (fn: (x: any) => boolean) => results.filter(fn).length;
-  const report = { schemaVersion: "1.0", generatedAt: new Date().toISOString(), datasetHash: observedHash, frozenAt: dataset.frozenAt, split: split ?? "all", denominator: results.length,
-  metrics: { validCandidates: count(x => x.validCandidate), executableCandidates: count(x => x.executableCandidate), relevantReproductions: count(x => x.relevantReproduction), infrastructureErrors: count(x => x.infrastructureError), unsupported: count(x => x.unsupported) }, results };
-  fs.writeFileSync(path.join(outputRoot, "aggregate.json"), JSON.stringify(report, null, 2) + "\n");
-  console.log(JSON.stringify({ outputRoot, ...report }, null, 2));
+}
+
+async function main() {
+  const status = await preflight();
+  const configFingerprint = createHash("sha256").update(canonical({ api, status, split: args.includes("--dev") ? "dev" : "held-out", datasetHash: datasetHash(dataset) })).digest("hex");
+  const manifest = { schemaVersion: "2.0", createdAt: new Date().toISOString(), datasetPath: path.relative(root, datasetPath).replace(/\\/g, "/"),
+    datasetHash: dataset.datasetHash, frozenAt: dataset.frozenAt, split: args.includes("--dev") ? "dev" : "held-out", caseIds: selected.map(item => item.id),
+    api, provider: status.generationProvider, model: status.generationModel, corpusFingerprint: status.corpusFingerprint,
+    sourceFingerprint: status.sourceFingerprint, providerPreflight: status.providerPreflight, configFingerprint };
+  const manifestPath = path.join(outputRoot, "manifest.json");
+  if (fs.existsSync(outputRoot)) {
+    if (!args.includes("--resume")) throw new Error("Output already exists; choose a new run ID or pass --resume");
+    const prior = readJson(manifestPath);
+    if (prior.datasetHash !== manifest.datasetHash || prior.configFingerprint !== configFingerprint || canonical(prior.caseIds) !== canonical(manifest.caseIds)) throw new Error("Resume refused: dataset or API configuration changed");
+  } else {
+    fs.mkdirSync(outputRoot, { recursive: true });
+    writeNew(manifestPath, manifest);
+  }
+  const results: ScoredCase[] = [];
+  for (const item of selected) {
+    const itemDir = path.join(outputRoot, item.id);
+    const resultPath = path.join(itemDir, "result.json");
+    if (fs.existsSync(resultPath)) { results.push(readJson(resultPath)); continue; }
+    if (fs.existsSync(itemDir)) throw new Error(`Incomplete case directory ${item.id}; inspect it before resuming to avoid duplicate provider calls`);
+    fs.mkdirSync(itemDir);
+    const { run, caseRecord, error } = await executeCase(item);
+    if (caseRecord) writeNew(path.join(itemDir, "case.json"), caseRecord);
+    if (run) writeNew(path.join(itemDir, "run.json"), run);
+    const result = scoreCase(item, run, undefined, error);
+    writeNew(resultPath, result);
+    results.push(result);
+    console.log(`${item.id}: ${result.state}${error ? ` (${error})` : ""}`);
+  }
+  const report = { schemaVersion: "2.0", generatedAt: new Date().toISOString(), manifestHash: createHash("sha256").update(fs.readFileSync(manifestPath)).digest("hex"),
+    datasetHash: dataset.datasetHash, ...aggregateCases(results), results };
+  const aggregatePath = path.join(outputRoot, "aggregate.json");
+  if (fs.existsSync(aggregatePath)) throw new Error("Aggregate already exists; immutable run is complete");
+  writeNew(aggregatePath, report);
+  console.log(JSON.stringify({ outputRoot, denominator: report.denominator, metrics: report.metrics }, null, 2));
 }
 
 main().catch(error => { console.error(error instanceof Error ? error.message : String(error)); process.exitCode = 1; });

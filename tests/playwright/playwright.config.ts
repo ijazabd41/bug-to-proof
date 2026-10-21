@@ -9,6 +9,13 @@ export default defineConfig({
   timeout: parseInt(process.env.PLAYWRIGHT_TIMEOUT ?? "30000", 10),
   retries: 0,
   workers: 1,
+  webServer: process.env.MINISHOP_BASE_URL ? undefined : {
+    command: "npm run dev:minishop",
+    cwd: path.resolve(__dirname, "../.."),
+    url: "http://localhost:5174/",
+    reuseExistingServer: false,
+    timeout: 30_000,
+  },
 
   use: {
     baseURL: process.env.MINISHOP_BASE_URL ?? "http://localhost:5174",

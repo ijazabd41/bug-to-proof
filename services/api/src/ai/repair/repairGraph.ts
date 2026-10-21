@@ -44,6 +44,7 @@ import {
 } from "./verification";
 import { getRunResources } from "./runtimeRegistry";
 import { FileCheckpointSaver } from "./fileCheckpointer";
+import { classifyProposalFailure } from "./proposalFailure";
 
 export const RepairGraphAnnotation = Annotation.Root({
   runId: Annotation<string>(),
@@ -69,6 +70,7 @@ export const RepairGraphAnnotation = Annotation.Root({
 
   // Evidence and check artifacts
   baselineRun: Annotation<TestRun | null>(),
+  baselineArtifacts: Annotation<{ screenshot?: string; trace?: string; resultJson?: string } | null>(),
   proposal: Annotation<ModelProposal | null>(),
   review: Annotation<ProposalReview | null>(),
   postPatchRun: Annotation<TestRun | null>(),
@@ -144,6 +146,7 @@ export function buildRepairGraph(dependencies: Partial<RepairGraphDependencies> 
       attempts: state.attempts ?? existing.attempts,
       diagnostics: state.diagnostics ?? existing.diagnostics,
       baselineRun: state.baselineRun !== undefined ? (state.baselineRun ?? undefined) : existing.baselineRun,
+      baselineArtifacts: state.baselineArtifacts !== undefined ? (state.baselineArtifacts ?? undefined) : existing.baselineArtifacts,
       proposal: state.proposal !== undefined ? (state.proposal ?? undefined) : existing.proposal,
       review: state.review !== undefined ? (state.review ?? undefined) : existing.review,
       postPatchRun: state.postPatchRun !== undefined ? (state.postPatchRun ?? undefined) : existing.postPatchRun,
@@ -273,18 +276,20 @@ export function buildRepairGraph(dependencies: Partial<RepairGraphDependencies> 
         durationMs: baselineResult.durationMs,
         evidenceIds: [],
       };
+      const baselineArtifacts = { ...baselineResult.artifactPaths };
 
       if (baselineResult.outcome !== "ASSERTION_FAILED") {
         const stopReason =
           baselineResult.outcome === "PASSED"
             ? "The reported failure was not reproduced on original source."
             : `Baseline reproduction failed with infrastructure error: ${baselineResult.actual}`;
-        syncDurableRecord({ baselineRun, state: "BLOCKED", stopReason }, state.runId, {
+        syncDurableRecord({ baselineRun, baselineArtifacts, state: "BLOCKED", stopReason }, state.runId, {
           stage: "baseline",
           message: `Baseline verification stopped: ${stopReason}`,
         });
         return {
           baselineRun,
+          baselineArtifacts,
           state: "BLOCKED" as const,
           stopReason,
           tBaselineMs,
@@ -305,12 +310,13 @@ export function buildRepairGraph(dependencies: Partial<RepairGraphDependencies> 
 
       if (!baseGate.verified) {
         const stopReason = `Baseline evidence gates violated: ${baseGate.violations.join("; ")}`;
-        syncDurableRecord({ baselineRun, state: "BLOCKED", stopReason }, state.runId, {
+        syncDurableRecord({ baselineRun, baselineArtifacts, state: "BLOCKED", stopReason }, state.runId, {
           stage: "baseline",
           message: `Baseline verification stopped: ${stopReason}`,
         });
         return {
           baselineRun,
+          baselineArtifacts,
           state: "BLOCKED" as const,
           stopReason,
           tBaselineMs,
@@ -318,12 +324,13 @@ export function buildRepairGraph(dependencies: Partial<RepairGraphDependencies> 
         };
       }
 
-      syncDurableRecord({ baselineRun, state: "REPRODUCING_BASELINE" }, state.runId, {
+      syncDurableRecord({ baselineRun, baselineArtifacts, state: "REPRODUCING_BASELINE" }, state.runId, {
         stage: "baseline",
         message: `Valid baseline failure confirmed: ${baselineResult.expected} vs ${baselineResult.actual}`,
       });
       return {
         baselineRun,
+        baselineArtifacts,
         state: "REPRODUCING_BASELINE" as const,
         tBaselineMs,
         events: ["Valid baseline failure confirmed"],
@@ -362,17 +369,37 @@ export function buildRepairGraph(dependencies: Partial<RepairGraphDependencies> 
       }
 
       const tStart = Date.now();
-      const proposal = await deps.generate({
-        caseTitle: state.caseTitle,
-        caseDescription: state.caseDescription,
-        reproductionTestFile: state.reproductionTestFile,
-        minishopDir: state.workspace!.minishopDir,
-        attempt: state.attempt,
-        diagnostics: state.diagnostics,
-        config: state.config,
-        runId: state.runId,
-        abortSignal: activeRes?.abortController.signal,
-      });
+      let proposal: ModelProposal;
+      try {
+        proposal = await deps.generate({
+          caseTitle: state.caseTitle,
+          caseDescription: state.caseDescription,
+          reproductionTestFile: state.reproductionTestFile,
+          minishopDir: state.workspace!.minishopDir,
+          attempt: state.attempt,
+          diagnostics: state.diagnostics,
+          config: state.config,
+          runId: state.runId,
+          abortSignal: activeRes?.abortController.signal,
+        });
+      } catch (error) {
+        const latest = getRunRecord(state.runId);
+        if (latest?.state === "CANCELLED" || activeRes?.abortController.signal.aborted) {
+          return {
+            state: "CANCELLED" as const,
+            stopReason: latest?.stopReason ?? "Cancelled during patch generation.",
+            events: ["Patch generation stopped after cancellation"],
+          };
+        }
+        const failure = classifyProposalFailure(error);
+        const { stopReason, diagnostic } = failure;
+        syncDurableRecord({ state: "BLOCKED", stopReason, error: diagnostic }, state.runId, {
+          stage: "proposal_blocked",
+          message: stopReason,
+          data: { boundary: failure.boundary, attempt: state.attempt },
+        });
+        return { state: "BLOCKED" as const, stopReason, error: diagnostic, events: [stopReason] };
+      }
       const tProposalMs = Date.now() - tStart;
 
       return {
@@ -908,6 +935,7 @@ export function buildRepairGraph(dependencies: Partial<RepairGraphDependencies> 
 
   workflow.addConditionalEdges("proposePatch", (state) => {
     if (state.state === "CANCELLED") return "finalizeRun";
+    if (state.state === "BLOCKED") return "finalizeRun";
     return "validateProposal";
   });
 

@@ -3,7 +3,7 @@ import path from "path";
 import { digest } from "../ai/repair/workspace";
 import { validateApplicationPath } from "./targetDiscovery";
 
-export const COMPILER_VERSION = "1.1.0";
+export const COMPILER_VERSION = "1.4.0";
 export const REPRODUCTION_DEFINITION_LIMITS = Object.freeze({
   maxBytes: 32_000, maxSteps: 20, maxPreconditions: 10, maxMappings: 20,
   maxTitleLength: 500, maxTextLength: 2_000, maxPathLength: 500,
@@ -37,6 +37,7 @@ export type ReproductionAssertion =
   | { type: "targetTextEquals"; testId: string; expected: string }
   | { type: "targetNumberEquals"; testId: string; expected: number }
   | { type: "targetCurrencyEquals"; testId: string; expected: number; currency: string }
+  | { type: "targetCurrencySumEquals"; testId: string; terms: string[]; currency: string }
   | { type: "targetVisibilityEquals"; testId: string; visible: boolean };
 
 export interface ReproductionDefinitionV1 {
@@ -151,9 +152,22 @@ function validateAssertion(item: unknown, at: string, errors: string[]): void {
     case "urlPathEquals": exactKeys(item, ["type", "expected"], at, errors); relativePath(item.expected, `${at}.expected`, errors); break;
     case "visibilityEquals": exactKeys(item, ["type", "role", "name", "visible"], at, errors); locator(); textValue(item.name, `${at}.name`, errors); if (typeof item.visible !== "boolean") errors.push(`${at}.visible must be boolean`); break;
     case "accessibleAttributeEquals": exactKeys(item, ["type", "role", "name", "attribute", "expected"], at, errors); locator(); textValue(item.name, `${at}.name`, errors); if (typeof item.attribute !== "string" || !/^aria-[a-z-]+$/.test(item.attribute)) errors.push(`${at}.attribute must be an aria-* attribute`); textValue(item.expected, `${at}.expected`, errors); break;
-    case "targetTextEquals": exactKeys(item, ["type", "testId", "expected"], at, errors); textValue(item.testId, `${at}.testId`, errors, 200); textValue(item.expected, `${at}.expected`, errors); break;
+    case "targetTextEquals":
+      exactKeys(item, ["type", "testId", "expected"], at, errors); textValue(item.testId, `${at}.testId`, errors, 200); textValue(item.expected, `${at}.expected`, errors);
+      if (typeof item.expected === "string" && /\b(equal(?:s)?|plus|sum|subtotal|shipping|minus|difference|multiplied|divided)\b/i.test(item.expected)) errors.push(`${at}.expected appears to be relational prose; use a trusted computed assertion`);
+      break;
     case "targetNumberEquals": exactKeys(item, ["type", "testId", "expected"], at, errors); textValue(item.testId, `${at}.testId`, errors, 200); finiteNumber(item.expected, `${at}.expected`, errors); break;
     case "targetCurrencyEquals": exactKeys(item, ["type", "testId", "expected", "currency"], at, errors); textValue(item.testId, `${at}.testId`, errors, 200); finiteNumber(item.expected, `${at}.expected`, errors); if (typeof item.currency !== "string" || !/^[A-Z]{3}$/.test(item.currency)) errors.push(`${at}.currency must be an uppercase ISO-style code`); break;
+    case "targetCurrencySumEquals":
+      exactKeys(item, ["type", "testId", "terms", "currency"], at, errors); textValue(item.testId, `${at}.testId`, errors, 200);
+      if (!Array.isArray(item.terms) || item.terms.length < 2 || item.terms.length > 10) errors.push(`${at}.terms must contain 2 to 10 target testIds`);
+      else {
+        item.terms.forEach((term, index) => textValue(term, `${at}.terms.${index}`, errors, 200));
+        if (new Set(item.terms).size !== item.terms.length) errors.push(`${at}.terms must not contain duplicates`);
+        if (typeof item.testId === "string" && item.terms.includes(item.testId)) errors.push(`${at}.terms must not include the result target`);
+      }
+      if (typeof item.currency !== "string" || !/^[A-Z]{3}$/.test(item.currency)) errors.push(`${at}.currency must be an uppercase ISO-style code`);
+      break;
     case "targetVisibilityEquals": exactKeys(item, ["type", "testId", "visible"], at, errors); textValue(item.testId, `${at}.testId`, errors, 200); if (typeof item.visible !== "boolean") errors.push(`${at}.visible must be boolean`); break;
     default: errors.push(`${at}.type is unsupported`);
   }
@@ -181,7 +195,15 @@ export function compileReproductionDefinition(input: unknown, definitionId: stri
   const canonical = canonicalizeReproductionDefinition(definition);
   const definitionHash = digest(canonical);
   const testIdentity = `btp-${definitionId}-v1-${definitionHash.slice(0, 12)}`;
-  const source = emitSource(definition, testIdentity, definitionHash)
+  let source = emitSource(definition, testIdentity, definitionHash)
+    .replace(
+      `  await page.goto(${literal(definition.startPath)});\n  for (const step of definition.steps) {`,
+      `  if (!definition.preconditions.some((item) => item.type === "seedCart")) await page.goto(${literal(definition.startPath)});\n  for (const step of definition.steps) {`,
+    )
+    .replace(
+      "const locate = (page: any, role: string, name?: string) =>",
+      "const normalizeCurrencyCents = (value: string) => Math.round(normalizeNumber(value) * 100);\nconst locate = (page: any, role: string, name?: string) =>",
+    )
     .replace(
       "const locate = (page: any, role: string, name?: string) => page.getByRole(role, name === undefined ? undefined : { name, exact: true });",
       "const locate = (page: any, role: string, name?: string) => page.getByRole(role, name === undefined ? undefined : { name, exact: true });\nconst locateInProduct = (page: any, productId: number) => page.getByTestId(`add-to-cart-${productId}`);\nconst locateAction = (page: any, action: any) => action.within?.kind === 'product' ? locateInProduct(page, action.within.productId) : locate(page, action.role, action.name);",
@@ -190,7 +212,15 @@ export function compileReproductionDefinition(input: unknown, definitionId: stri
     .replace("else if (step.type === \"click\")", "else if (step.type === \"clickTarget\") await page.getByTestId(step.testId).click();\n    else if (step.type === \"fillTarget\") await page.getByTestId(step.testId).fill(step.text);\n    else if (step.type === \"waitForTargetVisible\") await expect(page.getByTestId(step.testId)).toBeVisible();\n    else if (step.type === \"click\")")
     .replace("expect(locate(page, step.role, step.name)).toBeVisible()", "expect(locateAction(page, step)).toBeVisible()")
     .replace("await page.evaluate(({ productId, quantity }) => localStorage.setItem(\"cart\", JSON.stringify([{ productId, quantity }])), precondition)", "await page.getByTestId(`add-to-cart-${precondition.productId}`).click({ clickCount: precondition.quantity })")
-    .replace("if (assertion.type === \"urlPathEquals\")", "if (assertion.type === \"targetTextEquals\" || assertion.type === \"targetNumberEquals\" || assertion.type === \"targetCurrencyEquals\" || assertion.type === \"targetVisibilityEquals\") { const target = page.getByTestId(assertion.testId); const exists = await target.count(); const text = exists ? (await target.textContent()) ?? \"\" : \"\"; const received = assertion.type === \"targetVisibilityEquals\" ? exists > 0 && await target.isVisible() : !exists ? \"<missing>\" : assertion.type === \"targetTextEquals\" ? text.trim() : normalizeNumber(text); const expected = assertion.type === \"targetVisibilityEquals\" ? assertion.visible : assertion.expected; await assertWithEvidence(testInfo, assertion.type, expected, received, () => expect(received).toBe(expected)); }\n  else if (assertion.type === \"urlPathEquals\")");
+    .replace("await page.goto(\"/\"); await page.getByTestId(`add-to-cart-${precondition.productId}`)", "if (new URL(page.url()).pathname !== \"/\") await page.goto(\"/\"); await page.getByTestId(`add-to-cart-${precondition.productId}`)")
+    .replace("if (assertion.type === \"urlPathEquals\")", "if (assertion.type === \"targetCurrencySumEquals\") { const resultTarget = page.getByTestId(assertion.testId); const resultExists = await resultTarget.count(); const termTargets = assertion.terms.map((testId) => page.getByTestId(testId)); const termCounts = await Promise.all(termTargets.map((target) => target.count())); const missing = resultExists !== 1 || termCounts.some((count) => count !== 1); const received = missing ? \"<missing-or-ambiguous>\" : normalizeCurrencyCents((await resultTarget.textContent()) ?? \"\") / 100; const expected = missing ? assertion.terms.join(\" + \") : (await Promise.all(termTargets.map(async (target) => normalizeCurrencyCents((await target.textContent()) ?? \"\")))).reduce((sum, value) => sum + value, 0) / 100; await assertWithEvidence(testInfo, assertion.type, expected, received, () => expect(received).toBe(expected)); }\n  else if (assertion.type === \"targetTextEquals\" || assertion.type === \"targetNumberEquals\" || assertion.type === \"targetCurrencyEquals\" || assertion.type === \"targetVisibilityEquals\") { const target = page.getByTestId(assertion.testId); const exists = await target.count(); const text = exists ? (await target.textContent()) ?? \"\" : \"\"; const received = assertion.type === \"targetVisibilityEquals\" ? exists > 0 && await target.isVisible() : !exists ? \"<missing>\" : assertion.type === \"targetTextEquals\" ? text.trim() : normalizeNumber(text); const expected = assertion.type === \"targetVisibilityEquals\" ? assertion.visible : assertion.expected; await assertWithEvidence(testInfo, assertion.type, expected, received, () => expect(received).toBe(expected)); }\n  else if (assertion.type === \"urlPathEquals\")");
+  source = source.replace(
+    "const exists = await target.count(); const text = exists ? (await target.textContent()) ?? \"\" : \"\"; const received = assertion.type === \"targetVisibilityEquals\" ? exists > 0 && await target.isVisible() : !exists ? \"<missing>\" : assertion.type === \"targetTextEquals\" ? text.trim() : normalizeNumber(text); const expected = assertion.type === \"targetVisibilityEquals\" ? assertion.visible : assertion.expected; await assertWithEvidence(testInfo, assertion.type, expected, received, () => expect(received).toBe(expected));",
+    "const expected = assertion.type === \"targetVisibilityEquals\" ? assertion.visible : assertion.expected; const read = async () => { const exists = await target.count(); const text = exists ? (await target.textContent()) ?? \"\" : \"\"; return assertion.type === \"targetVisibilityEquals\" ? exists > 0 && await target.isVisible() : !exists ? \"<missing>\" : assertion.type === \"targetTextEquals\" ? text.trim() : normalizeNumber(text); }; const received = await waitForExpected(read, expected); await assertWithEvidence(testInfo, assertion.type, expected, received, () => expect(received).toBe(expected));",
+  ).replace(
+    "const locate = (page: any, role: string, name?: string) =>",
+    "async function waitForExpected(read: () => Promise<unknown>, expected: unknown) { try { await expect.poll(read, { timeout: 3000, intervals: [100, 200, 400] }).toBe(expected); } catch { /* Preserve final assertion evidence. */ } return read(); }\nconst locate = (page: any, role: string, name?: string) =>",
+  );
   return { compilerVersion: COMPILER_VERSION, definitionHash, compiledHash: digest(source), testIdentity, source };
 }
 

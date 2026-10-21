@@ -22,7 +22,7 @@ export const aiRouter = Router();
 aiRouter.get("/status", async (_req, res) => {
   try {
     const config = ragConfig();
-    const corpus = await loadCorpus(config.chunkSize, config.chunkOverlap);
+    const corpus = await loadCorpus(config.chunkSize, config.chunkOverlap, "source");
     res.json({
       embeddingProvider: config.embeddingProvider,
       embeddingModel: config.embeddingModel,
@@ -62,8 +62,13 @@ aiRouter.post("/ask", async (req, res) => {
     res.status(400).json({ error: "question must contain 1 to 4000 characters" });
     return;
   }
+  const scope = req.body.scope ?? "source";
+  if (scope !== "source" && scope !== "documentation") {
+    res.status(400).json({ error: "scope must be 'source' or 'documentation'" });
+    return;
+  }
   try {
-    res.json(await answerQuestion(req.body.question));
+    res.json(await answerQuestion(req.body.question, scope));
   } catch {
     res.status(503).json({ error: "Retrieval is unavailable. Check the configured embedding provider.", code: "RAG_UNAVAILABLE" });
   }

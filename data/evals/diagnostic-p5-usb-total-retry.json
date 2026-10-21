@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "2.0",
+  "frozenAt": "2026-10-21T14:10:00.000Z",
+  "status": "FROZEN_FOR_FUTURE_EVALUATION",
+  "policy": {
+    "promptTuningAfterFreezeAllowed": false,
+    "referenceTestsVisibleToGeneration": false,
+    "referenceFixesVisibleToGeneration": false,
+    "primaryFingerprint": "5f05334359364ab89e747dda08ea11c2c1671254a426b86011946a24318cd9c4",
+    "referenceEvidence": "artifacts/arbitrary-reproduction/prospective-reference/2026-10-20T19-08-59-249Z",
+    "scoring": "Diagnostic retry only; excluded from frozen v5 scorecard.",
+    "diagnosticOf": "p5-usb-total-under-counts"
+  },
+  "cases": [
+    {
+      "id": "diagnostic-p5-usb-total-retry",
+      "split": "dev",
+      "category": "calculation",
+      "report": {
+        "title": "USB Hub total is one dollar low",
+        "description": "Adding one USB Hub produces the wrong cart total.",
+        "steps": ["Open the shop", "Add USB Hub", "Read Total"],
+        "expected": "Total should be $15.00.",
+        "actual": "Total shows $14.00.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "answerable-bug",
+      "defects": [{
+        "relativePath": "src/store/cartStore.ts",
+        "fixedContent": "sum + item.price * item.quantity, 0)",
+        "buggyContent": "sum + (item.id === 3 ? item.price - 1 : item.price) * item.quantity, 0)"
+      }],
+      "referenceTest": "tests/playwright/cases/prospective-v5-reference.spec.ts",
+      "variantFingerprint": "b95cf89d5653e87e258d098620965c4edb15d82c1e11c9dc66c2d6527802ebed",
+      "referenceTestHash": "b1b6d2025839df2076a42f34432357008479f3255fa176b593a37fbf8df97e7c"
+    }
+  ],
+  "datasetHash": "3daadc63de5807d4090bb6a59efa7618bbb9e9f87120321c492199f4c317ae7d"
+}

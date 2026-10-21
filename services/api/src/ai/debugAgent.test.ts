@@ -14,7 +14,7 @@ function setup(outcomes: RunResult[], baseline = true) {
   const write = vi.fn((value: string) => { source = value; });
   const graph = buildDebugGraph({
     run, baseline: () => baseline, readSource: () => source, writeSource: write,
-    persist: vi.fn(), retrieve: async () => ({ answer: "Local sources", mode: "extractive", sources: [] }),
+    persist: vi.fn(), retrieve: async () => ({ answer: "Local sources", mode: "extractive", scope: "source", sources: [] }),
   });
   return { graph, run, write };
 }

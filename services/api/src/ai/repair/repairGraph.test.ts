@@ -158,6 +158,36 @@ describe("LangGraph Dynamic Repair Orchestrator (repairGraph)", () => {
     expect(savedRecord?.state).toBe("AWAITING_REVIEW");
   });
 
+  it("finishes BLOCKED when patch generation returns an empty-provider failure", async () => {
+    const runId = `graph-run-empty-provider-${Date.now()}`;
+    const graph = buildRepairGraph({
+      startApp: async () => ({ port: 5319, url: "http://localhost:5319", process: {} as any }),
+      stopApp: async () => {},
+      run: async () => ({
+        passed: false, outcome: "ASSERTION_FAILED", expected: "Total is $30.00", actual: "Total is $10.00",
+        durationMs: 10, runId: "run-before-empty", testFingerprint: "fp-empty", testIds: ["empty-provider-test"],
+        reportHash: "report-empty", artifactPaths: {
+          screenshot: `artifacts/runs/${runId}/baseline/failure/test-failed-1.png`,
+          trace: `artifacts/runs/${runId}/baseline/failure/trace.zip`,
+          resultJson: `artifacts/runs/${runId}/baseline/result.json`,
+        }, rawOutput: "",
+      }),
+      generate: async () => { throw new Error("Model returned an empty response. Verify LLM configuration and credentials."); },
+      checks: async () => [],
+    });
+
+    const result = await graph.invoke({
+      runId, caseId: testCaseId, caseTitle: mockCase.title, caseDescription: mockCase.description,
+      reproductionTestFile: reproductionFile, testFingerprint: "fp-empty", config: { mode: "simulated" },
+      state: "INITIALIZING", attempt: 1, maxAttempts: 3, attempts: [], diagnostics: [], requiredChecks: [], events: [],
+    }, { configurable: { thread_id: runId } });
+
+    expect(result.state).toBe("BLOCKED");
+    expect(result.stopReason).toContain("Patch generation provider returned no usable content");
+    expect(result.error).toContain("no usable patch content");
+    expect(result.baselineArtifacts?.screenshot).toContain("test-failed-1.png");
+  });
+
   it("stops at baseline reproduction with BLOCKED if failure is not reproduced", async () => {
     const runId = `graph-run-unreproduced-${Date.now()}`;
 

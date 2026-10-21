@@ -25,6 +25,10 @@ export function validateCandidateAgainstDiscovery(input: unknown, discovery: Tar
   route(definition.startPath, "startPath");
   definition.preconditions.forEach((item, index) => {
     if (item.type === "seedCart" && !products.has(item.productId)) findings.push(`preconditions.${index}.productId is absent from frozen fixtures`);
+    if (item.type === "seedCart" && definition.startPath !== "/") findings.push(`preconditions.${index}.seedCart requires startPath / to retain MiniShop in-memory state`);
+    if (item.type === "clearLocalStorage" && definition.preconditions.slice(0, index).some(previous => previous.type === "seedCart")) {
+      findings.push(`preconditions.${index}.clearLocalStorage must come before seedCart`);
+    }
   });
   definition.steps.forEach((step, index) => {
     if (step.type === "goto") route(step.path, `steps.${index}.path`);
@@ -35,7 +39,30 @@ export function validateCandidateAgainstDiscovery(input: unknown, discovery: Tar
       control(role, step.label, `steps.${index}`);
     }
   });
-  if ("testId" in definition.assertion) target(definition.assertion.testId, "assertion");
+  let stateMayHaveChanged = definition.preconditions.some(item => item.type === "seedCart");
+  definition.steps.forEach((step, index) => {
+    if ((step.type === "goto" || step.type === "reload") && stateMayHaveChanged) {
+      findings.push(`steps.${index} hard navigation after an interactive state change can discard MiniShop in-memory state; use a discovered link`);
+    }
+    if (step.type === "click" && step.role !== "link" || step.type === "clickTarget" && !/^(nav-|back-to-)/.test(step.testId) ||
+      step.type === "fill" || step.type === "fillTarget" || step.type === "selectOption") stateMayHaveChanged = true;
+  });
+  if (definition.assertion.type === "visibleTextEquals" && definition.assertion.role === "textbox") {
+    findings.push("assertion reads textbox text content; use a discovered status or message target for visible feedback");
+  }
+  if (definition.assertion.type === "targetTextEquals") {
+    const { testId, expected } = definition.assertion;
+    if (/(?:-input|-button)$/.test(testId)) {
+      findings.push("assertion reads a control's text content; use a discovered status or message target for visible feedback");
+    }
+    const productRow = (discovery.targets ?? []).find(item => item.testId === testId && /^cart-item-\d+$/.test(testId) && item.context?.productName === expected);
+    if (productRow) findings.push("assertion compares an entire composite cart row with only a product name; use a name-specific target or assertion");
+  }
+  if (definition.assertion.type === "targetCurrencySumEquals") {
+    target(definition.assertion.testId, "assertion");
+    definition.assertion.terms.forEach((testId, index) => target(testId, `assertion.terms.${index}`));
+  }
+  else if ("testId" in definition.assertion) target(definition.assertion.testId, "assertion");
   else if (definition.assertion.type === "urlPathEquals") route(definition.assertion.expected, "assertion.expected");
   else if ("name" in definition.assertion && definition.assertion.name) control(definition.assertion.role, definition.assertion.name, "assertion");
   return { ok: findings.length === 0, findings };

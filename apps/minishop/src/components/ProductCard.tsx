@@ -20,8 +20,8 @@ export function ProductCard({ product }: ProductCardProps) {
         gap: 8,
       }}
     >
-      <span style={{ fontWeight: 600 }}>{product.name}</span>
-      <span style={{ color: "#6b7280" }}>${product.price.toFixed(2)}</span>
+      <span data-testid={`product-name-${product.id}`} style={{ fontWeight: 600 }}>{product.name}</span>
+      <span data-testid={`product-price-${product.id}`} style={{ color: "#6b7280" }}>${product.price.toFixed(2)}</span>
       <button
         data-testid={`add-to-cart-${product.id}`}
         onClick={() => addItem(product)}

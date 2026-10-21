@@ -31,6 +31,16 @@ beforeEach(() => { vi.clearAllMocks(); mocks.listReproductionRuns.mockResolvedVa
 afterEach(() => vi.useRealTimers());
 
 describe("CaseDetail arbitrary reproduction lifecycle", () => {
+  it("shows structured report fields instead of empty legacy reproduction placeholders", () => {
+    render(<CaseDetail bugCase={completeCase({
+      reproduction: { preconditions: [], steps: ["Legacy placeholder"], expected: "", actual: "", testFile: "", lastRun: null },
+    })} onUpdate={vi.fn()} />);
+    expect(screen.getByText("Open cart")).toBeInTheDocument();
+    expect(screen.getByText("$20")).toBeInTheDocument();
+    expect(screen.getByText("$10")).toBeInTheDocument();
+    expect(screen.queryByText("Legacy placeholder")).not.toBeInTheDocument();
+  });
+
   it("shows Generate reproduction for a complete testless case", async () => {
     render(<CaseDetail bugCase={completeCase()} onUpdate={vi.fn()} />);
     expect(screen.getByRole("button", { name: /generate reproduction/i })).toBeInTheDocument();
@@ -47,6 +57,22 @@ describe("CaseDetail arbitrary reproduction lifecycle", () => {
     render(<CaseDetail bugCase={completeCase({ reproduction: { preconditions: [], steps: [], expected: "", actual: "", testFile: "tests/playwright/case.spec.ts", lastRun: null } })} onUpdate={vi.fn()} />);
     expect(screen.getByRole("button", { name: /mark as ready to reproduce/i })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /generate reproduction/i })).not.toBeInTheDocument();
+  });
+
+  it("explains that a passing configured baseline is not an AI repair", () => {
+    render(<CaseDetail bugCase={completeCase({
+      reproduction: {
+        preconditions: [], steps: ["Open cart"], expected: "$20", actual: "$20",
+        testFile: "tests/playwright/case.spec.ts",
+        lastRun: {
+          outcome: "PASSED", passed: true, expected: "$20", actual: "$20",
+          durationMs: 12, runAt: "2026-10-12T00:00:00.000Z", evidenceIds: [],
+        },
+      },
+    })} onUpdate={vi.fn()} />);
+    expect(screen.getByText(/configured reproduction test/i)).toBeInTheDocument();
+    expect(screen.getByText(/baseline passed on the current source/i)).toBeInTheDocument();
+    expect(screen.getByText(/does not mean the generation provider repaired it/i)).toBeInTheDocument();
   });
 
   it("handles the 202 start response by displaying the durable record", async () => {
@@ -111,6 +137,43 @@ describe("CaseDetail arbitrary reproduction lifecycle", () => {
     expect(mocks.getReproductionRun).toHaveBeenCalledTimes(1);
     expect(screen.getByText("GENERATING_CANDIDATE")).toBeInTheDocument();
     expect(screen.getByRole("alert")).toHaveTextContent("poll unavailable");
+  });
+
+  it("explains a provider connection failure without implying a product bug", async () => {
+    mocks.listReproductionRuns.mockResolvedValue([{
+      ...run("BLOCKED"),
+      events: [{ sequence: 1, state: "BLOCKED", message: "Reproduction generation provider request failed (request_failed)", createdAt: "2026-10-12T00:00:00.000Z" }],
+      stopReason: "Generation provider failed",
+    }]);
+    render(<CaseDetail bugCase={completeCase()} onUpdate={vi.fn()} />);
+    expect(await screen.findByText(/provider connection failed before an HTTP response/i)).toBeInTheDocument();
+    expect(screen.getByText(/no product bug was reproduced/i)).toBeInTheDocument();
+  });
+
+  it("shows a timed-out provider request and its bounded retry count", async () => {
+    mocks.listReproductionRuns.mockResolvedValue([{
+      ...run("BLOCKED"),
+      attempts: [{ attempt: 1, classification: "PROVIDER_ERROR", provider: "openai", requestAttempts: 3, responseShape: "request_timed_out", diagnostics: "Provider request timed out (request_timed_out)" }],
+      events: [{ sequence: 1, state: "BLOCKED", message: "Provider request timed out (request_timed_out)", createdAt: "2026-10-12T00:00:00.000Z" }],
+      stopReason: "Generation provider failed",
+    }]);
+    render(<CaseDetail bugCase={completeCase()} onUpdate={vi.fn()} />);
+    expect((await screen.findAllByText(/provider request timed out/i)).length).toBeGreaterThan(0);
+    expect(screen.getByText(/provider requests: 3/i)).toBeInTheDocument();
+  });
+
+  it("explains quota exhaustion and offers a safe new generation run", async () => {
+    mocks.listReproductionRuns.mockResolvedValue([{
+      ...run("BLOCKED"),
+      attempts: [{ attempt: 1, classification: "PROVIDER_ERROR", provider: "openai", requestAttempts: 3, httpStatus: 429, responseShape: "http_error:429", diagnostics: "Provider returned HTTP 429 (http_error:429)" }],
+      events: [{ sequence: 1, state: "BLOCKED", message: "Provider returned HTTP 429 (http_error:429)", createdAt: "2026-10-21T04:39:34.453Z" }],
+      stopReason: "Generation provider failed",
+    }]);
+    render(<CaseDetail bugCase={completeCase()} onUpdate={vi.fn()} />);
+    expect((await screen.findAllByText(/provider returned HTTP 429/i)).length).toBeGreaterThan(0);
+    expect(screen.getByText(/wait for provider quota.*then retry/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /retry generation/i })).toBeInTheDocument();
+    expect(screen.getByText(/provider requests: 3/i)).toBeInTheDocument();
   });
 
   it("submits the exact candidate hashes and refreshes the case after approval", async () => {

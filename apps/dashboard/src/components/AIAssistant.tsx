@@ -4,10 +4,11 @@ import { API_BASE, artifactUrl } from "../api/client";
 interface Answer {
   answer: string;
   mode: string;
+  scope: "source" | "documentation";
   abstained?: boolean;
   warnings?: string[];
   telemetry?: { provider: string; strategy: string; retrievalMs: number; cacheHit: boolean };
-  sources: { source: string; chunkId: string; content: string; score: number; startLine?: number; endLine?: number }[];
+  sources: { source: string; sourceType: "source" | "test" | "documentation"; chunkId: string; content: string; score: number; startLine?: number; endLine?: number }[];
 }
 
 interface DebugReport {
@@ -53,6 +54,7 @@ interface RepairRun {
     reviewedAt: string;
   };
   requiredChecks: RequiredCheck[];
+  baselineArtifacts?: { screenshot?: string; trace?: string; resultJson?: string };
   events: { timestamp: string; stage: string; message: string }[];
   stopReason?: string;
   error?: string;
@@ -65,6 +67,7 @@ export function isTerminalState(state?: string): boolean {
 
 export function AIAssistant({ caseId, onComplete }: { caseId: string; onComplete: () => Promise<void> }) {
   const [question, setQuestion] = useState("Why does the cart total show only the first item's price?");
+  const [questionScope, setQuestionScope] = useState<"source" | "documentation">("source");
   const [answer, setAnswer] = useState<Answer | null>(null);
   const [report, setReport] = useState<DebugReport | null>(null);
   const [repairRun, setRepairRun] = useState<RepairRun | null>(null);
@@ -365,6 +368,25 @@ export function AIAssistant({ caseId, onComplete }: { caseId: string; onComplete
             </p>
           )}
 
+          {repairRun.baselineArtifacts && (
+            <div style={{ marginTop: 12, padding: 12, border: "1px solid #cbd5e1", borderRadius: 6, background: "#f8fafc" }}>
+              <h5 style={{ margin: "0 0 8px" }}>Playwright Baseline Evidence</h5>
+              {repairRun.baselineArtifacts.screenshot && (
+                <a href={artifactUrl(repairRun.baselineArtifacts.screenshot)} target="_blank" rel="noreferrer">
+                  <img
+                    src={artifactUrl(repairRun.baselineArtifacts.screenshot)}
+                    alt="Baseline failure screenshot"
+                    style={{ display: "block", width: "100%", maxWidth: 760, maxHeight: 420, objectFit: "contain", border: "1px solid #e2e8f0", borderRadius: 4, background: "#fff" }}
+                  />
+                </a>
+              )}
+              <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 8, fontSize: 12 }}>
+                {repairRun.baselineArtifacts.trace && <a href={artifactUrl(repairRun.baselineArtifacts.trace)}>Open Playwright trace</a>}
+                {repairRun.baselineArtifacts.resultJson && <a href={artifactUrl(repairRun.baselineArtifacts.resultJson)}>Open Playwright report</a>}
+              </div>
+            </div>
+          )}
+
           {/* Proposal Review Section */}
           {repairRun.proposal && (
             <div style={{ marginTop: 12 }}>
@@ -522,7 +544,7 @@ export function AIAssistant({ caseId, onComplete }: { caseId: string; onComplete
 
       {/* RAG Question section */}
       <label htmlFor="rag-question" style={{ marginTop: 16, display: "block" }}>
-        Ask source code question
+        {questionScope === "source" ? "Ask a source-code question" : "Ask a project-documentation question"}
       </label>
       <textarea
         id="rag-question"
@@ -531,8 +553,13 @@ export function AIAssistant({ caseId, onComplete }: { caseId: string; onComplete
         onChange={(e) => setQuestion(e.target.value)}
         style={{ display: "block", width: "100%", minHeight: 70, margin: "8px 0" }}
       />
-      <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-        <button disabled={busy || !question.trim()} onClick={() => run("/api/ai/ask", { question })}>
+      <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+        <label htmlFor="rag-scope" style={{ fontSize: 12, color: "#475569" }}>Search</label>
+        <select id="rag-scope" value={questionScope} onChange={event => { setQuestionScope(event.target.value as "source" | "documentation"); setAnswer(null); }}>
+          <option value="source">Source code and tests</option>
+          <option value="documentation">Project documentation</option>
+        </select>
+        <button disabled={busy || !question.trim()} onClick={() => run("/api/ai/ask", { question, scope: questionScope })}>
           Ask with sources
         </button>
         <button disabled={busy} onClick={() => run(`/api/ai/cases/${caseId}/debug`, { applyPatch: false }, true)}>
@@ -548,9 +575,12 @@ export function AIAssistant({ caseId, onComplete }: { caseId: string; onComplete
       {busy && <p role="status">Executing request…</p>}
       {error && <p role="alert" style={{ color: "#dc2626" }}>{error}</p>}
       {answer?.abstained && <p role="status">{answer.answer}</p>}
-      {answer?.warnings?.length ? (
-        <p role="status">A grounded model answer was unavailable. Showing retrieved evidence.</p>
-      ) : null}
+      {answer?.warnings?.includes("GENERATION_UNAVAILABLE") && (
+        <p role="status">Answer generation was unavailable; showing retrieved {answer.scope === "documentation" ? "documentation" : "source"} evidence.</p>
+      )}
+      {answer?.warnings?.includes("GENERATION_UNGROUNDED") && (
+        <p role="status">The generated answer did not pass citation validation; showing retrieved {answer.scope === "documentation" ? "documentation" : "source"} evidence instead.</p>
+      )}
       {answer?.telemetry && (
         <p style={{ fontSize: 12, color: "#6b7280" }}>
           {answer.telemetry.strategy} retrieval · {answer.telemetry.retrievalMs} ms ·{" "}
@@ -561,14 +591,14 @@ export function AIAssistant({ caseId, onComplete }: { caseId: string; onComplete
         <div>
           <p>{answer.mode === "extractive" ? "Local source excerpts" : "Generated answer — check cited sources"}</p>
           {answer.mode === "extractive" ? (
-            <p>Retrieved {answer.sources.length} local source excerpts. Expand a source to inspect it.</p>
+            <p>Retrieved {answer.sources.length} local {answer.scope === "documentation" ? "documentation" : "source-code/test"} excerpts. Expand an excerpt to inspect it.</p>
           ) : (
             <pre style={{ whiteSpace: "pre-wrap", maxHeight: 360, overflow: "auto" }}>{answer.answer}</pre>
           )}
           {answer.sources.map((source) => (
             <details key={source.chunkId}>
               <summary>
-                {source.source} · lines {source.startLine ?? "?"}–{source.endLine ?? "?"} · {source.chunkId}
+                {source.sourceType} · {source.source} · lines {source.startLine ?? "?"}–{source.endLine ?? "?"} · {source.chunkId}
               </summary>
               <pre style={{ whiteSpace: "pre-wrap", maxHeight: 360, overflow: "auto" }}>{source.content}</pre>
             </details>

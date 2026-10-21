@@ -1,0 +1,483 @@
+{
+  "schemaVersion": "2.0",
+  "frozenAt": "2026-10-20T19:04:35.857Z",
+  "status": "FROZEN_FOR_FUTURE_EVALUATION",
+  "policy": {
+    "promptTuningAfterFreezeAllowed": false,
+    "referenceTestsVisibleToGeneration": false,
+    "referenceFixesVisibleToGeneration": false,
+    "primaryFingerprint": "5f05334359364ab89e747dda08ea11c2c1671254a426b86011946a24318cd9c4",
+    "referenceEvidence": "artifacts/arbitrary-reproduction/prospective-reference/2026-10-20T19-00-25-198Z",
+    "scoring": "Independent reviewed report match is required; unreviewed assertion failures are separate."
+  },
+  "cases": [
+    {
+      "id": "p4-dev-promo-success-message-absent",
+      "split": "dev",
+      "category": "async",
+      "report": {
+        "title": "Successful promo has no confirmation",
+        "description": "SAVE20 discounts the cart, but its confirmation message does not appear.",
+        "steps": [
+          "Open the shop",
+          "Add Keyboard",
+          "Enter SAVE20",
+          "Click Apply",
+          "Wait for the confirmation"
+        ],
+        "expected": "Promo status should say Promo code applied!",
+        "actual": "No promo status appears.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "answerable-bug",
+      "defects": [
+        {
+          "relativePath": "src/components/Cart.tsx",
+          "fixedContent": "setPromoMessage(\"Promo code applied!\");",
+          "buggyContent": "setPromoMessage(\"\");"
+        }
+      ],
+      "referenceTest": "tests/playwright/cases/prospective-v4-reference.spec.ts",
+      "variantFingerprint": "a15c3842dc3eece36e91ed27fcd6aedbb94ec439aecaa2e56b009d897762b6bc",
+      "referenceTestHash": "9b137556f02a6455af06dbe0ccbce2808c14c71c1da9c06a8eb7bed630d30abe"
+    },
+    {
+      "id": "p4-dev-mouse-catalog-price-wrong",
+      "split": "dev",
+      "category": "rendering",
+      "report": {
+        "title": "Mouse Pad catalog price is too high",
+        "description": "The Mouse Pad product card shows a price different from its catalog data.",
+        "steps": [
+          "Open the shop",
+          "Find the Mouse Pad card",
+          "Read its price"
+        ],
+        "expected": "$20.00 should appear on Mouse Pad.",
+        "actual": "$25.00 appears.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "answerable-bug",
+      "defects": [
+        {
+          "relativePath": "src/components/ProductCard.tsx",
+          "fixedContent": "${product.price.toFixed(2)}",
+          "buggyContent": "${(product.id === 2 ? 25 : product.price).toFixed(2)}"
+        }
+      ],
+      "referenceTest": "tests/playwright/cases/prospective-v4-reference.spec.ts",
+      "variantFingerprint": "0e39d984af8e51ca878e3dd0ce05e67d29d7cacb71ac82ecfb627831aaf192a5",
+      "referenceTestHash": "9b137556f02a6455af06dbe0ccbce2808c14c71c1da9c06a8eb7bed630d30abe"
+    },
+    {
+      "id": "p4-third-keyboard-add-capped",
+      "split": "held-out",
+      "category": "state",
+      "report": {
+        "title": "Third Keyboard add does not increase quantity",
+        "description": "The Keyboard cart line stops increasing at two.",
+        "steps": [
+          "Open the shop",
+          "Add Keyboard three times",
+          "Read Keyboard quantity"
+        ],
+        "expected": "Quantity should show ×3.",
+        "actual": "Quantity shows ×2.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "answerable-bug",
+      "defects": [
+        {
+          "relativePath": "src/store/cartStore.ts",
+          "fixedContent": "i.quantity + 1",
+          "buggyContent": "Math.min(i.quantity + 1, 2)"
+        }
+      ],
+      "referenceTest": "tests/playwright/cases/prospective-v4-reference.spec.ts",
+      "variantFingerprint": "ae904a5142f225f6d2c24cfc69ce8fa5f71fb37d578b4bddd12384314619de3a",
+      "referenceTestHash": "9b137556f02a6455af06dbe0ccbce2808c14c71c1da9c06a8eb7bed630d30abe"
+    },
+    {
+      "id": "p4-remove-mouse-clears-keyboard",
+      "split": "held-out",
+      "category": "deletion",
+      "report": {
+        "title": "Removing Mouse Pad also removes Keyboard",
+        "description": "A separate Keyboard disappears when Mouse Pad is removed.",
+        "steps": [
+          "Open the shop",
+          "Add Keyboard",
+          "Add Mouse Pad",
+          "Remove Mouse Pad",
+          "Inspect Keyboard"
+        ],
+        "expected": "Keyboard should remain in the cart.",
+        "actual": "Keyboard disappears.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "answerable-bug",
+      "defects": [
+        {
+          "relativePath": "src/store/cartStore.ts",
+          "fixedContent": "state.items.filter((i) => i.id !== productId)",
+          "buggyContent": "productId === 2 ? [] : state.items.filter((i) => i.id !== productId)"
+        }
+      ],
+      "referenceTest": "tests/playwright/cases/prospective-v4-reference.spec.ts",
+      "variantFingerprint": "8c9776b64db0e4f88bbbd14e050f6e95e99a6314e074d935da9acce782aeea87",
+      "referenceTestHash": "9b137556f02a6455af06dbe0ccbce2808c14c71c1da9c06a8eb7bed630d30abe"
+    },
+    {
+      "id": "p4-sidebar-checkout-keeps-mouse",
+      "split": "held-out",
+      "category": "state",
+      "report": {
+        "title": "Sidebar Checkout leaves Mouse Pad",
+        "description": "The sidebar Checkout removes Keyboard but leaves Mouse Pad.",
+        "steps": [
+          "Open the shop",
+          "Add Keyboard",
+          "Add Mouse Pad",
+          "Click Checkout in the sidebar"
+        ],
+        "expected": "The cart should become empty.",
+        "actual": "Mouse Pad remains.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "answerable-bug",
+      "defects": [
+        {
+          "relativePath": "src/components/Cart.tsx",
+          "fixedContent": "onClick={clearCart}",
+          "buggyContent": "onClick={() => { useCartStore.setState((state) => ({ items: state.items.filter((item) => item.id === 2) })); }}"
+        }
+      ],
+      "referenceTest": "tests/playwright/cases/prospective-v4-reference.spec.ts",
+      "variantFingerprint": "6ba532b2508a08c979113c8c5a3229626fb6d4de06915b54dfb71ed1f62942f6",
+      "referenceTestHash": "9b137556f02a6455af06dbe0ccbce2808c14c71c1da9c06a8eb7bed630d30abe"
+    },
+    {
+      "id": "p4-usb-total-under-counts",
+      "split": "held-out",
+      "category": "calculation",
+      "report": {
+        "title": "USB Hub total is one dollar low",
+        "description": "Adding one USB Hub produces the wrong cart total.",
+        "steps": [
+          "Open the shop",
+          "Add USB Hub",
+          "Read Total"
+        ],
+        "expected": "Total should be $15.00.",
+        "actual": "Total shows $14.00.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "answerable-bug",
+      "defects": [
+        {
+          "relativePath": "src/store/cartStore.ts",
+          "fixedContent": "sum + item.price * item.quantity, 0)",
+          "buggyContent": "sum + (item.id === 3 ? item.price - 1 : item.price) * item.quantity, 0)"
+        }
+      ],
+      "referenceTest": "tests/playwright/cases/prospective-v4-reference.spec.ts",
+      "variantFingerprint": "b95cf89d5653e87e258d098620965c4edb15d82c1e11c9dc66c2d6527802ebed",
+      "referenceTestHash": "9b137556f02a6455af06dbe0ccbce2808c14c71c1da9c06a8eb7bed630d30abe"
+    },
+    {
+      "id": "p4-webcam-catalog-name-camera",
+      "split": "held-out",
+      "category": "rendering",
+      "report": {
+        "title": "Webcam catalog card says Camera",
+        "description": "The Webcam item has the wrong name in the product catalog.",
+        "steps": [
+          "Open the shop",
+          "Find the Webcam product card",
+          "Read its name"
+        ],
+        "expected": "The card name should say Webcam.",
+        "actual": "The card says Camera.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "answerable-bug",
+      "defects": [
+        {
+          "relativePath": "src/components/ProductCard.tsx",
+          "fixedContent": "{product.name}</span>",
+          "buggyContent": "{product.id === 4 ? \"Camera\" : product.name}</span>"
+        }
+      ],
+      "referenceTest": "tests/playwright/cases/prospective-v4-reference.spec.ts",
+      "variantFingerprint": "964c59a7ce98910dfea4d3970601d4e9f4dc225265a79db6cd092557462b6189",
+      "referenceTestHash": "9b137556f02a6455af06dbe0ccbce2808c14c71c1da9c06a8eb7bed630d30abe"
+    },
+    {
+      "id": "p4-keyboard-cart-name-mouse",
+      "split": "held-out",
+      "category": "rendering",
+      "report": {
+        "title": "Keyboard cart line says Mouse Pad",
+        "description": "The Keyboard name changes when it appears in the cart.",
+        "steps": [
+          "Open the shop",
+          "Add Keyboard",
+          "Read its cart line name"
+        ],
+        "expected": "The cart line should say Keyboard.",
+        "actual": "The cart line says Mouse Pad.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "answerable-bug",
+      "defects": [
+        {
+          "relativePath": "src/components/CartItem.tsx",
+          "fixedContent": "{item.name}</span>",
+          "buggyContent": "{item.id === 1 ? \"Mouse Pad\" : item.name}</span>"
+        }
+      ],
+      "referenceTest": "tests/playwright/cases/prospective-v4-reference.spec.ts",
+      "variantFingerprint": "5767ef8bf757e26f803fc7626428e05410cb6dc7836f340c887f441f25432f85",
+      "referenceTestHash": "9b137556f02a6455af06dbe0ccbce2808c14c71c1da9c06a8eb7bed630d30abe"
+    },
+    {
+      "id": "p4-forty-five-cart-free-shipping",
+      "split": "held-out",
+      "category": "calculation",
+      "report": {
+        "title": "Forty-five dollar cart gets free shipping",
+        "description": "A cart below the fifty-dollar threshold is marked free shipping.",
+        "steps": [
+          "Open the shop",
+          "Add Keyboard",
+          "Add Mouse Pad",
+          "Add USB Hub",
+          "Read Shipping"
+        ],
+        "expected": "Shipping should be $5.00.",
+        "actual": "Shipping shows $0.00.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "answerable-bug",
+      "defects": [
+        {
+          "relativePath": "src/store/cartStore.ts",
+          "fixedContent": "get().total() >= 50",
+          "buggyContent": "get().total() >= 45"
+        }
+      ],
+      "referenceTest": "tests/playwright/cases/prospective-v4-reference.spec.ts",
+      "variantFingerprint": "ef670466be7e4163fe7a9e144d14b5f04e2e1194780f73c4471d40d4fc2baef0",
+      "referenceTestHash": "9b137556f02a6455af06dbe0ccbce2808c14c71c1da9c06a8eb7bed630d30abe"
+    },
+    {
+      "id": "p4-promo-success-without-discount",
+      "split": "held-out",
+      "category": "async",
+      "report": {
+        "title": "SAVE20 confirms but leaves total unchanged",
+        "description": "The success message appears without reducing the cart total.",
+        "steps": [
+          "Open the shop",
+          "Add Keyboard",
+          "Enter SAVE20",
+          "Click Apply",
+          "Wait for confirmation",
+          "Read Total"
+        ],
+        "expected": "Total should be $8.00.",
+        "actual": "Total remains $10.00.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "answerable-bug",
+      "defects": [
+        {
+          "relativePath": "src/store/cartStore.ts",
+          "fixedContent": "items: state.items.map((i) => ({ ...i, price: Number((i.price * 0.8).toFixed(2)) })),",
+          "buggyContent": "items: state.items,"
+        }
+      ],
+      "referenceTest": "tests/playwright/cases/prospective-v4-reference.spec.ts",
+      "variantFingerprint": "65b28ca103282faea37a75f1bf3a5df57a9cf28e9406b3a3a93aac85157056cc",
+      "referenceTestHash": "9b137556f02a6455af06dbe0ccbce2808c14c71c1da9c06a8eb7bed630d30abe"
+    },
+    {
+      "id": "p4-invalid-promo-shows-success",
+      "split": "held-out",
+      "category": "async",
+      "report": {
+        "title": "Invalid promo displays a success message",
+        "description": "A rejected promo code is shown as applied.",
+        "steps": [
+          "Open the shop",
+          "Add Keyboard",
+          "Enter NOPE",
+          "Click Apply",
+          "Wait for validation"
+        ],
+        "expected": "Promo status should say Invalid promo code.",
+        "actual": "Promo status says Promo code applied!.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "answerable-bug",
+      "defects": [
+        {
+          "relativePath": "src/components/Cart.tsx",
+          "fixedContent": "} else {\n      setPromoMessage(\"Invalid promo code\");\n    }",
+          "buggyContent": "} else {\n      setPromoMessage(\"Promo code applied!\");\n    }"
+        }
+      ],
+      "referenceTest": "tests/playwright/cases/prospective-v4-reference.spec.ts",
+      "variantFingerprint": "84795de838269bc891d85d49d2ab32ceb773ab11df4c677bbb487d6c12ee5754",
+      "referenceTestHash": "9b137556f02a6455af06dbe0ccbce2808c14c71c1da9c06a8eb7bed630d30abe"
+    },
+    {
+      "id": "p4-mouse-adds-two-at-once",
+      "split": "held-out",
+      "category": "state",
+      "report": {
+        "title": "One Mouse Pad click adds two",
+        "description": "A single Add to Cart action doubles Mouse Pad quantity.",
+        "steps": [
+          "Open the shop",
+          "Click Add to Cart on Mouse Pad once",
+          "Read Mouse Pad quantity"
+        ],
+        "expected": "Quantity should show ×1.",
+        "actual": "Quantity shows ×2.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "answerable-bug",
+      "defects": [
+        {
+          "relativePath": "src/components/ProductCard.tsx",
+          "fixedContent": "onClick={() => addItem(product)}",
+          "buggyContent": "onClick={() => { addItem(product); if (product.id === 2) addItem(product); }}"
+        }
+      ],
+      "referenceTest": "tests/playwright/cases/prospective-v4-reference.spec.ts",
+      "variantFingerprint": "af0723495d26aa075dcba48301bbfd6afb6d91e1f4b927bfd4b66e65ed018078",
+      "referenceTestHash": "9b137556f02a6455af06dbe0ccbce2808c14c71c1da9c06a8eb7bed630d30abe"
+    },
+    {
+      "id": "p4-single-keyboard-nav-count-zero",
+      "split": "held-out",
+      "category": "navigation",
+      "report": {
+        "title": "Header count stays empty after adding Keyboard",
+        "description": "One Keyboard is present in the cart but the Cart link shows no count.",
+        "steps": [
+          "Open the shop",
+          "Add Keyboard",
+          "Read the Cart link"
+        ],
+        "expected": "Cart link should show Cart (1).",
+        "actual": "Cart link shows Cart.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "answerable-bug",
+      "defects": [
+        {
+          "relativePath": "src/App.tsx",
+          "fixedContent": "items.reduce((n, i) => n + i.quantity, 0)",
+          "buggyContent": "items.length === 1 ? 0 : items.reduce((n, i) => n + i.quantity, 0)"
+        }
+      ],
+      "referenceTest": "tests/playwright/cases/prospective-v4-reference.spec.ts",
+      "variantFingerprint": "7c761f25b4600fb3aefed70535b71a7a680b46054f9cbd79bbee1ca29a20a676",
+      "referenceTestHash": "9b137556f02a6455af06dbe0ccbce2808c14c71c1da9c06a8eb7bed630d30abe"
+    },
+    {
+      "id": "p4-cart-page-ignores-quantity",
+      "split": "held-out",
+      "category": "calculation",
+      "report": {
+        "title": "Full cart page total ignores quantity",
+        "description": "The full cart page shows the price of one Keyboard after two were added.",
+        "steps": [
+          "Open the shop",
+          "Add Keyboard twice",
+          "Open Cart with the header link",
+          "Read Total"
+        ],
+        "expected": "Cart page Total should be $20.00.",
+        "actual": "Cart page Total shows $10.00.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "answerable-bug",
+      "defects": [
+        {
+          "relativePath": "src/pages/CartPage.tsx",
+          "fixedContent": "const cartTotal = total();",
+          "buggyContent": "const cartTotal = items.reduce((sum, item) => sum + item.price, 0);"
+        }
+      ],
+      "referenceTest": "tests/playwright/cases/prospective-v4-reference.spec.ts",
+      "variantFingerprint": "4b7eaf4df19b1adf1e7b9ff211852879d79e5d2f2410502b0df1074551b8a156",
+      "referenceTestHash": "9b137556f02a6455af06dbe0ccbce2808c14c71c1da9c06a8eb7bed630d30abe"
+    },
+    {
+      "id": "p4-control-valid-promo",
+      "split": "held-out",
+      "category": "control",
+      "report": {
+        "title": "Check SAVE20 confirmation",
+        "description": "Confirm the status after applying the valid code to a Keyboard cart.",
+        "steps": [
+          "Open the shop",
+          "Add Keyboard",
+          "Enter SAVE20",
+          "Click Apply",
+          "Wait for status"
+        ],
+        "expected": "Promo status should say Promo code applied!",
+        "actual": "Promo status appears to say Promo code applied!",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "control",
+      "defects": [],
+      "referenceTest": "tests/playwright/cases/prospective-v4-reference.spec.ts",
+      "variantFingerprint": "5f05334359364ab89e747dda08ea11c2c1671254a426b86011946a24318cd9c4",
+      "referenceTestHash": "9b137556f02a6455af06dbe0ccbce2808c14c71c1da9c06a8eb7bed630d30abe"
+    },
+    {
+      "id": "p4-control-webcam-price",
+      "split": "held-out",
+      "category": "control",
+      "report": {
+        "title": "Check Webcam catalog price",
+        "description": "Confirm the product card price for Webcam.",
+        "steps": [
+          "Open the shop",
+          "Find Webcam",
+          "Read its catalog price"
+        ],
+        "expected": "Webcam price should be $35.00.",
+        "actual": "Webcam price appears to be $35.00.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "control",
+      "defects": [],
+      "referenceTest": "tests/playwright/cases/prospective-v4-reference.spec.ts",
+      "variantFingerprint": "5f05334359364ab89e747dda08ea11c2c1671254a426b86011946a24318cd9c4",
+      "referenceTestHash": "9b137556f02a6455af06dbe0ccbce2808c14c71c1da9c06a8eb7bed630d30abe"
+    }
+  ],
+  "datasetHash": "64edf731be5c1b5dd976ce4f3ba1fae8bfd5503e8c37e040c5d74b8b7f63af93"
+}

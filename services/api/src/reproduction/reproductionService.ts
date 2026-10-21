@@ -6,10 +6,11 @@ import { DEFAULT_REPRODUCTION_LIMITS, type ReportSnapshot, type ReproductionLimi
 import { validateCandidateAgainstDiscovery } from "./candidatePolicy";
 import { persistCompiledReproduction, validateReproductionDefinition } from "./definitionCompiler";
 import { persistTargetDiscovery, type TargetDiscoverySnapshot } from "./targetDiscovery";
+import { GenerationProviderError } from "./generationProvider";
 import type { ReproductionRunStore } from "./reproductionRunStore";
 
-export const REPRODUCTION_PROMPT_VERSION = "reproduction-v1";
-export interface GenerationResult { raw: string; provider: string; model: string; responseShape?: string; usage?: { inputTokens?: number; outputTokens?: number; costUsd?: number } }
+export const REPRODUCTION_PROMPT_VERSION = "reproduction-v2";
+export interface GenerationResult { raw: string; provider: string; model: string; responseShape?: string; requestAttempts?: number; usage?: { inputTokens?: number; outputTokens?: number; costUsd?: number } }
 export interface GenerationContext { report: ReportSnapshot; discovery: TargetDiscoverySnapshot; attempt: number; previousDiagnostics: readonly string[]; promptVersion: typeof REPRODUCTION_PROMPT_VERSION }
 export interface ReproductionServiceDependencies {
   store: ReproductionRunStore; generatedRoot: string;
@@ -53,10 +54,17 @@ export class ReproductionService {
       let generated: GenerationResult;
       try { generated = await this.deps.generate({ report: run.reportSnapshot, discovery, attempt: attemptNumber, previousDiagnostics: diagnostics, promptVersion: REPRODUCTION_PROMPT_VERSION }, input.abortSignal); }
       catch (error) {
+        if (error instanceof GenerationProviderError) {
+          run.attempts = [...run.attempts, { attempt: attemptNumber, attemptExecutionId, provider: error.provider, model: error.model,
+            responseShape: error.responseShape, requestAttempts: error.requestAttempts, httpStatus: error.httpStatus,
+            promptVersion: REPRODUCTION_PROMPT_VERSION, classification: "PROVIDER_ERROR", diagnostics: error.message,
+            durationMs: Date.now() - started, artifactPaths: [] }];
+        }
         if (input.abortSignal?.aborted) {
           transition("CANCELLED", "Cancelled during candidate generation"); run.stopReason = "Cancelled by user"; run.completedAt = now(); this.deps.store.write(run); return run;
         }
-        diagnostics.push(bounded(error, limits.maxDiagnosticBytes)); run.stopReason = "Generation provider failed"; transition("BLOCKED", diagnostics.at(-1)!); run.completedAt = now(); this.deps.store.write(run); return run;
+        const diagnostic = error instanceof GenerationProviderError ? error.message : "Generation provider failed unexpectedly";
+        diagnostics.push(bounded(diagnostic, limits.maxDiagnosticBytes)); run.stopReason = "Generation provider failed"; transition("BLOCKED", diagnostics.at(-1)!); run.completedAt = now(); this.deps.store.write(run); return run;
       }
       const rawArtifact = persistRawOutput(this.deps.generatedRoot, runId, attemptNumber, generated.raw, limits.maxDefinitionBytes);
       const parsed = validateReproductionDefinition(generated.raw); const policy = parsed.ok ? validateCandidateAgainstDiscovery(parsed.value, discovery) : { ok: false, findings: parsed.errors };
@@ -65,7 +73,7 @@ export class ReproductionService {
           ? `Provider response contained no usable text (${generated.responseShape})`
           : policy.findings.join("; ")).slice(0, limits.maxDiagnosticBytes); diagnostics.push(finding);
         run.attempts = [...run.attempts, { attempt: attemptNumber, attemptExecutionId, provider: generated.provider, model: generated.model, promptVersion: REPRODUCTION_PROMPT_VERSION,
-          responseShape: generated.responseShape, classification: "CANDIDATE_INVALID", diagnostics: finding, validationFindings: policy.findings, durationMs: Date.now() - started, usage: generated.usage, artifactPaths: [artifactReference(rawArtifact, this.deps.generatedRoot)] }];
+          responseShape: generated.responseShape, requestAttempts: generated.requestAttempts, classification: "CANDIDATE_INVALID", diagnostics: finding, validationFindings: policy.findings, durationMs: Date.now() - started, usage: generated.usage, artifactPaths: [artifactReference(rawArtifact, this.deps.generatedRoot)] }];
         transition("CANDIDATE_INVALID", `Candidate ${attemptNumber} failed validation`); continue;
       }
       if (this.inputsChanged(discovery)) return this.blockChangedInputs(run, attemptNumber, attemptExecutionId, generated, rawArtifact, now, parsed.value);
@@ -102,7 +110,7 @@ export class ReproductionService {
       }
       const classification = execution.outcome === "ASSERTION_FAILED" ? "ASSERTION_FAILED" : execution.outcome === "PASSED" ? "BASELINE_PASSED" : "CANDIDATE_EXECUTION_ERROR";
       run.attempts = [...run.attempts, { attempt: attemptNumber, attemptExecutionId, definition: parsed.value, definitionHash: compiled.definitionHash, compilerVersion: compiled.compilerVersion,
-        compiledTestHash: compiled.compiledHash, provider: generated.provider, model: generated.model, promptVersion: REPRODUCTION_PROMPT_VERSION, classification,
+        compiledTestHash: compiled.compiledHash, provider: generated.provider, model: generated.model, promptVersion: REPRODUCTION_PROMPT_VERSION, classification, requestAttempts: generated.requestAttempts,
         failureKind: execution.failureKind,
         diagnostics: bounded(execution.actual, limits.maxDiagnosticBytes), durationMs: execution.durationMs, usage: generated.usage,
         artifactPaths: [artifactReference(rawArtifact, this.deps.generatedRoot), artifactReference(compiled.filePath, this.deps.generatedRoot), ...Object.values(execution.artifactPaths).filter((value): value is string => !!value)] }];

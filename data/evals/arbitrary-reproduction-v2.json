@@ -1,0 +1,483 @@
+{
+  "schemaVersion": "2.0",
+  "frozenAt": "2026-10-20T13:21:07.139Z",
+  "status": "FROZEN_FOR_FUTURE_EVALUATION",
+  "policy": {
+    "promptTuningAfterFreezeAllowed": false,
+    "referenceTestsVisibleToGeneration": false,
+    "referenceFixesVisibleToGeneration": false,
+    "primaryFingerprint": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289",
+    "referenceEvidence": "artifacts/arbitrary-reproduction/prospective-reference/2026-10-20T13-17-41-123Z",
+    "scoring": "Independent reviewed report match is required; unreviewed assertion failures are separate."
+  },
+  "cases": [
+    {
+      "id": "p2-dev-total-first-item",
+      "split": "dev",
+      "category": "calculation",
+      "report": {
+        "title": "Total reads only first cart item",
+        "description": "A second distinct product does not increase the cart total.",
+        "steps": [
+          "Open the shop",
+          "Add Keyboard",
+          "Add Mouse Pad",
+          "Read Total"
+        ],
+        "expected": "Total should be $30.00.",
+        "actual": "Total stays $10.00.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "answerable-bug",
+      "defects": [
+        {
+          "relativePath": "src/store/cartStore.ts",
+          "fixedContent": "get().items.reduce((sum, item) => sum + item.price * item.quantity, 0)",
+          "buggyContent": "get().items[0]?.price ?? 0"
+        }
+      ],
+      "referenceTest": "tests/playwright/cases/prospective-v2-reference.spec.ts",
+      "variantFingerprint": "0248e0d27084c5fad9ab416c1db35d60dd2731e3946e1fbd25d88c1bcb273718",
+      "referenceTestHash": "b51faa5fcf1d6389db5a7ab1f98e6f47da050d40c3870653445a5ed71045c7b1"
+    },
+    {
+      "id": "p2-dev-quantity-stuck",
+      "split": "dev",
+      "category": "state",
+      "report": {
+        "title": "Repeated add leaves quantity at one",
+        "description": "A second Keyboard click does not increase the cart line quantity.",
+        "steps": [
+          "Open the shop",
+          "Add Keyboard twice",
+          "Read its quantity"
+        ],
+        "expected": "Quantity should display ×2.",
+        "actual": "Quantity stays ×1.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "answerable-bug",
+      "defects": [
+        {
+          "relativePath": "src/store/cartStore.ts",
+          "fixedContent": "i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i",
+          "buggyContent": "i.id === product.id ? { ...i, quantity: 1 } : i"
+        }
+      ],
+      "referenceTest": "tests/playwright/cases/prospective-v2-reference.spec.ts",
+      "variantFingerprint": "da57cb3642528a13b429edc2ce1dd442b9885cae788a75e8b242c53a58f4ca3b",
+      "referenceTestHash": "b51faa5fcf1d6389db5a7ab1f98e6f47da050d40c3870653445a5ed71045c7b1"
+    },
+    {
+      "id": "p2-total-extra-fee",
+      "split": "held-out",
+      "category": "calculation",
+      "report": {
+        "title": "Single-item total contains an extra charge",
+        "description": "The cart total is two dollars too high with one Keyboard.",
+        "steps": [
+          "Open the shop",
+          "Add one Keyboard",
+          "Read Total"
+        ],
+        "expected": "Total should be $10.00.",
+        "actual": "Total shows $12.00.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "answerable-bug",
+      "defects": [
+        {
+          "relativePath": "src/store/cartStore.ts",
+          "fixedContent": "sum + item.price * item.quantity, 0)",
+          "buggyContent": "sum + item.price * item.quantity + 2, 0)"
+        }
+      ],
+      "referenceTest": "tests/playwright/cases/prospective-v2-reference.spec.ts",
+      "variantFingerprint": "a8d32c6524a142d006ce5a7e9217745aaa772ba99b785006576d68ea96c13fa5",
+      "referenceTestHash": "b51faa5fcf1d6389db5a7ab1f98e6f47da050d40c3870653445a5ed71045c7b1"
+    },
+    {
+      "id": "p2-second-product-ignored",
+      "split": "held-out",
+      "category": "state",
+      "report": {
+        "title": "Second distinct product is not added",
+        "description": "Mouse Pad is missing after it is added to a cart containing Keyboard.",
+        "steps": [
+          "Open the shop",
+          "Add Keyboard",
+          "Add Mouse Pad",
+          "Inspect cart lines"
+        ],
+        "expected": "Keyboard and Mouse Pad should both appear.",
+        "actual": "Only Keyboard appears.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "answerable-bug",
+      "defects": [
+        {
+          "relativePath": "src/store/cartStore.ts",
+          "fixedContent": "return { items: [...state.items, { ...product, quantity: 1 }] };",
+          "buggyContent": "return { items: state.items.length ? state.items : [...state.items, { ...product, quantity: 1 }] };"
+        }
+      ],
+      "referenceTest": "tests/playwright/cases/prospective-v2-reference.spec.ts",
+      "variantFingerprint": "76046fa8a11d95d992216d31b394d0acadf892522415c949d399fcfa2978b065",
+      "referenceTestHash": "b51faa5fcf1d6389db5a7ab1f98e6f47da050d40c3870653445a5ed71045c7b1"
+    },
+    {
+      "id": "p2-remove-mouse-removes-keyboard",
+      "split": "held-out",
+      "category": "deletion",
+      "report": {
+        "title": "Removing Mouse Pad also removes Keyboard",
+        "description": "A separate cart line disappears when Mouse Pad is removed.",
+        "steps": [
+          "Open the shop",
+          "Add Keyboard",
+          "Add Mouse Pad",
+          "Remove Mouse Pad"
+        ],
+        "expected": "Keyboard should remain in the cart.",
+        "actual": "The cart becomes empty.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "answerable-bug",
+      "defects": [
+        {
+          "relativePath": "src/store/cartStore.ts",
+          "fixedContent": "state.items.filter((i) => i.id !== productId)",
+          "buggyContent": "state.items.filter((i) => i.id !== productId && i.id !== 1)"
+        }
+      ],
+      "referenceTest": "tests/playwright/cases/prospective-v2-reference.spec.ts",
+      "variantFingerprint": "25a58ad637e1e0d46e1adf752e3d0b6813d2bb0f0f56ee026c99273ec20aa0d4",
+      "referenceTestHash": "b51faa5fcf1d6389db5a7ab1f98e6f47da050d40c3870653445a5ed71045c7b1"
+    },
+    {
+      "id": "p2-checkout-keeps-cart",
+      "split": "held-out",
+      "category": "multi-file",
+      "report": {
+        "title": "Checkout does not clear cart on either screen",
+        "description": "Checkout leaves items in the sidebar and full cart page.",
+        "steps": [
+          "Open the shop",
+          "Add Keyboard",
+          "Click Checkout in the sidebar",
+          "Open Cart",
+          "Click Checkout on the cart page"
+        ],
+        "expected": "The cart should be empty after Checkout.",
+        "actual": "Keyboard remains after Checkout.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "answerable-bug",
+      "defects": [
+        {
+          "relativePath": "src/components/Cart.tsx",
+          "fixedContent": "onClick={clearCart}",
+          "buggyContent": "onClick={() => {}}"
+        },
+        {
+          "relativePath": "src/pages/CartPage.tsx",
+          "fixedContent": "onClick={clearCart}",
+          "buggyContent": "onClick={() => {}}"
+        }
+      ],
+      "referenceTest": "tests/playwright/cases/prospective-v2-reference.spec.ts",
+      "variantFingerprint": "e7156e231d46453c08134ffb3d7d8e25196e88b732d41de534024cfee94ffc55",
+      "referenceTestHash": "b51faa5fcf1d6389db5a7ab1f98e6f47da050d40c3870653445a5ed71045c7b1"
+    },
+    {
+      "id": "p2-cart-link-opens-shop",
+      "split": "held-out",
+      "category": "navigation",
+      "report": {
+        "title": "Cart navigation opens the shop",
+        "description": "The navigation Cart link leaves the browser on the shop route.",
+        "steps": [
+          "Open the shop",
+          "Click Cart in the header"
+        ],
+        "expected": "The URL path should be /cart.",
+        "actual": "The URL path stays /.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "answerable-bug",
+      "defects": [
+        {
+          "relativePath": "src/App.tsx",
+          "fixedContent": "to=\"/cart\"\n        data-testid=\"nav-cart-link\"",
+          "buggyContent": "to=\"/\"\n        data-testid=\"nav-cart-link\""
+        }
+      ],
+      "referenceTest": "tests/playwright/cases/prospective-v2-reference.spec.ts",
+      "variantFingerprint": "03aeeb85ea04ae4b856714403ecc642c178e817b0925adbb00583d42cb2e642e",
+      "referenceTestHash": "b51faa5fcf1d6389db5a7ab1f98e6f47da050d40c3870653445a5ed71045c7b1"
+    },
+    {
+      "id": "p2-back-link-stays-cart",
+      "split": "held-out",
+      "category": "navigation",
+      "report": {
+        "title": "Back to Shop stays on Cart",
+        "description": "The Back to Shop link on the cart page does not return to the shop.",
+        "steps": [
+          "Open the shop",
+          "Click Cart",
+          "Click Back to Shop"
+        ],
+        "expected": "The URL path should be /.",
+        "actual": "The URL path remains /cart.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "answerable-bug",
+      "defects": [
+        {
+          "relativePath": "src/pages/CartPage.tsx",
+          "fixedContent": "to=\"/\"\n          data-testid=\"back-to-shop\"",
+          "buggyContent": "to=\"/cart\"\n          data-testid=\"back-to-shop\""
+        }
+      ],
+      "referenceTest": "tests/playwright/cases/prospective-v2-reference.spec.ts",
+      "variantFingerprint": "e79209b6061bb8555dc66a74dc7094d06b6c08ac4de1da533afb6b74ad95918a",
+      "referenceTestHash": "b51faa5fcf1d6389db5a7ab1f98e6f47da050d40c3870653445a5ed71045c7b1"
+    },
+    {
+      "id": "p2-quantity-label-off-by-one",
+      "split": "held-out",
+      "category": "rendering",
+      "report": {
+        "title": "Cart line quantity is one too high",
+        "description": "One Keyboard is displayed with quantity two.",
+        "steps": [
+          "Open the shop",
+          "Add one Keyboard",
+          "Read the Keyboard cart line quantity"
+        ],
+        "expected": "Quantity should display ×1.",
+        "actual": "Quantity displays ×2.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "answerable-bug",
+      "defects": [
+        {
+          "relativePath": "src/components/CartItem.tsx",
+          "fixedContent": "×{item.quantity}",
+          "buggyContent": "×{item.quantity + 1}"
+        }
+      ],
+      "referenceTest": "tests/playwright/cases/prospective-v2-reference.spec.ts",
+      "variantFingerprint": "1f37fab6fbe1611d64638dcfa62e800366d05314de2504dd03f02dcdb4827c8a",
+      "referenceTestHash": "b51faa5fcf1d6389db5a7ab1f98e6f47da050d40c3870653445a5ed71045c7b1"
+    },
+    {
+      "id": "p2-line-price-ignores-quantity",
+      "split": "held-out",
+      "category": "rendering",
+      "report": {
+        "title": "Cart line price ignores quantity",
+        "description": "Two Keyboards show a single-item line price.",
+        "steps": [
+          "Open the shop",
+          "Add Keyboard twice",
+          "Read the Keyboard cart line price"
+        ],
+        "expected": "Line price should be $20.00.",
+        "actual": "Line price shows $10.00.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "answerable-bug",
+      "defects": [
+        {
+          "relativePath": "src/components/CartItem.tsx",
+          "fixedContent": "item.price * item.quantity",
+          "buggyContent": "item.price"
+        }
+      ],
+      "referenceTest": "tests/playwright/cases/prospective-v2-reference.spec.ts",
+      "variantFingerprint": "bc2e7aedfb5d2a1b99b654009c740e137786d8a1a053ee338786a7db5cd10aa4",
+      "referenceTestHash": "b51faa5fcf1d6389db5a7ab1f98e6f47da050d40c3870653445a5ed71045c7b1"
+    },
+    {
+      "id": "p2-invalid-promo-accepted",
+      "split": "held-out",
+      "category": "async",
+      "report": {
+        "title": "Invalid promo code is reported as applied",
+        "description": "The app confirms an unknown promo code.",
+        "steps": [
+          "Open the shop",
+          "Add Keyboard",
+          "Enter NOTREAL in Promo code",
+          "Click Apply",
+          "Wait for validation"
+        ],
+        "expected": "The app should say Invalid promo code.",
+        "actual": "The app says Promo code applied!.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "answerable-bug",
+      "defects": [
+        {
+          "relativePath": "src/store/cartStore.ts",
+          "fixedContent": "    return false;\n  },\n\n  clearPromoCode:",
+          "buggyContent": "    return true;\n  },\n\n  clearPromoCode:"
+        }
+      ],
+      "referenceTest": "tests/playwright/cases/prospective-v2-reference.spec.ts",
+      "variantFingerprint": "26af6a7abd506bbc81fb48eda82d4dd21610b7eb59ddf51168e8de8b00631d6a",
+      "referenceTestHash": "b51faa5fcf1d6389db5a7ab1f98e6f47da050d40c3870653445a5ed71045c7b1"
+    },
+    {
+      "id": "p2-promo-clears-items",
+      "split": "held-out",
+      "category": "async",
+      "report": {
+        "title": "Promo validation empties the cart",
+        "description": "A valid promo removes the item already in the cart.",
+        "steps": [
+          "Open the shop",
+          "Add Keyboard",
+          "Enter SAVE20",
+          "Click Apply",
+          "Wait for validation"
+        ],
+        "expected": "Keyboard should remain in the cart.",
+        "actual": "The cart becomes empty.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "answerable-bug",
+      "defects": [
+        {
+          "relativePath": "src/store/cartStore.ts",
+          "fixedContent": "discountPercent: 20,\n        items: state.items.map((i) => ({ ...i, price: Number((i.price * 0.8).toFixed(2)) })),",
+          "buggyContent": "discountPercent: 20,\n        items: [],"
+        }
+      ],
+      "referenceTest": "tests/playwright/cases/prospective-v2-reference.spec.ts",
+      "variantFingerprint": "fa74acbe5c9a90c932d672d39a1e7eba1220c29465e6e14ff194fa38dc0bdff9",
+      "referenceTestHash": "b51faa5fcf1d6389db5a7ab1f98e6f47da050d40c3870653445a5ed71045c7b1"
+    },
+    {
+      "id": "p2-shipping-fee-six",
+      "split": "held-out",
+      "category": "calculation",
+      "report": {
+        "title": "Shipping fee is one dollar too high",
+        "description": "A small cart shows six dollars shipping.",
+        "steps": [
+          "Open the shop",
+          "Add Keyboard",
+          "Read Shipping"
+        ],
+        "expected": "Shipping should be $5.00.",
+        "actual": "Shipping shows $6.00.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "answerable-bug",
+      "defects": [
+        {
+          "relativePath": "src/store/cartStore.ts",
+          "fixedContent": "get().items.length === 0 ? 0 : 5",
+          "buggyContent": "get().items.length === 0 ? 0 : 6"
+        }
+      ],
+      "referenceTest": "tests/playwright/cases/prospective-v2-reference.spec.ts",
+      "variantFingerprint": "f94bfc915f38ec5dafbf144b23f2c1536c4e338bf34726af3ff44b71795fdc0e",
+      "referenceTestHash": "b51faa5fcf1d6389db5a7ab1f98e6f47da050d40c3870653445a5ed71045c7b1"
+    },
+    {
+      "id": "p2-promo-discount-ten",
+      "split": "held-out",
+      "category": "calculation",
+      "report": {
+        "title": "SAVE20 gives ten percent instead of twenty",
+        "description": "A ten-dollar Keyboard is nine dollars after SAVE20.",
+        "steps": [
+          "Open the shop",
+          "Add Keyboard",
+          "Enter SAVE20",
+          "Click Apply",
+          "Wait for validation",
+          "Read Total"
+        ],
+        "expected": "Total should be $8.00.",
+        "actual": "Total shows $9.00.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "answerable-bug",
+      "defects": [
+        {
+          "relativePath": "src/store/cartStore.ts",
+          "fixedContent": "discountPercent: 20,\n        items: state.items.map((i) => ({ ...i, price: Number((i.price * 0.8).toFixed(2)) })),",
+          "buggyContent": "discountPercent: 10,\n        items: state.items.map((i) => ({ ...i, price: Number((i.price * 0.9).toFixed(2)) })),"
+        }
+      ],
+      "referenceTest": "tests/playwright/cases/prospective-v2-reference.spec.ts",
+      "variantFingerprint": "a34c8db9766a7a628da851c37d3fe8f404d475a838a41a36fdd56010d98349f3",
+      "referenceTestHash": "b51faa5fcf1d6389db5a7ab1f98e6f47da050d40c3870653445a5ed71045c7b1"
+    },
+    {
+      "id": "p2-control-correct-total",
+      "split": "held-out",
+      "category": "control",
+      "report": {
+        "title": "Check a normal single-item total",
+        "description": "Verify that a cart with one Keyboard has the expected total.",
+        "steps": [
+          "Open the shop",
+          "Add Keyboard",
+          "Read Total"
+        ],
+        "expected": "Total should be $10.00.",
+        "actual": "Total appears to be $10.00.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "control",
+      "defects": [],
+      "referenceTest": "tests/playwright/cases/prospective-v2-reference.spec.ts",
+      "variantFingerprint": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289",
+      "referenceTestHash": "b51faa5fcf1d6389db5a7ab1f98e6f47da050d40c3870653445a5ed71045c7b1"
+    },
+    {
+      "id": "p2-control-correct-navigation",
+      "split": "held-out",
+      "category": "control",
+      "report": {
+        "title": "Check normal Cart navigation",
+        "description": "Verify that the header Cart link opens the cart page.",
+        "steps": [
+          "Open the shop",
+          "Click Cart in the header"
+        ],
+        "expected": "The URL path should be /cart.",
+        "actual": "The URL path appears to be /cart.",
+        "startPath": "/",
+        "context": "Fresh browser storage and an empty cart."
+      },
+      "label": "control",
+      "defects": [],
+      "referenceTest": "tests/playwright/cases/prospective-v2-reference.spec.ts",
+      "variantFingerprint": "7806a8885a9410200ff4f2f51c9a208f4c2cf7ab2ba2508a0d8d192cb4f32289",
+      "referenceTestHash": "b51faa5fcf1d6389db5a7ab1f98e6f47da050d40c3870653445a5ed71045c7b1"
+    }
+  ],
+  "datasetHash": "088b6b5bab0fc9b22322d551bfa2736e4015d81db6cf6b942d079b384c1b72d5"
+}

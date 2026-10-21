@@ -73,7 +73,7 @@ export function Cart() {
             </button>
           </div>
           {promoMessage && (
-            <p style={{ fontSize: 12, color: promoCode ? "#059669" : "#dc2626", marginTop: 4 }}>
+            <p data-testid="promo-status" role="status" style={{ fontSize: 12, color: promoCode ? "#059669" : "#dc2626", marginTop: 4 }}>
               {promoMessage}
             </p>
           )}

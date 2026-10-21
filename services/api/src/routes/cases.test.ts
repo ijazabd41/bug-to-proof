@@ -61,17 +61,14 @@ describe("Cases API Validation & Hardening", () => {
       expect(res.body.reportCompleteness).toEqual({ complete: true, missingFields: [] });
     });
 
-    it("creates incomplete reports honestly and lists missing details", async () => {
-      const res = await request(app).post("/api/cases").send({
-        title: "Ambiguous issue",
-        description: "The cart looks wrong",
-      });
-
-      expect(res.status).toBe(201);
-      expect(res.body.reportCompleteness).toEqual({
-        complete: false,
-        missingFields: ["steps", "expected", "actual"],
-      });
+    it("rejects new cases missing reproduction steps or either outcome", async () => {
+      const base = { title: "Cart issue", description: "The cart looks wrong", steps: ["Open cart"], expected: "Both prices", actual: "Only one price" };
+      for (const field of ["steps", "expected", "actual"] as const) {
+        const body = { ...base, [field]: field === "steps" ? [] : "  " };
+        const res = await request(app).post("/api/cases").send(body);
+        expect(res.status).toBe(400);
+        expect(res.body.error).toMatch(new RegExp(field, "i"));
+      }
     });
 
     it("rejects creation with missing title", async () => {
@@ -114,6 +111,9 @@ describe("Cases API Validation & Hardening", () => {
         const res = await request(app).post("/api/cases").send({
           title: `Case ${i}`,
           description: `Description ${i}`,
+          steps: ["Open cart"],
+          expected: "Both prices",
+          actual: "Only one price",
         });
         expect(res.status).toBe(201);
         expect(ids.has(res.body.id)).toBe(false);

@@ -116,6 +116,9 @@ export function validateCreateCase(body: unknown): ValidationResult<CreateCaseIn
 
   const reportValidation = validateReportFields(body as Record<string, unknown>);
   if (!reportValidation.valid || !reportValidation.data) return reportValidation as ValidationResult<CreateCaseInput>;
+  if (reportValidation.data.steps.length === 0) return { valid: false, error: "steps are required" };
+  if (!reportValidation.data.expected) return { valid: false, error: "expected behavior is required" };
+  if (!reportValidation.data.actual) return { valid: false, error: "actual behavior is required" };
 
   return {
     valid: true,

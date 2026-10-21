@@ -58,6 +58,16 @@ export class LocalTokenEmbeddings extends Embeddings {
   async embedDocuments(texts: string[]) { return texts.map((text) => this.vector(text)); }
   async embedQuery(text: string) { return this.vector(text); }
 }
+class BatchedOllamaEmbeddings extends OllamaEmbeddings {
+  override async embedDocuments(texts: string[]): Promise<number[][]> {
+    const vectors: number[][] = [];
+    // Keep each local request below the timeout while preserving corpus order.
+    for (let i = 0; i < texts.length; i += 8) {
+      vectors.push(...await super.embedDocuments(texts.slice(i, i + 8)));
+    }
+    return vectors;
+  }
+}
 /** Credentials stay out of index identities, API responses and saved metadata. */
 export function createEmbeddings(config: RagConfig): EmbeddingsInterface {
   if (config.embeddingProvider === "lexical") return new LocalTokenEmbeddings();
@@ -69,7 +79,7 @@ export function createEmbeddings(config: RagConfig): EmbeddingsInterface {
       configuration: { baseURL: config.embeddingBaseUrl },
     });
   }
-  return new OllamaEmbeddings({
+  return new BatchedOllamaEmbeddings({
     model: config.embeddingModel, baseUrl: config.embeddingBaseUrl, maxRetries: 0,
     fetch: (input, init) => fetch(input, { ...init, signal: AbortSignal.timeout(config.timeoutMs) }),
   });

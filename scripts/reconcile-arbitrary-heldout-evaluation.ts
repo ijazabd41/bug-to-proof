@@ -23,5 +23,6 @@ const results = fs.readdirSync(directory, { withFileTypes: true }).filter(item =
 const count = (field: string) => results.filter((item: any) => item[field]).length;
 const report = { ...prior, reconciledAt: new Date().toISOString(), denominator: results.length,
   metrics: { validCandidates: count("validCandidate"), executableCandidates: count("executableCandidate"), relevantReproductions: count("relevantReproduction"), infrastructureErrors: count("infrastructureError"), unsupported: count("unsupported") }, results };
-fs.writeFileSync(path.join(directory, "aggregate.json"), JSON.stringify(report, null, 2) + "\n");
-console.log(JSON.stringify({ directory, metrics: report.metrics }, null, 2));
+const output = path.join(directory, `reconciled-${new Date().toISOString().replace(/[:.]/g, "-")}.json`);
+fs.writeFileSync(output, JSON.stringify(report, null, 2) + "\n", { flag: "wx" });
+console.log(JSON.stringify({ output, metrics: report.metrics }, null, 2));

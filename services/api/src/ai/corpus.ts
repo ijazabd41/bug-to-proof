@@ -5,26 +5,39 @@ import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { digest } from "../runner/integrity";
 import { WORKSPACE_ROOT } from "../utils/paths";
 
-export const SOURCES = [
-  "README.md", "AGENTS.md", "docs/ai-workflow.md", "docs/rag-interview-guide.md",
-  "services/api/src/ai/providers.ts", "services/api/src/ai/vectorIndex.ts",
-  "services/api/src/ai/retrieval.ts", "services/api/src/ai/rag.ts",
-  "services/api/src/ai/debugAgent.ts",
-  "apps/minishop/src/store/cartStore.ts", "apps/minishop/src/components/Cart.tsx",
-  "apps/minishop/src/data/products.ts", "tests/playwright/cases/case-001-cart-total.spec.ts",
-  "services/api/src/runner/playwrightRunner.ts", "services/api/src/runner/integrity.ts",
-  "services/api/src/runner/classification.ts", "services/api/src/runner/record.ts",
+export type CorpusScope = "source" | "documentation" | "all";
+export type CorpusSourceType = "source" | "test" | "documentation";
+export const SOURCES: ReadonlyArray<{ path: string; sourceType: CorpusSourceType }> = [
+  { path: "README.md", sourceType: "documentation" },
+  { path: "AGENTS.md", sourceType: "documentation" },
+  { path: "docs/ai-workflow.md", sourceType: "documentation" },
+  { path: "docs/rag-interview-guide.md", sourceType: "documentation" },
+  { path: "services/api/src/ai/providers.ts", sourceType: "source" },
+  { path: "services/api/src/ai/vectorIndex.ts", sourceType: "source" },
+  { path: "services/api/src/ai/retrieval.ts", sourceType: "source" },
+  { path: "services/api/src/ai/rag.ts", sourceType: "source" },
+  { path: "services/api/src/ai/debugAgent.ts", sourceType: "source" },
+  { path: "apps/minishop/src/store/cartStore.ts", sourceType: "source" },
+  { path: "apps/minishop/src/components/Cart.tsx", sourceType: "source" },
+  { path: "apps/minishop/src/data/products.ts", sourceType: "source" },
+  { path: "tests/playwright/cases/case-001-cart-total.spec.ts", sourceType: "test" },
+  { path: "services/api/src/runner/playwrightRunner.ts", sourceType: "source" },
+  { path: "services/api/src/runner/integrity.ts", sourceType: "source" },
+  { path: "services/api/src/runner/classification.ts", sourceType: "source" },
+  { path: "services/api/src/runner/record.ts", sourceType: "source" },
 ];
 export interface CorpusChunk {
-  source: string; chunkId: string; content: string;
+  source: string; sourceType: CorpusSourceType; chunkId: string; content: string;
   startLine: number; endLine: number; sourceHash: string;
 }
-export async function loadCorpus(chunkSize: number, chunkOverlap: number) {
+export async function loadCorpus(chunkSize: number, chunkOverlap: number, scope: CorpusScope = "source") {
   const root = fs.realpathSync(WORKSPACE_ROOT);
   const splitter = new RecursiveCharacterTextSplitter({ chunkSize, chunkOverlap });
   const chunks: CorpusChunk[] = [];
   const sourceHashes: [string, string][] = [];
-  for (const source of SOURCES) {
+  const selected = SOURCES.filter(({ sourceType }) => scope === "all" || (scope === "documentation" ? sourceType === "documentation" : sourceType !== "documentation"));
+  for (const entry of selected) {
+    const source = entry.path;
     const target = path.join(root, source);
     if (!fs.existsSync(target)) continue;
     const file = fs.realpathSync(target);
@@ -42,7 +55,7 @@ export async function loadCorpus(chunkSize: number, chunkOverlap: number) {
       const startLine = text.slice(0, position).split("\n").length;
       const endLine = startLine + content.split("\n").length - 1;
       chunks.push({
-        source, sourceHash, content, startLine, endLine,
+        source, sourceType: entry.sourceType, sourceHash, content, startLine, endLine,
         chunkId: digest(JSON.stringify([source, sourceHash, startLine, content])).slice(0, 12),
       });
     }
@@ -50,7 +63,7 @@ export async function loadCorpus(chunkSize: number, chunkOverlap: number) {
   if (!chunks.length) throw new Error("No allowed corpus sources");
   return {
     chunks,
-    fingerprint: digest(JSON.stringify({ version: 1, sourceHashes, chunkSize, chunkOverlap })),
+    fingerprint: digest(JSON.stringify({ version: 2, scope, sourceHashes, chunkSize, chunkOverlap })),
     documents: chunks.map((chunk) => new Document({ pageContent: chunk.content, metadata: chunk })),
   };
 }

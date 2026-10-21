@@ -21,24 +21,30 @@ test("desktop case workspace and report submission", async ({ page }, testInfo) 
   const errors: string[] = [];
   page.on("pageerror", error => errors.push(error.message));
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: "Bug cases." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Investigations." })).toBeVisible();
   await expect(page.getByRole("table")).toBeVisible();
-  await page.getByRole("searchbox", { name: "Search cases" }).fill("quantity");
-  await expect(page.locator(".case-title")).toHaveCount(2);
-  await page.getByRole("searchbox", { name: "Search cases" }).fill("");
-  await page.getByRole("combobox", { name: "Filter by status" }).selectOption("VERIFIED");
-  await expect(page.locator(".case-title")).toHaveCount(1);
-  await page.getByRole("button", { name: "Clear" }).click();
   const cases = await (await page.request.get("/api/cases")).json();
   expect(cases.length).toBeGreaterThan(0);
+  const searchTerm = "cart";
+  await page.getByRole("searchbox", { name: "Search cases" }).fill(searchTerm);
+  await expect(page.locator(".case-title")).toHaveCount(cases.filter((item: any) => [item.title, item.description, item.id].some((value: string) => value.toLowerCase().includes(searchTerm))).length);
+  await page.getByRole("searchbox", { name: "Search cases" }).fill("");
+  await page.getByRole("combobox", { name: "Filter by status" }).selectOption(cases[0].status);
+  await expect(page.locator(".case-title")).toHaveCount(cases.filter((item: any) => item.status === cases[0].status).length);
+  await page.getByRole("button", { name: "Clear" }).click();
   await expect(page.locator(".case-title").first()).toBeVisible();
   const viewport = page.viewportSize()!;
   const table = await page.locator(".cases-panel").boundingBox();
-  const form = await page.locator(".report-panel").boundingBox();
-  expect(form!.x).toBeGreaterThan(table!.x + table!.width);
+  expect(table!.width).toBeGreaterThan(900);
+  await expect(page.getByRole("dialog")).toBeHidden();
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(viewport.width);
   await capture(page, testInfo, "desktop-overview");
 
+  await page.getByRole("button", { name: "New report" }).click();
+  await expect(page.getByRole("dialog")).toBeVisible();
+  const dialog = await page.getByRole("dialog").boundingBox();
+  expect(Math.abs(dialog!.x + dialog!.width / 2 - viewport.width / 2)).toBeLessThan(2);
+  await capture(page, testInfo, "desktop-report-form");
   await page.getByRole("button", { name: "Create case" }).click();
   await expect(page.getByRole("alert")).toHaveText("Title is required.");
   await expect(page.getByRole("textbox", { name: "Title *", exact: true })).toBeFocused();
@@ -46,9 +52,11 @@ test("desktop case workspace and report submission", async ({ page }, testInfo) 
   await page.getByRole("button", { name: "Create case" }).click();
   await expect(page.getByRole("alert")).toHaveText("Description is required.");
   await page.getByLabel("Description", { exact: false }).fill("Two products have an incorrect total.");
-  await page.getByLabel("Reproduction steps").fill("Add two products.");
-  await page.getByLabel("Expected behavior").fill("Sum both prices.");
-  await page.getByLabel("Actual behavior").fill("Only the first price appears.");
+  await page.getByRole("button", { name: "Create case" }).click();
+  await expect(page.getByRole("alert")).toHaveText("Reproduction steps are required.");
+  await page.getByLabel("Reproduction steps", { exact: false }).fill("Add two products.");
+  await page.getByLabel("Expected behavior", { exact: false }).fill("Sum both prices.");
+  await page.getByLabel("Actual behavior", { exact: false }).fill("Only the first price appears.");
   // Intercept submission to verify the payload without modifying real case data.
   let submitted: any;
   const created = { ...cases[0], id: "ui-smoke-created", title: "UI smoke report", description: "", status: "REPORTED", evidence: [], reproduction: null, patch: null, verification: null };
@@ -64,9 +72,9 @@ test("desktop case workspace and report submission", async ({ page }, testInfo) 
   await expect(page).toHaveURL(/cases\/ui-smoke-created$/);
   await expect(page.getByRole("heading", { name: "UI smoke report", exact: true })).toBeVisible();
   expect(submitted.title).toBe("UI smoke report");
-  expect(submitted.description).toContain("Steps to reproduce:\nAdd two products.");
-  expect(submitted.description).toContain("Expected behavior:\nSum both prices.");
-  expect(submitted.description).toContain("Actual behavior:\nOnly the first price appears.");
+  expect(submitted.steps).toEqual(["Add two products."]);
+  expect(submitted.expected).toBe("Sum both prices.");
+  expect(submitted.actual).toBe("Only the first price appears.");
   await expect(page.getByText("Not run yet.", { exact: true })).toBeVisible();
   expect(errors).toEqual([]);
 });
@@ -80,7 +88,7 @@ test("real case evidence on desktop and mobile", async ({ page }, testInfo) => {
   await expect(page.getByRole("heading", { name: selected.title, exact: true })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Before / After Comparison", exact: true })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Debugging & AI Repair Assistant", exact: true })).toBeVisible();
-  await page.locator(".repair-assistant").getByText("Ask source code question", { exact: true }).waitFor();
+  await page.locator(".repair-assistant").getByLabel("Ask a source-code question").waitFor();
   await page.waitForFunction(() => Array.from(document.images).every(img => img.complete));
   const evidence = await page.locator(".verification-overview").boundingBox();
   const assistant = await page.locator(".repair-assistant").boundingBox();
@@ -99,6 +107,42 @@ test("real case evidence on desktop and mobile", async ({ page }, testInfo) => {
   await expect(page.getByRole("table")).toBeHidden();
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
   await capture(page, testInfo, "mobile-overview");
+  await page.getByRole("button", { name: "New report" }).click();
+  await expect(page.getByRole("dialog")).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+  await capture(page, testInfo, "mobile-report-form");
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("dialog")).toBeHidden();
+});
+
+test("incomplete report fields stay aligned and required", async ({ page }, testInfo) => {
+  const cases = await (await page.request.get("/api/cases")).json();
+  const selected = cases[0];
+  const incomplete = {
+    ...selected,
+    reproduction: { ...selected.reproduction, testFile: "" },
+    report: { schemaVersion: "1.0", steps: [], expected: "Both prices are included", actual: "Only one price is included", startPath: "", context: "" },
+    reportCompleteness: { complete: false, missingFields: ["steps"] },
+  };
+  await page.route("**/api/cases/" + selected.id, route => route.fulfill({ json: incomplete }));
+  await page.goto("/cases/" + selected.id);
+  const form = page.getByRole("form", { name: "Clarify bug report" });
+  await expect(form).toBeVisible();
+  const steps = form.getByLabel("Reproduction steps", { exact: false });
+  const expected = form.getByLabel("Expected behavior", { exact: false });
+  const actual = form.getByLabel("Actual behavior", { exact: false });
+  await expect(steps).toHaveAttribute("required", "");
+  await expect(expected).toHaveAttribute("required", "");
+  await expect(actual).toHaveAttribute("required", "");
+  const formBox = await form.boundingBox();
+  const stepsBox = await steps.boundingBox();
+  expect(stepsBox!.width).toBeGreaterThan(formBox!.width * 0.9);
+  await form.getByRole("button", { name: "Save report details" }).click();
+  await expect(form.getByRole("alert")).toHaveText("Reproduction steps are required.");
+  await capture(page, testInfo, "desktop-clarification");
+  await page.setViewportSize({ width: 390, height: 844 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+  await capture(page, testInfo, "mobile-clarification");
 });
 `;
 
@@ -110,7 +154,7 @@ async function main() {
   fs.writeFileSync(file, source, { flag: "wx" });
   try {
     const result = await runTest("dashboard-ui", path.relative(WORKSPACE_ROOT, file), "after", {
-      targetUrl: "http://localhost:5173", artifactDir: dir, timeoutMs: 180_000,
+      targetUrl: process.env.DASHBOARD_URL ?? "http://localhost:5173", artifactDir: dir, timeoutMs: 180_000,
     });
     const report = {
       scope: "UI design regression only; not bug repair proof. Screenshots show real saved cases. Submission is intercepted to avoid data mutation.",

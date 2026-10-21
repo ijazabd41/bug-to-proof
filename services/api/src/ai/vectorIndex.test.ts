@@ -87,7 +87,7 @@ describe("source provenance", () => {
   });
 });
 const source: SourceChunk = {
-  source: "cart.ts", chunkId: "known", sourceHash: "hash", startLine: 1, endLine: 2,
+  source: "cart.ts", sourceType: "source", chunkId: "known", sourceHash: "hash", startLine: 1, endLine: 2,
   content: "total = price * quantity", score: 1, lexicalScore: 1, rankScore: 1,
 };
 describe("generated-answer provenance (model responses simulated)", () => {

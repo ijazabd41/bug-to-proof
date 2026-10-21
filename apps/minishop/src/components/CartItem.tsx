@@ -18,7 +18,7 @@ export function CartItem({ productId }: { productId: number }) {
         borderBottom: "1px solid #f3f4f6",
       }}
     >
-      <span>{item.name}</span>
+      <span data-testid={`cart-item-name-${productId}`}>{item.name}</span>
       <span data-testid={`cart-item-quantity-${productId}`} style={{ color: "#6b7280", fontSize: 14 }}>
         ×{item.quantity}
       </span>

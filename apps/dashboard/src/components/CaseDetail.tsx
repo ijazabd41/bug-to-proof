@@ -17,16 +17,37 @@ interface CaseDetailProps {
 
 const POLLING_STATUSES = new Set(["REPRODUCING", "VERIFYING"]);
 const DEMO_CASE_ID = "case-001";
-const REPRODUCTION_STATE_STYLE: Record<string, { background: string; color: string }> = {
-  DISCOVERING_TARGET: { background: "#e0f2fe", color: "#0369a1" },
-  GENERATING_CANDIDATE: { background: "#dbeafe", color: "#1d4ed8" },
-  CANDIDATE_INVALID: { background: "#ffedd5", color: "#9a3412" },
-  CANDIDATE_EXECUTION_ERROR: { background: "#fee2e2", color: "#991b1b" },
-  BASELINE_PASSED: { background: "#dcfce7", color: "#166534" },
-  BLOCKED: { background: "#f3e8ff", color: "#7e22ce" },
-  CANCELLED: { background: "#e5e7eb", color: "#374151" },
-  AWAITING_TEST_REVIEW: { background: "#fef3c7", color: "#92400e" },
+const REPRODUCTION_STATE_STYLE: Record<string, { background: string; color: string; border?: string }> = {
+  DISCOVERING_TARGET: { background: "#f0f9ff", color: "#0369a1", border: "1px solid #bae6fd" },
+  GENERATING_CANDIDATE: { background: "#eff6ff", color: "#1d4ed8", border: "1px solid #bfdbfe" },
+  CANDIDATE_INVALID: { background: "#fff7ed", color: "#c2410c", border: "1px solid #fed7aa" },
+  CANDIDATE_EXECUTION_ERROR: { background: "#fef2f2", color: "#b91c1c", border: "1px solid #fecaca" },
+  BASELINE_PASSED: { background: "#ecfdf5", color: "#047857", border: "1px solid #a7f3d0" },
+  BLOCKED: { background: "#faf5ff", color: "#7e22ce", border: "1px solid #e9d5ff" },
+  CANCELLED: { background: "#f1f5f9", color: "#475569", border: "1px solid #cbd5e1" },
+  AWAITING_TEST_REVIEW: { background: "#fffbeb", color: "#b45309", border: "1px solid #fde68a" },
 };
+
+function reproductionDiagnostic(run: ReproductionRunRecordSummary): { message: string; detail?: string } {
+  const raw = run.events?.[run.events.length - 1]?.message || run.stopReason || "Orchestrating reproduction generation…";
+  if (raw.includes("request_failed")) return {
+    message: "Provider connection failed before an HTTP response.",
+    detail: "Check provider reachability, DNS/TLS, and the configured endpoint. No product bug was reproduced.",
+  };
+  if (raw.includes("request_timed_out") || raw.includes("request_aborted_or_timed_out")) return {
+    message: "Provider request timed out.",
+    detail: "Check provider availability and the timeout setting, then retry. No product bug was reproduced.",
+  };
+  if (raw.includes("http_error:429")) return {
+    message: "Provider returned HTTP 429 (rate limit or quota).",
+    detail: "Wait for provider quota to recover, then retry generation. No product bug was reproduced.",
+  };
+  if (raw.includes("http_error:")) return {
+    message: raw.replace(/^Reproduction generation provider request failed /, "Provider request failed "),
+    detail: "The provider returned an HTTP error. No product bug was reproduced.",
+  };
+  return { message: raw, ...(run.state === "BLOCKED" ? { detail: "Generation stopped before a verified reproduction was established." } : {}) };
+}
 
 export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
   const [actionError, setActionError] = useState<string | null>(null);
@@ -40,6 +61,11 @@ export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
   const [reviewLoading, setReviewLoading] = useState<"APPROVE" | "REJECT" | null>(null);
   const [reviewerNotes, setReviewerNotes] = useState("");
   const hasTrustedReproductionTest = Boolean(bugCase.reproduction?.testFile?.trim());
+  const displayedReproduction = hasTrustedReproductionTest
+    ? bugCase.reproduction
+    : bugCase.report
+      ? { preconditions: [] as string[], steps: bugCase.report.steps, expected: bugCase.report.expected, actual: bugCase.report.actual, lastRun: null }
+      : bugCase.reproduction;
 
   useEffect(() => {
     let cancelled = false;
@@ -513,9 +539,14 @@ export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
       {section(
         "Reproduction",
         <>
-          {bugCase.reproduction ? (
+          {displayedReproduction ? (
             <>
-              {Array.isArray(bugCase.reproduction.preconditions) && bugCase.reproduction.preconditions.length > 0 && (
+              {hasTrustedReproductionTest && (
+                <p style={{ alignSelf: "flex-start", margin: 0, padding: "4px 8px", borderRadius: 999, background: "#eef2ff", color: "#4338ca", fontSize: 11, fontWeight: 700 }}>
+                  Configured reproduction test
+                </p>
+              )}
+              {"preconditions" in displayedReproduction && Array.isArray(displayedReproduction.preconditions) && displayedReproduction.preconditions.length > 0 && (
                 <div>
                   <p style={{ fontSize: 13, fontWeight: 500, marginBottom: 6 }}>
                     Preconditions
@@ -523,7 +554,7 @@ export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
                   <ul
                     style={{ paddingLeft: 20, fontSize: 13, color: "#374151" }}
                   >
-                    {bugCase.reproduction.preconditions.map((p, i) => (
+                    {displayedReproduction.preconditions.map((p, i) => (
                       <li key={i} style={{ marginBottom: 4 }}>
                         {p}
                       </li>
@@ -531,10 +562,10 @@ export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
                   </ul>
                 </div>
               )}
-              {Array.isArray(bugCase.reproduction.steps) && bugCase.reproduction.steps.length > 0 && (<div>
+              {Array.isArray(displayedReproduction.steps) && displayedReproduction.steps.length > 0 && (<div>
                 <p style={{ fontSize: 13, fontWeight: 500, marginBottom: 6 }}>Steps</p>
                 <ol style={{ paddingLeft: 20, fontSize: 13, color: "#374151" }}>
-                  {bugCase.reproduction.steps.map((s, i) => (
+                  {displayedReproduction.steps.map((s, i) => (
                     <li key={i} style={{ marginBottom: 4 }}>
                       {s}
                     </li>
@@ -554,7 +585,7 @@ export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
                     Expected
                   </p>
                   <p style={{ fontSize: 13, color: "#374151" }}>
-                    {bugCase.reproduction.expected || "—"}
+                    {displayedReproduction.expected || "—"}
                   </p>
                 </div>
                 <div>
@@ -569,17 +600,17 @@ export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
                     Actual
                   </p>
                   <p style={{ fontSize: 13, color: "#374151" }}>
-                    {bugCase.reproduction.actual || "—"}
+                    {displayedReproduction.actual || "—"}
                   </p>
                 </div>
               </div>
-              {bugCase.reproduction.lastRun?.outcome === "INFRASTRUCTURE_ERROR" && (
-                <p role="alert">Infrastructure error — no reproduced bug. {bugCase.reproduction.lastRun.actual}</p>
+              {displayedReproduction.lastRun?.outcome === "INFRASTRUCTURE_ERROR" && (
+                <p role="alert">Infrastructure error — no reproduced bug. {displayedReproduction.lastRun.actual}</p>
               )}
-              {bugCase.reproduction.lastRun != null && (
+              {displayedReproduction.lastRun != null && (
                 <div
                   style={{
-                    background: bugCase.reproduction.lastRun.passed
+                    background: displayedReproduction.lastRun.passed
                       ? "#dcfce7"
                       : "#fee2e2",
                     padding: "10px 14px",
@@ -588,12 +619,17 @@ export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
                   }}
                 >
                   Last run:{" "}
-                  {bugCase.reproduction.lastRun.passed ? "✅ PASSED" : "❌ FAILED"} —{" "}
-                  {bugCase.reproduction.lastRun.durationMs}ms at{" "}
-                  {new Date(bugCase.reproduction.lastRun.runAt).toLocaleString()}
-                  {bugCase.reproduction.lastRun.outcome === "ASSERTION_FAILED" && (
+                  {displayedReproduction.lastRun.passed ? "✅ PASSED" : "❌ FAILED"} —{" "}
+                  {displayedReproduction.lastRun.durationMs}ms at{" "}
+                  {new Date(displayedReproduction.lastRun.runAt).toLocaleString()}
+                  {displayedReproduction.lastRun.outcome === "ASSERTION_FAILED" && (
                     <p style={{ marginTop: 4, fontSize: 12, color: "#6b7280" }}>
                       Bug reproduced — baseline test failed as expected.
+                    </p>
+                  )}
+                  {hasTrustedReproductionTest && displayedReproduction.lastRun.outcome === "PASSED" && (
+                    <p style={{ marginTop: 4, fontSize: 12, color: "#166534" }}>
+                      Baseline passed on the current source, so this report was not reproduced. This does not mean the generation provider repaired it.
                     </p>
                   )}
                 </div>
@@ -626,12 +662,14 @@ export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
                           {reproductionRun.state}
                         </span>
                       </div>
-                      <p style={{ fontSize: 13, color: "#334155", marginBottom: 6 }}>
-                        {reproductionRun.events?.[reproductionRun.events.length - 1]?.message || reproductionRun.stopReason || "Orchestrating reproduction generation…"}
-                      </p>
+                      {(() => { const diagnostic = reproductionDiagnostic(reproductionRun); return <>
+                        <p style={{ fontSize: 13, color: "#334155", marginBottom: 6 }}>{diagnostic.message}</p>
+                        {diagnostic.detail && <p style={{ fontSize: 12, color: "#64748b", marginBottom: 6 }}>{diagnostic.detail}</p>}
+                      </>; })()}
                       {reproductionRun.attempts?.length > 0 && (
                         <p style={{ fontSize: 12, color: "#64748b" }}>
                           Attempts: {reproductionRun.attempts.length}
+                          {reproductionRun.attempts[reproductionRun.attempts.length - 1]?.requestAttempts !== undefined && ` · Provider requests: ${reproductionRun.attempts[reproductionRun.attempts.length - 1].requestAttempts}`}
                           {reproductionRun.attempts[reproductionRun.attempts.length - 1]?.diagnostics && ` — ${reproductionRun.attempts[reproductionRun.attempts.length - 1]?.diagnostics}`}
                         </p>
                       )}
@@ -669,7 +707,7 @@ export function CaseDetail({ bugCase, onUpdate }: CaseDetailProps) {
                       onClick={handleStartReproduction}
                       style={btnStyle("#2563eb", reproductionLoading)}
                     >
-                      {reproductionLoading ? "Starting…" : "▶ Generate Reproduction"}
+                      {reproductionLoading ? "Starting…" : reproductionRun?.state === "BLOCKED" ? "↺ Retry generation" : "▶ Generate Reproduction"}
                     </button>
                   )}
                 </>
